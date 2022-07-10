@@ -2,7 +2,7 @@ import main_discord
 import main_telegram
 
 def start_bots():
-    pass
+    print("gg")
 
 
 if __name__ == '__main__':
