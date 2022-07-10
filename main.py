@@ -8,3 +8,7 @@ def start_bots():
 
 if __name__ == '__main__':
     start_bots()
+    print("denis crutoy perets")
+
+
+
