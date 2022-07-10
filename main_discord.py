@@ -1,19 +1,35 @@
 import discord
 import main_constants
 from discord.ext import commands
+from discord.message import Message
 
-bot = commands.Bot(command_prefix='?', description=main_constants.description_discord_bot)
+client = discord.Client()
 
-@bot.commands
-async def on_command(ctx, left: int, right: int):
-    print(ctx)
 
-@bot.event
-async def on_ready(channel, user, when):
-    print(f'we have logged in as {bot.user}')
+@client.event
+async def on_ready():
+    print(f"Bot was started: {client.user}")
+
+
+# Все ивенты: https://discordpy.readthedocs.io/en/latest/api.html#event-reference
+@client.event
+async def on_message(message: Message):
+    # Если автор совпадает с клиентом то вернуть
+    # Чтобы бот не считывал свои сообщения
+    if message.author == client.user:
+        return
+
+    await message.channel.send("sdsdsds")  # Отправить в канал
+    await message.author.send("sasasa")  # Отправить в личку
+
+    channel: discord.TextChannel = client.get_channel(995704829416583200)  # Канал по id
+    await channel.send("sdsds")  # Отправка в канал по id
+
+    print(message.channel.id)  # Id канала
+
+    if message.content.startswith('$hello'):
+        await message.channel.send('Hello!')
 
 
 if __name__ == '__main__':
-    bot.run(main_constants.DISCORD_API)
-
-
+    client.run(main_constants.DISCORD_API)
