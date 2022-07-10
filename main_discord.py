@@ -19,6 +19,7 @@ async def on_message(message: Message):
     if message.author == client.user:
         return
 
+    # Не забывать await
     await message.channel.send("sdsdsds")  # Отправить в канал
     await message.author.send("sasasa")  # Отправить в личку
 
