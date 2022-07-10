@@ -2,18 +2,15 @@ import discord
 import main_constants
 from discord.ext import commands
 
-bot = discord.Client()
+bot = commands.Bot(command_prefix='?', description=main_constants.description_discord_bot)
 
-
-@bot.event
-async def on_ready():
-    print('we have logged in as {0.user}'.format(bot))
-
+@bot.commands
+async def on_command(ctx, left: int, right: int):
+    print(ctx)
 
 @bot.event
-async def on_typing(channel, user, when):
-    await channel.send(user.name)
-    print("f")
+async def on_ready(channel, user, when):
+    print(f'we have logged in as {bot.user}')
 
 
 if __name__ == '__main__':
