@@ -23,8 +23,11 @@ async def on_message(message: Message):
     await message.channel.send("sdsdsds")  # Отправить в канал
     await message.author.send("sasasa")  # Отправить в личку
 
+    print(message.author)
     channel: discord.TextChannel = client.get_channel(995704829416583200)  # Канал по id
     await channel.send("sdsds")  # Отправка в канал по id
+
+    #client.get_user("Zebaro#9282")
 
     print(message.channel.id)  # Id канала
 
