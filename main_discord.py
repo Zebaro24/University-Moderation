@@ -29,6 +29,15 @@ async def on_message(message: Message):
     # await message.channel.send("sdsdsds")  # Отправить в канал
     # await message.author.send("sasasa")  # Отправить в личку
 
+    gg: discord.channel.DMChannel = message.channel
+    #message.author
+
+    if message.content[0:2] == "cl":
+        num = int(message.content[3:])
+        print(type(gg))
+        #gg.
+        await gg.purge(limit=num)
+
     print(message.author)
     channel: discord.TextChannel = client.get_channel(995704829416583200)  # Канал по id
     await channel.send("sdsds")  # Отправка в канал по id
@@ -48,28 +57,28 @@ async def offline_role():
     #for i in roles.ROLES.keys():
     #    await message.add_reaction(i)
 
-    print(client.user)
     for reaction in message.reactions:
         if reaction.count != 1:
             async for user in reaction.users():
-                if user != client.user:
-                    print(f"{user.id} : {client.user.id}")
-                    await message.remove_reaction(reaction, user)
+                if user.id != client.user.id:
+                    member = await client.get_guild(config.discord_guild).fetch_member(user.id)
+                    await message.remove_reaction(reaction, member)
 
                     if str(reaction.emoji) not in roles.ROLES:
-                        await user.send(
+                        await member.send(
                             embed=discord.Embed(title="Этой роли не существует!", color=config.discord_color))
+
                     else:
-                        role: discord.Role = user.guild.get_role(roles.ROLES[str(reaction.emoji)])
-                        if roles.ROLES[str(reaction.emoji)] in [i.id for i in user.roles]:
-                            await user.remove_roles(role)
-                            await user.send(
-                                embed=discord.Embed(title=f"Роль **{role.name}** была добавлена!",
+                        role: discord.Role = client.get_guild(config.discord_guild).get_role(roles.ROLES[str(reaction.emoji)])
+                        if roles.ROLES[str(reaction.emoji)] in [i.id for i in member.roles]:
+                            await member.remove_roles(role)
+                            await member.send(
+                                embed=discord.Embed(title=f"Роль **{role.name}** была убрана!",
                                                     color=config.discord_color))
                         else:
-                            await user.add_roles(role)
-                            await user.send(
-                                embed=discord.Embed(title=f"Роль **{role.name}** была убрана!",
+                            await member.add_roles(role)
+                            await member.send(
+                                embed=discord.Embed(title=f"Роль **{role.name}** была добавлена!",
                                                     color=config.discord_color))
 
 
@@ -80,7 +89,6 @@ async def on_raw_reaction_add(payload: discord.raw_models.RawReactionActionEvent
         return
     if payload.member == client.user:
         return
-    print(payload.guild_id)
 
     message: Message = await client.get_channel(payload.channel_id).fetch_message(payload.message_id)
     await message.remove_reaction(payload.emoji, payload.member)
@@ -94,11 +102,13 @@ async def on_raw_reaction_add(payload: discord.raw_models.RawReactionActionEvent
     if roles.ROLES[str(payload.emoji)] in [i.id for i in payload.member.roles]:
         await payload.member.remove_roles(role)
         await payload.member.send(
-            embed=discord.Embed(title=f"Роль **{role.name}** была добавлена!", color=config.discord_color))
+            embed=discord.Embed(title=f"Роль **{role.name}** была убрана!", color=config.discord_color))
+
+
     else:
         await payload.member.add_roles(role)
         await payload.member.send(
-            embed=discord.Embed(title=f"Роль **{role.name}** была убрана!", color=config.discord_color))
+            embed=discord.Embed(title=f"Роль **{role.name}** была добавлена!", color=config.discord_color))
     '''
     guild: discord.guild.Guild = message.guild
     member: discord.member.Member = payload.member  # utils.get(message.guild.members, id=payload.user_id)
