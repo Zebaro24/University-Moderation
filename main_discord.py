@@ -50,11 +50,16 @@ async def on_message(message: Message):
         await message.channel.send('Hello!')
 
 
+    # message.id = 996541038686642226
+    # for i in roles.ROLES.keys():
+    #     await message.add_reaction(i)
+
+
 # Реализовать добавление ролей пока бот был выключен
 async def offline_role():
     message: Message = await client.get_guild(config.discord_guild).get_channel(roles.chanel_id).fetch_message(
         roles.message_id)
-    #for i in roles.ROLES.keys():
+    # for i in roles.ROLES.keys():
     #    await message.add_reaction(i)
 
     for reaction in message.reactions:
@@ -85,6 +90,7 @@ async def offline_role():
 # roles
 @client.event
 async def on_raw_reaction_add(payload: discord.raw_models.RawReactionActionEvent):
+
     if payload.message_id != roles.message_id or payload.guild_id != config.discord_guild or payload.channel_id != roles.chanel_id:
         return
     if payload.member == client.user:
@@ -92,6 +98,7 @@ async def on_raw_reaction_add(payload: discord.raw_models.RawReactionActionEvent
 
     message: Message = await client.get_channel(payload.channel_id).fetch_message(payload.message_id)
     await message.remove_reaction(payload.emoji, payload.member)
+
 
     if str(payload.emoji) not in roles.ROLES:
         await payload.member.send(embed=discord.Embed(title="Этой роли не существует!", color=config.discord_color))
@@ -109,6 +116,10 @@ async def on_raw_reaction_add(payload: discord.raw_models.RawReactionActionEvent
         await payload.member.add_roles(role)
         await payload.member.send(
             embed=discord.Embed(title=f"Роль **{role.name}** была добавлена!", color=config.discord_color))
+
+
+
+
     '''
     guild: discord.guild.Guild = message.guild
     member: discord.member.Member = payload.member  # utils.get(message.guild.members, id=payload.user_id)
