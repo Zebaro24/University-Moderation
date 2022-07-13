@@ -68,6 +68,21 @@ async def on_raw_reaction_add(payload: discord.raw_models.RawReactionActionEvent
             embed=discord.Embed(title=f"Роль **{role.name}** была добавлена!", color=config.discord_color))
 
 
+# Создание главного сообщения для ролей
+async def create_message(cache_bot):
+    print("\033[32m" + "В конфиг roles_config!" + "\033[0m")
+    chanel = cache_bot.get_guild(config.discord_guild).get_channel(roles_config.chanel_id)
+    text = ""
+    for i in roles_config.ROLES.keys():
+        role_name = input(f"{i} - ")
+        text += f"{i} - {role_name}\n"
+    message = await chanel.send(embed=discord.Embed(title=text, color=config.discord_color))
+
+    for i in roles_config.ROLES.keys():
+        await message.add_reaction(i)
+
+    print(f"ID сообщения реакций: {message.id}")
+
 '''
     guild: discord.guild.Guild = message.guild
     member: discord.member.Member = payload.member  # utils.get(message.guild.members, id=payload.user_id)
