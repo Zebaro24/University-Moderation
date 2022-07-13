@@ -1,7 +1,5 @@
 import discord
 import config
-from discord import utils
-from discord.ext import commands
 from discord.message import Message
 import roles
 
@@ -29,14 +27,12 @@ async def on_message(message: Message):
     # await message.channel.send("sdsdsds")  # Отправить в канал
     # await message.author.send("sasasa")  # Отправить в личку
 
-    gg: discord.channel.DMChannel = message.channel
-    #message.author
-
-    if message.content[0:2] == "cl":
-        num = int(message.content[3:])
-        print(type(gg))
-        #gg.
-        await gg.purge(limit=num)
+    if message.content[0:2] == "cl" and type(message.channel) != discord.channel.DMChannel:
+        try:
+            num = int(message.content[3:])
+        except ValueError:
+            num = 5
+        await message.channel.purge(limit=num)
 
     print(message.author)
     channel: discord.TextChannel = client.get_channel(995704829416583200)  # Канал по id
@@ -74,7 +70,8 @@ async def offline_role():
                             embed=discord.Embed(title="Этой роли не существует!", color=config.discord_color))
 
                     else:
-                        role: discord.Role = client.get_guild(config.discord_guild).get_role(roles.ROLES[str(reaction.emoji)])
+                        role: discord.Role = client.get_guild(config.discord_guild).get_role(
+                            roles.ROLES[str(reaction.emoji)])
                         if roles.ROLES[str(reaction.emoji)] in [i.id for i in member.roles]:
                             await member.remove_roles(role)
                             await member.send(
@@ -139,5 +136,9 @@ async def on_raw_reaction_add(payload: discord.raw_models.RawReactionActionEvent
     '''
 
 
-if __name__ == '__main__':
+def start():
     client.run(config.DISCORD_API)
+
+
+if __name__ == '__main__':
+    start()
