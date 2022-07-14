@@ -1,10 +1,11 @@
 import config
 import discord
 
-# Возможности
-import roles
-
 bot = discord.Client()  # intents=intents_g)
+
+# Возможности
+import discord_bot.roles as roles
+import discord_bot.music as music
 
 
 @bot.event
@@ -23,6 +24,9 @@ async def on_message(message: discord.Message):
     # Не забывать await
     # await message.channel.send("sdsdsds")  # Отправить в канал
     # await message.author.send("sasasa")  # Отправить в личку
+    if "gg"== message.content:
+        await music.play_music(bot,message)
+
 
     if message.content[0:2] == "cl" and type(message.channel) != discord.channel.DMChannel:
         try:

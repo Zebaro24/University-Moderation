@@ -1,7 +1,7 @@
-import telebot
+from telebot import TeleBot
 import config
 
-bot = telebot.TeleBot(config.TELEGRAM_API)
+bot = TeleBot(config.TELEGRAM_API)
 
 
 def start():
@@ -9,4 +9,4 @@ def start():
 
 
 if __name__ == '__main__':
-    pass
+    start()

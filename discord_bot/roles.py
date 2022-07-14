@@ -1,10 +1,10 @@
 # Конфиги
 import config
-import roles_config
+import discord_bot.roles_config as roles_config
 
 # Функции
 import discord
-from discord_bot.main import bot
+from discord_bot.main_discord import bot
 
 
 # Реализовать добавление ролей пока бот был выключен
@@ -82,6 +82,7 @@ async def create_message(cache_bot):
         await message.add_reaction(i)
 
     print(f"ID сообщения реакций: {message.id}")
+
 
 '''
     guild: discord.guild.Guild = message.guild
