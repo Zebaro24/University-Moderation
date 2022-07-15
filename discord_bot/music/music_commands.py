@@ -1,11 +1,16 @@
 from discord_bot.music.spotify_config import *
 from discord import FFmpegPCMAudio
+from discord_bot.main_discord import splash
+import dislash
 
 import tekore as tk
 import yt_dlp
 
 
-async def play_music(bot, message):
+@splash.slash_command(description="Says Hello")
+async def play(ctx:dislash.interactions.app_command_interaction.SlashInteraction):
+    await ctx.send("Загрузка...")
+    print(type(ctx))
     track_url = "https://open.spotify.com/track/1AuvZZkmzlsArfACRNk97B?si=39a7cdf6d1d74c1a"
     if track_url[:31] == "https://open.spotify.com/track/":
         track_id = track_url[31:]
@@ -27,8 +32,7 @@ async def play_music(bot, message):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(text, False)
         url_track = info["entries"][0]["formats"][3]["url"]
-
-        channel = message.author.voice.channel
+        channel = ctx.author.voice.channel
         # voice = get(bot.voice_clients, guild=message.guild)
         # if voice and voice.is_connected():
         #     await voice.move_to(channel)

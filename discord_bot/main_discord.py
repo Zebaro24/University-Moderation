@@ -1,12 +1,17 @@
 from utils import print_ds
 from config import DISCORD_API, ds_chanel_id
+from dislash import InteractionClient
 import discord
+from discord.ext import commands
 
-bot = discord.Client()  # intents=intents_g)
+bot = commands.Bot("!")  # intents=intents_g)
+# https://dislashpy.readthedocs.io/en/latest/quickstart.html#creating-a-simple-command
+splash = InteractionClient(bot)
+
 
 # Возможности
 import discord_bot.roles.roles_commands as roles
-import discord_bot.music.music_commands as music
+import discord_bot.music.music_commands
 import discord_bot.ds_to_tg as ds_to_tg
 
 
@@ -28,8 +33,6 @@ async def on_message(message: discord.Message):
         ds_to_tg.discord_to_tg(message)
         return
 
-    if "gg" == message.content:
-        await music.play_music(bot, message)
 
     # Не забывать await
     # await message.channel.send("sdsdsds")  # Отправить в канал
