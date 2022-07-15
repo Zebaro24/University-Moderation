@@ -1,16 +1,18 @@
-import config
+from utils import print_ds
+from config import DISCORD_API, ds_chanel_id
 import discord
 
 bot = discord.Client()  # intents=intents_g)
 
 # Возможности
-import discord_bot.roles as roles
-import discord_bot.music as music
+import discord_bot.roles.roles_commands as roles
+import discord_bot.music.music_commands as music
+import discord_bot.ds_to_tg as ds_to_tg
 
 
 @bot.event
 async def on_ready():
-    print(f"Bot was started: {bot.user}")
+    print_ds(f"Бот был запущен под именем: {bot.user.name}")
     await roles.offline_role(bot)
 
 
@@ -21,14 +23,18 @@ async def on_message(message: discord.Message):
     # Чтобы бот не считывал свои сообщения
     if message.author == bot.user:
         return
+
+    if message.channel.id == ds_chanel_id:
+        ds_to_tg.discord_to_tg(message)
+        return
+
+    if "gg" == message.content:
+        await music.play_music(bot, message)
+
     # Не забывать await
     # await message.channel.send("sdsdsds")  # Отправить в канал
     # await message.author.send("sasasa")  # Отправить в личку
-    if "gg"== message.content:
-        await music.play_music(bot,message)
-
-
-    if message.content[0:2] == "cl" and type(message.channel) != discord.channel.DMChannel:
+    '''if message.content[0:2] == "cl" and type(message.channel) != discord.channel.DMChannel:
         try:
             num = int(message.content[3:])
         except ValueError:
@@ -44,11 +50,11 @@ async def on_message(message: discord.Message):
     print(message.channel.id)  # Id канала
 
     if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
+        await message.channel.send('Hello!')'''
 
 
 def start():
-    bot.run(config.DISCORD_API)
+    bot.run(DISCORD_API)
 
 
 if __name__ == '__main__':

@@ -1,13 +1,13 @@
 from config import DISCORD_API
-import discord
-from roles import create_message
+from utils import print_ds
+from discord_bot.roles.roles_commands import create_message
 
 bot = discord.Client()
 
 
 @bot.event
 async def on_ready():
-    print(f"Bot was started: {bot.user}")
+    print_ds(f"Бот был запущен под именем: {bot.user}")
     await create_message(bot)
     await bot.close()
 
