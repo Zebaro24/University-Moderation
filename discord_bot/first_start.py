@@ -1,6 +1,7 @@
 from config import DISCORD_API
 from utils import print_ds
 from discord_bot.roles.roles_commands import create_message
+import discord
 
 bot = discord.Client()
 

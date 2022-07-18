@@ -10,6 +10,6 @@ def start_bots():
 
 
 if __name__ == '__main__':
-    print(f"{bc(35)}<---Програма была запущена--->{bc()}")
+    print(f"{bc(32)}<---Програма была запущена--->{bc()}")
     start_bots()
     print("denis crutoy perets")

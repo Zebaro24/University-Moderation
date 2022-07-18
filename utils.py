@@ -3,7 +3,7 @@ def bc(color=0):
 
 
 def print_ds(text):
-    print(f"{bc(32)}Discord:{bc()} {text}")
+    print(f"{bc(35)}Discord:{bc()} {text}")
 
 
 def print_tg(text):
