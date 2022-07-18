@@ -1,6 +1,6 @@
 # Конфиги
 from config import discord_guild, discord_color
-from discord_bot.roles.roles_config import *
+from config import role_channel_id, role_message_id, ROLES
 from utils import print_ds
 
 # Функции
@@ -67,38 +67,3 @@ async def on_raw_reaction_add(payload: discord.raw_models.RawReactionActionEvent
         await payload.member.add_roles(role)
         await payload.member.send(
             embed=discord.Embed(title=f"Роль **{role.name}** была добавлена!", color=discord_color))
-
-
-# Создание главного сообщения для ролей
-async def create_message(cache_bot):
-    print_ds("В конфиг roles_config!")
-    chanel = cache_bot.get_guild(discord_guild).get_channel(role_channel_id)
-    text = ""
-    for i in ROLES.keys():
-        role_name = input(f"{i} - ")
-        text += f"{i} - {role_name}\n"
-    message = await chanel.send(embed=discord.Embed(title=text, color=discord_color))
-
-    for i in ROLES.keys():
-        await message.add_reaction(i)
-
-    print_ds(f"ID сообщения реакций: {message.id}")
-
-
-'''
-    guild: discord.guild.Guild = message.guild
-    member: discord.member.Member = payload.member  # utils.get(message.guild.members, id=payload.user_id)
-
-    print(member.roles)
-    print(f"Информацтия сервера: {guild.fetch_member(payload.member)}")
-    print(f"gggg{member}")
-    await payload.member.send("dd")
-    try:
-        emoji = str(payload.emoji)
-        print(emoji)
-        role = utils.get(message.guild.members, id=roles.ROLES[emoji])
-        print(role)
-        await member.add_roles(role)
-    except:
-        print("net roli")
-'''

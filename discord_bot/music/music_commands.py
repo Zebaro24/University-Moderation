@@ -1,4 +1,4 @@
-from discord_bot.music.spotify_config import *
+from config import client_id, client_secret
 from discord import FFmpegPCMAudio
 from discord_bot.main_discord import splash
 import dislash
@@ -8,7 +8,7 @@ import yt_dlp
 
 
 @splash.slash_command(description="Says Hello")
-async def play(ctx:dislash.interactions.app_command_interaction.SlashInteraction):
+async def play(ctx: dislash.interactions.app_command_interaction.SlashInteraction):
     await ctx.send("Загрузка...")
     print(type(ctx))
     track_url = "https://open.spotify.com/track/1AuvZZkmzlsArfACRNk97B?si=39a7cdf6d1d74c1a"
