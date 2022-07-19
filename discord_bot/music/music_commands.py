@@ -1,13 +1,13 @@
 from config import client_id, client_secret
 from discord import FFmpegPCMAudio
-from discord_bot.main_discord import splash
+from discord_bot.main_discord import slash
 import dislash
 
 import tekore as tk
 import yt_dlp
 
 
-@splash.slash_command(description="Says Hello")
+@slash.slash_command(description="Says Hello")
 async def play(ctx: dislash.interactions.app_command_interaction.SlashInteraction):
     await ctx.send("Загрузка...")
     print(type(ctx))

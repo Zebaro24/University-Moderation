@@ -1,13 +1,21 @@
-from utils import print_ds
-from config import DISCORD_API, ds_chanel_id
-from dislash import InteractionClient
+# Основные дискорд библиотеки
 import discord
 from discord.ext import commands
 
-bot = commands.Bot("!")  # intents=intents_g)
-# https://dislashpy.readthedocs.io/en/latest/quickstart.html#creating-a-simple-command
-splash = InteractionClient(bot)
+# Для слеш команд используем dislash
+from dislash import InteractionClient
+# Для кнопок и тд используем discord_components
+from discord_components import DiscordComponents
 
+# Конфиги и доп библиотеки
+from utils import print_ds
+from config import DISCORD_API, ds_chanel_id
+import time
+
+# https://dislashpy.readthedocs.io/en/latest/quickstart.html#creating-a-simple-command - Slash command
+bot = commands.Bot("!")  # intents=intents_g)
+slash = InteractionClient(bot)
+components = DiscordComponents(bot)
 
 # Возможности
 import discord_bot.roles.roles_commands as roles
@@ -18,13 +26,15 @@ import discord_bot.ds_to_tg as ds_to_tg
 @bot.event
 async def on_ready():
     print_ds(f"Бот был запущен под именем: {bot.user.name}")
+    # activity = discord.Activity(type=discord.ActivityType.watching, name="a movie",timestamps={"start":time.time(),"end":time.time()+20})
+    # await bot.change_presence(status=discord.Status.idle, activity=activity)
     await roles.offline_role(bot)
 
 
 # Все ивенты: https://discordpy.readthedocs.io/en/latest/api.html#event-reference
 @bot.event
 async def on_message(message: discord.Message):
-    # Если автор совпадает с клиентом то вернуть
+    # Если автор совпадает с клиентом – то вернуть
     # Чтобы бот не считывал свои сообщения
     if message.author == bot.user:
         return
@@ -33,10 +43,9 @@ async def on_message(message: discord.Message):
         ds_to_tg.discord_to_tg(message)
         return
 
-
     # Не забывать await
-    # await message.channel.send("sdsdsds")  # Отправить в канал
-    # await message.author.send("sasasa")  # Отправить в личку
+    # await message.channel.send("Hello")  # Отправить в канал
+    # await message.author.send("It's me")  # Отправить в личку
     '''if message.content[0:2] == "cl" and type(message.channel) != discord.channel.DMChannel:
         try:
             num = int(message.content[3:])
@@ -46,7 +55,7 @@ async def on_message(message: discord.Message):
 
     print(message.author)
     channel: discord.TextChannel = bot.get_channel(995704829416583200)  # Канал по id
-    await channel.send("sdsds")  # Отправка в канал по id
+    await channel.send("I am potato")  # Отправка в канал по id
 
     # client.get_user("Zebaro#9282")
 
