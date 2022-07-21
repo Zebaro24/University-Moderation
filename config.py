@@ -24,9 +24,8 @@ client_secret = "<SPOTIFY_CLIENT_SECRET>"
 
 # {Mafia}
 mafia_channel_id = 998603873415610438  # <---Первоначальная замена
-mafia_message_id = None  # Получим с mafia/mafia_first.py
-
 mafia_color = 10038562
+mafia_players = []
 
 # <----Telegram Configs---->
 

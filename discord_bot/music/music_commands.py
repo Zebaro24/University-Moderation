@@ -7,11 +7,13 @@ import tekore as tk
 import yt_dlp
 
 
-@slash.slash_command(description="Says Hello")
-async def play(ctx: dislash.interactions.app_command_interaction.SlashInteraction):
+@slash.slash_command(description="Воспроизвести песню",
+                     options=[dislash.Option("url", "Введите ссылку на песню", dislash.OptionType.STRING,True)])
+async def play(ctx: dislash.interactions.app_command_interaction.SlashInteraction,url):
     await ctx.send("Загрузка...")
     print(type(ctx))
     track_url = "https://open.spotify.com/track/1AuvZZkmzlsArfACRNk97B?si=39a7cdf6d1d74c1a"
+    track_url = url
     if track_url[:31] == "https://open.spotify.com/track/":
         track_id = track_url[31:]
     else:

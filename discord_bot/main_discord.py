@@ -5,22 +5,22 @@ from discord.ext import commands
 # Для слеш команд используем dislash
 from dislash import InteractionClient
 # Для кнопок и тд используем discord_components
-from discord_components import DiscordComponents
+# from discord_components import DiscordComponents - Убран
 
 # Конфиги и доп библиотеки
 from utils import print_ds
-from config import DISCORD_API, ds_chanel_id
+from config import DISCORD_API, ds_chanel_id,discord_guild,mafia_channel_id
 import time
 
 # https://dislashpy.readthedocs.io/en/latest/quickstart.html#creating-a-simple-command - Slash command
 bot = commands.Bot("!")  # intents=intents_g)
 slash = InteractionClient(bot)
-components = DiscordComponents(bot)
 
 # Возможности
 import discord_bot.roles.roles_commands as roles
 import discord_bot.music.music_commands
 import discord_bot.ds_to_tg as ds_to_tg
+import discord_bot.mafia.mafia_start as mafia_start
 
 
 @bot.event
@@ -29,6 +29,9 @@ async def on_ready():
     # activity = discord.Activity(type=discord.ActivityType.watching, name="a movie",timestamps={"start":time.time(),"end":time.time()+20})
     # await bot.change_presence(status=discord.Status.idle, activity=activity)
     await roles.offline_role(bot)
+    chanel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
+    await mafia_start.mafia_start(chanel)
+
 
 
 # Все ивенты: https://discordpy.readthedocs.io/en/latest/api.html#event-reference
