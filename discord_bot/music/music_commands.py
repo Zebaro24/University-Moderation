@@ -33,11 +33,15 @@ async def play(ctx: dislash.interactions.app_command_interaction.SlashInteractio
 
     playlist = []
     for track in spotify_playlist:
-        text = "ytsearch:"
+        text = ""
         for i in track.artists:
             text += f"{i.name}, "
         text = text[:-2]
         text += f" - {track.name}"
+
+        await ctx.reply(text)
+
+        text = "ytsearch:" + text
 
         ydl_opts = {'format': 'bestaudio/best'}
 
@@ -45,26 +49,24 @@ async def play(ctx: dislash.interactions.app_command_interaction.SlashInteractio
             info = ydl.extract_info(text, False)
             playlist.append(str(info["entries"][0]["formats"][3]["url"]))
         if len(playlist) == 1:
-            print(playlist)
-            channel = ctx.author.voice.channel
-            voice = utils.get(bot.voice_clients)
-            if voice and voice.is_connected():
-                await voice.move_to(channel)
-            else:
-                voice = await channel.connect()
-            op = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-            # options -http_persistent 0
-            # D:\ffmpeg\bin
-            print(playlist)
-            source = FFmpegPCMAudio(playlist[0], **op)
-            player = voice.play(source, after=lambda: next(ctx))
+            await next(ctx)
 
 
 @slash.slash_command(description="Следующая песня")
 async def next(ctx: dislash.interactions.app_command_interaction.SlashInteraction):
-    voice_client = ctx.guild.voice_client
-    playlist.pop(0)
+    channel = ctx.author.voice.channel
+    voice = utils.get(bot.voice_clients)
+    if voice and voice.is_connected():
+        await voice.move_to(channel)
+    else:
+        voice = await channel.connect()
+
     op = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-    if not playlist:
+    if playlist:
         source = FFmpegPCMAudio(playlist[0], **op)
-        player = voice_client.play(source)
+
+        def n():
+            next(ctx)
+
+        player = voice.play(source, after=n)
+        playlist.pop(0)

@@ -1,7 +1,6 @@
 # Основные дискорд библиотеки
 import discord
 from discord.ext import commands
-
 # Для слеш команд используем dislash
 from dislash import InteractionClient
 # Для кнопок и тд используем discord_components
@@ -9,11 +8,12 @@ from dislash import InteractionClient
 
 # Конфиги и доп библиотеки
 from utils import print_ds
-from config import DISCORD_API, ds_chanel_id,discord_guild,mafia_channel_id
+from config import DISCORD_API, ds_chanel_id, discord_guild, mafia_channel_id
 import time
 
+inst: discord.flags.Intents = discord.Intents.all()
 # https://dislashpy.readthedocs.io/en/latest/quickstart.html#creating-a-simple-command - Slash command
-bot = commands.Bot("!")  # intents=intents_g)
+bot = commands.Bot("!",   intents=inst)
 slash = InteractionClient(bot)
 
 # Возможности
@@ -26,12 +26,11 @@ import discord_bot.mafia.mafia_start as mafia_start
 @bot.event
 async def on_ready():
     print_ds(f"Бот был запущен под именем: {bot.user.name}")
-    # activity = discord.Activity(type=discord.ActivityType.watching, name="a movie",timestamps={"start":time.time(),"end":time.time()+20})
-    # await bot.change_presence(status=discord.Status.idle, activity=activity)
+    activity = discord.Activity(type=discord.ActivityType.listening, name="музыку Димы",timestamps= {'start': 1658478664095})
+    await bot.change_presence(status=discord.Status.dnd, activity=activity)
     await roles.offline_role(bot)
     chanel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
     await mafia_start.mafia_start(chanel)
-
 
 
 # Все ивенты: https://discordpy.readthedocs.io/en/latest/api.html#event-reference
@@ -45,6 +44,9 @@ async def on_message(message: discord.Message):
     if message.channel.id == ds_chanel_id:
         ds_to_tg.discord_to_tg(message)
         return
+    member: discord.member.Member = message.author
+    gg:discord.activity.Activity=member.activities[1]
+    print(gg.to_dict())
 
     # Не забывать await
     # await message.channel.send("Hello")  # Отправить в канал
