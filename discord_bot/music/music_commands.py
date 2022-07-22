@@ -2,6 +2,7 @@ from config import client_id, client_secret, discord_guild
 from discord import FFmpegPCMAudio, utils
 import discord
 from discord_bot.main_discord import slash, bot
+from utils import print_ds
 import dislash
 
 import tekore as tk
@@ -18,6 +19,7 @@ async def play(ctx: dislash.interactions.app_command_interaction.SlashInteractio
         await ctx.reply("Здесь нельзя запускать музыку", ephemeral=True)
         return
     await ctx.send("Загрузка...")
+    await ctx.send("Конвертация в YouTube...")
 
     spotify = tk.Spotify(tk.request_client_token(client_id, client_secret))
 
@@ -31,7 +33,12 @@ async def play(ctx: dislash.interactions.app_command_interaction.SlashInteractio
     else:
         spotify_playlist = []
 
+    await ctx.send("Загрузка с YouTube...")
+
     playlist = []
+    message = await ctx.send(
+        embed=discord.Embed(title="Плейлист музики", description="Загрузка...", color=discord.colour.Color.dark_blue()))
+    num = 1
     for track in spotify_playlist:
         text = ""
         for i in track.artists:
@@ -39,7 +46,13 @@ async def play(ctx: dislash.interactions.app_command_interaction.SlashInteractio
         text = text[:-2]
         text += f" - {track.name}"
 
-        await ctx.reply(text)
+        embed = message.embeds[0]
+        if embed.description == "Загрузка...":
+            embed.description = f"{num}) {text}"
+        else:
+            embed.description += f"\n{num}) {text}"
+        await message.edit(embed=embed)
+        num += 1
 
         text = "ytsearch:" + text
 
@@ -48,25 +61,49 @@ async def play(ctx: dislash.interactions.app_command_interaction.SlashInteractio
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(text, False)
             playlist.append(str(info["entries"][0]["formats"][3]["url"]))
-        if len(playlist) == 1:
-            await next(ctx)
+
+        if not utils.get(bot.voice_clients):
+            await ctx.send("Подключение к голосовому каналу...")
+            channel = ctx.author.voice.channel
+            voice = utils.get(bot.voice_clients)
+            if voice and voice.is_connected():
+                await voice.move_to(channel)
+            else:
+                await channel.connect()
+            play_all_playlist()
 
 
-@slash.slash_command(description="Следующая песня")
-async def next(ctx: dislash.interactions.app_command_interaction.SlashInteraction):
-    channel = ctx.author.voice.channel
+def play_all_playlist():
     voice = utils.get(bot.voice_clients)
-    if voice and voice.is_connected():
-        await voice.move_to(channel)
-    else:
-        voice = await channel.connect()
 
     op = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
     if playlist:
         source = FFmpegPCMAudio(playlist[0], **op)
 
-        def n():
-            next(ctx)
-
-        player = voice.play(source, after=n)
+        player = voice.play(source, after=lambda e: print_ds(f'Player error: {e}') if e else play_all_playlist())
         playlist.pop(0)
+
+
+@slash.slash_command(description="Пауза")
+async def pause(ctx: dislash.interactions.app_command_interaction.SlashInteraction):
+    await ctx.reply("Ок")
+    voice: discord.voice_client.VoiceClient = bot.voice_clients[0]
+    if voice:
+        voice.pause()
+
+
+@slash.slash_command(description="Продолжить")
+async def resume(ctx: dislash.interactions.app_command_interaction.SlashInteraction):
+    await ctx.reply("Ок")
+    voice: discord.voice_client.VoiceClient = bot.voice_clients[0]
+    if voice:
+        voice.resume()
+
+
+@slash.slash_command(description="Скипнуть песню")
+async def skip(ctx: dislash.interactions.app_command_interaction.SlashInteraction):
+    await ctx.reply("Ок")
+    voice: discord.voice_client.VoiceClient = bot.voice_clients[0]
+    if voice:
+        voice.stop()
+        # play_all_playlist()
