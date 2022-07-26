@@ -22,6 +22,8 @@ ROLES = {
 client_id = "<SPOTIFY_CLIENT_ID>"
 client_secret = "<SPOTIFY_CLIENT_SECRET>"
 
+music_channel_id = 999748844025819146
+
 # {Mafia}
 mafia_channel_id = 998603873415610438  # <---Первоначальная замена
 mafia_color = 10038562

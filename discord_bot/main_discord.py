@@ -1,4 +1,6 @@
 # Основные дискорд библиотеки
+import time
+
 import discord
 from discord.ext import commands
 # Для слеш команд используем dislash
@@ -8,12 +10,11 @@ from dislash import InteractionClient
 
 # Конфиги и доп библиотеки
 from utils import print_ds
-from config import DISCORD_API, ds_chanel_id, discord_guild, mafia_channel_id
-import time
+from config import DISCORD_API, ds_chanel_id, discord_guild, mafia_channel_id, music_channel_id
 
 inst: discord.flags.Intents = discord.Intents.all()
 # https://dislashpy.readthedocs.io/en/latest/quickstart.html#creating-a-simple-command - Slash command
-bot = commands.Bot("!",   intents=inst)
+bot = commands.Bot("!", intents=inst)
 slash = InteractionClient(bot)
 
 # Возможности
@@ -21,14 +22,22 @@ import discord_bot.roles.roles_commands as roles
 import discord_bot.music.music_commands
 import discord_bot.ds_to_tg as ds_to_tg
 import discord_bot.mafia.mafia_start as mafia_start
+from discord_bot.music.music_read import read_spotify, while_music, update_message
 
 
 @bot.event
 async def on_ready():
     print_ds(f"Бот был запущен под именем: {bot.user.name}")
-    activity = discord.Activity(type=discord.ActivityType.listening, name="музыку Димы",timestamps= {'start': 1658478664095})
+
+    activity = discord.Activity(type=discord.ActivityType.listening, name="музыку Димы")
     await bot.change_presence(status=discord.Status.dnd, activity=activity)
+
     await roles.offline_role(bot)
+
+    await update_message()
+    read_spotify("https://open.spotify.com/playlist/37i9dQZF1E38pfYCyDWb2j?si=d31487aa9a324efd")
+    await update_message()
+
     chanel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
     await mafia_start.mafia_start(chanel)
 
@@ -44,8 +53,13 @@ async def on_message(message: discord.Message):
     if message.channel.id == ds_chanel_id:
         ds_to_tg.discord_to_tg(message)
         return
+
+    if "gg" == message.content:
+        # gg_pl()
+        pass
+
     member: discord.member.Member = message.author
-    gg:discord.activity.Activity=member.activities[1]
+    gg: discord.activity.Activity = member.activities[1]
     print(gg.to_dict())
 
     # Не забывать await

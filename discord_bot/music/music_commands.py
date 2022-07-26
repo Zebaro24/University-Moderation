@@ -1,4 +1,4 @@
-from config import client_id, client_secret, discord_guild
+from config import client_id, client_secret, music_channel_id, discord_guild
 from discord import FFmpegPCMAudio, utils
 import discord
 from discord_bot.main_discord import slash, bot
@@ -11,13 +11,17 @@ import yt_dlp
 playlist = []
 
 
-@slash.slash_command(description="Воспроизвести песню",
-                     options=[dislash.Option("url", "Введите ссылку на песню", dislash.OptionType.STRING, True)])
+@slash.slash_command(description="Воспроизвести плейлист или трек",
+                     options=[
+                         dislash.Option("url", "Введите ссылку на плейлист или трек", dislash.OptionType.STRING, True)])
 async def play(ctx: dislash.interactions.app_command_interaction.SlashInteraction, url):
     global playlist
     if discord_guild != ctx.guild_id:
+        return
+    if music_channel_id != ctx.channel_id:
         await ctx.reply("Здесь нельзя запускать музыку", ephemeral=True)
         return
+    await ctx.channel.purge(limit=1000)
     await ctx.send("Загрузка...")
     await ctx.send("Конвертация в YouTube...")
 
@@ -52,6 +56,7 @@ async def play(ctx: dislash.interactions.app_command_interaction.SlashInteractio
         else:
             embed.description += f"\n{num}) {text}"
         await message.edit(embed=embed)
+
         num += 1
 
         text = "ytsearch:" + text
@@ -71,6 +76,10 @@ async def play(ctx: dislash.interactions.app_command_interaction.SlashInteractio
             else:
                 await channel.connect()
             play_all_playlist()
+
+
+def spotify_reed():
+    pass
 
 
 def play_all_playlist():
