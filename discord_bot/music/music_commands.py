@@ -1,81 +1,54 @@
+import time
+
+import wavelink
+
 from config import client_id, client_secret, music_channel_id, discord_guild
 from discord import FFmpegPCMAudio, utils
 import discord
 from discord_bot.main_discord import slash, bot
 from utils import print_ds
 import dislash
+from discord_bot.music.music_read import read_url,playlist
 
 import tekore as tk
 import yt_dlp
 
-playlist = []
+
 
 
 @slash.slash_command(description="Воспроизвести плейлист или трек",
                      options=[
                          dislash.Option("url", "Введите ссылку на плейлист или трек", dislash.OptionType.STRING, True)])
 async def play(ctx: dislash.interactions.app_command_interaction.SlashInteraction, url):
-    global playlist
     if discord_guild != ctx.guild_id:
         return
     if music_channel_id != ctx.channel_id:
         await ctx.reply("Здесь нельзя запускать музыку", ephemeral=True)
         return
-    await ctx.channel.purge(limit=1000)
-    await ctx.send("Загрузка...")
-    await ctx.send("Конвертация в YouTube...")
+    before_time = time.perf_counter()
 
-    spotify = tk.Spotify(tk.request_client_token(client_id, client_secret))
+    read_url(url)
 
-    if url[:31] == "https://open.spotify.com/track/":
-        track_id = url[31:]
-        spotify_playlist = [spotify.track(track_id)]
-    elif url[:34] == "https://open.spotify.com/playlist/":
-        playlist_id = url[34:]
-        items = spotify.playlist(playlist_id).tracks.items
-        spotify_playlist = [i.track for i in items]
-    else:
-        spotify_playlist = []
-
-    await ctx.send("Загрузка с YouTube...")
-
-    playlist = []
-    message = await ctx.send(
-        embed=discord.Embed(title="Плейлист музики", description="Загрузка...", color=discord.colour.Color.dark_blue()))
-    num = 1
-    for track in spotify_playlist:
-        text = ""
-        for i in track.artists:
-            text += f"{i.name}, "
-        text = text[:-2]
-        text += f" - {track.name}"
-
-        embed = message.embeds[0]
-        if embed.description == "Загрузка...":
-            embed.description = f"{num}) {text}"
+    print("hhhh")
+    if not utils.get(bot.voice_clients):
+        await ctx.send("Подключение к голосовому каналу...")
+        channel = ctx.author.voice.channel
+        voice = utils.get(bot.voice_clients)
+        print("do")
+        if voice and voice.is_connected():
+            print("перед")
+            await voice.move_to(channel)
         else:
-            embed.description += f"\n{num}) {text}"
-        await message.edit(embed=embed)
-
-        num += 1
-
-        text = "ytsearch:" + text
-
-        ydl_opts = {'format': 'bestaudio/best'}
-
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(text, False)
-            playlist.append(str(info["entries"][0]["formats"][3]["url"]))
-
-        if not utils.get(bot.voice_clients):
-            await ctx.send("Подключение к голосовому каналу...")
-            channel = ctx.author.voice.channel
-            voice = utils.get(bot.voice_clients)
-            if voice and voice.is_connected():
-                await voice.move_to(channel)
-            else:
-                await channel.connect()
-            play_all_playlist()
+            print("gg")
+            vc = await channel.connect(cls=wavelink.Player)
+            track_name = f"{playlist[0]['artists']} - {playlist[0]['name']}"
+            track = await wavelink.YouTubeTrack.search(query=track_name, return_first=True)
+            await vc.play(track)
+            print(time.perf_counter()-before_time)
+    else:
+        track_name = f"{playlist[0]['artists']} - {playlist[0]['name']}"
+        track = await wavelink.YouTubeTrack.search(query=track_name, return_first=True)
+        await utils.get(bot.voice_clients).play(track)
 
 
 def spotify_reed():

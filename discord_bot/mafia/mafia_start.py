@@ -35,6 +35,8 @@ async def mafia_start(ctx):
 # На заметку
 @bot.event
 async def on_button_click(interaction: dislash.interactions.message_interaction.MessageInteraction):
+    print("gggh")
+    print(interaction.component.custom_id)
     if interaction.component.custom_id == "mafia_info":
         await interaction.reply("Правила", ephemeral=True)
     elif interaction.component.custom_id == "mafia_join":
@@ -82,8 +84,19 @@ async def on_button_click(interaction: dislash.interactions.message_interaction.
 
                     await interaction.message.edit(embed=embed)
                     await interaction.reply("Ждем остальных игроков", ephemeral=True)
+
         else:
             await interaction.reply("Вы еще не присоединились", ephemeral=True)
+    elif interaction.component.custom_id == "music_pause":
+        await interaction.reply("Пауза",delete_after=3)
+        voice: discord.voice_client.VoiceClient = bot.voice_clients
+        if voice:
+            await voice[0].pause()
+    elif interaction.component.custom_id == "music_play":
+        await interaction.reply("Воспроизвести", delete_after=3)
+        voice: discord.voice_client.VoiceClient = bot.voice_clients
+        if voice:
+            await voice[0].resume()
 #     print(type(interaction))
 #     print(interaction.component.)
 #     print(interaction.component.to_dict())

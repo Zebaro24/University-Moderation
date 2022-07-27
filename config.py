@@ -24,9 +24,13 @@ client_secret = "<SPOTIFY_CLIENT_SECRET>"
 
 music_channel_id = 999748844025819146
 
+music_colour = 7506394
+music_button_colour = 1  # blurple
+
 # {Mafia}
 mafia_channel_id = 998603873415610438  # <---Первоначальная замена
 mafia_color = 10038562
+mafia_button_colour = 4
 mafia_players = []
 
 # <----Telegram Configs---->

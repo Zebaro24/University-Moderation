@@ -3,6 +3,9 @@ import time
 
 import discord
 from discord.ext import commands
+from asyncio import run_coroutine_threadsafe
+from threading import Thread
+import wavelink
 # Для слеш команд используем dislash
 from dislash import InteractionClient
 # Для кнопок и тд используем discord_components
@@ -22,7 +25,8 @@ import discord_bot.roles.roles_commands as roles
 import discord_bot.music.music_commands
 import discord_bot.ds_to_tg as ds_to_tg
 import discord_bot.mafia.mafia_start as mafia_start
-from discord_bot.music.music_read import read_spotify, while_music, update_message
+from discord_bot.music.music_read import read_spotify
+from discord_bot.music.music_message import update_message
 
 
 @bot.event
@@ -34,12 +38,18 @@ async def on_ready():
 
     await roles.offline_role(bot)
 
-    await update_message()
-    read_spotify("https://open.spotify.com/playlist/37i9dQZF1E38pfYCyDWb2j?si=d31487aa9a324efd")
-    await update_message()
-
     chanel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
     await mafia_start.mafia_start(chanel)
+
+    bot.loop.create_task(
+        wavelink.NodePool.create_node(bot=bot, host='127.0.0.1', port=2333, password='youshallnotpass'))
+
+    await update_message()
+
+
+@bot.event
+async def on_wavelink_node_ready(node: wavelink.Node):
+    print_ds(f"Музыкальная нода была запущена под идентификатором: {node.identifier}")
 
 
 # Все ивенты: https://discordpy.readthedocs.io/en/latest/api.html#event-reference
@@ -55,7 +65,6 @@ async def on_message(message: discord.Message):
         return
 
     if "gg" == message.content:
-        # gg_pl()
         pass
 
     member: discord.member.Member = message.author
