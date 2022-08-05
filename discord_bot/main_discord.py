@@ -1,11 +1,10 @@
 # Основные дискорд библиотеки
-import time
 
 import discord
 from discord.ext import commands
-from asyncio import run_coroutine_threadsafe
-from threading import Thread
 import wavelink
+from wavelink.ext import spotify
+from config import client_id, client_secret
 # Для слеш команд используем dislash
 from dislash import InteractionClient
 # Для кнопок и тд используем discord_components
@@ -13,7 +12,7 @@ from dislash import InteractionClient
 
 # Конфиги и доп библиотеки
 from utils import print_ds
-from config import DISCORD_API, ds_chanel_id, discord_guild, mafia_channel_id, music_channel_id
+from config import DISCORD_API, ds_chanel_id, discord_guild, mafia_channel_id
 
 inst: discord.flags.Intents = discord.Intents.all()
 # https://dislashpy.readthedocs.io/en/latest/quickstart.html#creating-a-simple-command - Slash command
@@ -21,19 +20,19 @@ bot = commands.Bot("!", intents=inst)
 slash = InteractionClient(bot)
 
 # Возможности
+import discord_bot.discord_button
 import discord_bot.roles.roles_commands as roles
-import discord_bot.music.music_commands
-import discord_bot.ds_to_tg as ds_to_tg
+import tg_ds.ds_to_tg as ds_to_tg
 import discord_bot.mafia.mafia_start as mafia_start
-from discord_bot.music.music_read import read_spotify
 from discord_bot.music.music_message import update_message
+import discord_bot.music.music_commands
 
 
 @bot.event
 async def on_ready():
     print_ds(f"Бот был запущен под именем: {bot.user.name}")
 
-    activity = discord.Activity(type=discord.ActivityType.listening, name="музыку Димы")
+    activity = discord.Activity(type=discord.ActivityType.listening, name="СЕРЕГА ПИРАТ - Where Is My Mind?")
     await bot.change_presence(status=discord.Status.dnd, activity=activity)
 
     await roles.offline_role(bot)
@@ -41,8 +40,7 @@ async def on_ready():
     chanel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
     await mafia_start.mafia_start(chanel)
 
-    bot.loop.create_task(
-        wavelink.NodePool.create_node(bot=bot, host='127.0.0.1', port=2333, password='youshallnotpass'))
+    bot.loop.create_task(wavelink.NodePool.create_node(bot=bot, host='127.0.0.1', port=2333, password='ln6Bdu47', spotify_client=spotify.SpotifyClient(client_id=client_id, client_secret=client_secret)))
 
     await update_message()
 

@@ -33,7 +33,7 @@ async def mafia_start(ctx):
 
 
 # На заметку
-@bot.event
+#@bot.event
 async def on_button_click(interaction: dislash.interactions.message_interaction.MessageInteraction):
     print("gggh")
     print(interaction.component.custom_id)

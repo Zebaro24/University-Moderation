@@ -1,23 +1,23 @@
 from config import client_id, client_secret
 import tekore as tk
 from math import ceil
-import yt_dlp
+import discord
+import wavelink
 
 playlist = []
+details_player = {"status": "play", "volume": "low"}
 position = 0
+
 spotify = tk.Spotify(tk.request_client_token(client_id, client_secret))
-ydl_opts = {
-    'format': 'bestaudio/best',
-    "postprocessors":
-        [{"key": "FFmpegExtractAudio", "preferredcodec": "mp3", "preferredquality": "192"}],
-}
 
 
-def read_url(url):
+async def read_url(url):
     if url[:25] == "https://open.spotify.com/":
         read_spotify(url)
     elif url[:24] == "https://www.youtube.com/":
-        read_youtube(url)
+        await read_youtube(url)
+    else:
+        await read_youtube(url)
 
 
 def read_spotify(url):
@@ -32,27 +32,38 @@ def read_spotify(url):
         spotify_playlist = []
 
     for track in spotify_playlist:
-        artists = ""
-        for i in track.artists:
-            artists += f"{i.name}, "
-        artists = artists[:-2]
-
-        '''text = f"ytsearch:{artists} - {track.name}"
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(text, False)
-            print(info)
-            streem = str(info["entries"][0]["formats"][3]["url"])'''
-
-        track_for_playlist = {"name": track.name,
-                              "artists": artists,
-                              "time": ceil(track.duration_ms / 1000),
-                              "img": track.album.images[0].url,
-                              "streem": None}
-        playlist.append(track_for_playlist)
+        spotify_add(track)
 
 
-def read_youtube(url):
-    pass
+def spotify_add(track):
+    artists = ""
+    for i in track.artists:
+        artists += f"{i.name}, "
+    artists = artists[:-2]
+
+    track_for_playlist = {"name": track.name,
+                          "artists": artists,
+                          "time": ceil(track.duration_ms / 1000),
+                          "img": track.album.images[0].url}
+    playlist.append(track_for_playlist)
+
+
+async def read_youtube(url):
+    track = await wavelink.YouTubeTrack.search(url, return_first=True)
+    track_for_playlist = {"name": track.title,
+                          "artists": track.author,
+                          "time": ceil(track.duration),
+                          "img": track.thumb}
+    playlist.append(track_for_playlist)
+
+
+def read_status(member: discord.member.Member):
+    for activity in member.activities:
+
+        if str(activity.type) == "ActivityType.listening" and activity.name == "Spotify":
+            track = spotify.track(activity.track_id)
+
+            spotify_add(track)
 
 
 def streem_youtube():
