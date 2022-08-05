@@ -25,3 +25,4 @@ for i in target_id:
     x = requests.post(url, json=body, headers=headers)
     print(f"https://discord.gg/{x.json()['code']}")
 
+
