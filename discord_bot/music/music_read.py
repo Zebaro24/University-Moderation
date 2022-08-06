@@ -3,6 +3,8 @@ import tekore as tk
 from math import ceil
 import discord
 import wavelink
+from discord_bot.main_discord import bot
+from config import discord_guild, music_channel_id
 
 playlist = []
 details_player = {"status": "play", "volume": "low"}
@@ -49,12 +51,17 @@ def spotify_add(track):
 
 
 async def read_youtube(url):
-    track = await wavelink.YouTubeTrack.search(url, return_first=True)
-    track_for_playlist = {"name": track.title,
-                          "artists": track.author,
-                          "time": ceil(track.duration),
-                          "img": track.thumb}
-    playlist.append(track_for_playlist)
+    try:
+        track = await wavelink.YouTubeTrack.search(url, return_first=True)
+    except IndexError:
+        await bot.get_guild(discord_guild).get_channel(music_channel_id).send(
+            "Трек не был найден на YouTube...", delete_after=3)
+    else:
+        track_for_playlist = {"name": track.title,
+                              "artists": track.author,
+                              "time": ceil(track.duration),
+                              "img": track.thumb}
+        playlist.append(track_for_playlist)
 
 
 def read_status(member: discord.member.Member):

@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 import wavelink
 from wavelink.ext import spotify
-from config import client_id, client_secret
+from config import client_id, client_secret, music_channel_id
 # Для слеш команд используем dislash
 from dislash import InteractionClient
 # Для кнопок и тд используем discord_components
@@ -25,6 +25,7 @@ import discord_bot.roles.roles_commands as roles
 import tg_ds.ds_to_tg as ds_to_tg
 import discord_bot.mafia.mafia_start as mafia_start
 from discord_bot.music.music_message import update_message
+from discord_bot.music.music_commands import playlist, read_url, play
 import discord_bot.music.music_commands
 import discord_bot.activity
 
@@ -41,7 +42,7 @@ async def on_ready():
     chanel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
     await mafia_start.mafia_start(chanel)
 
-    bot.loop.create_task(wavelink.NodePool.create_node(bot=bot, host='127.0.0.1', port=2333, password='ln6Bdu47', spotify_client=spotify.SpotifyClient(client_id=client_id, client_secret=client_secret)))
+    bot.loop.create_task(wavelink.NodePool.create_node(bot=bot, host='127.0.0.1', port=2333, password='ln6Bdu47'))
 
     await update_message()
 
@@ -66,9 +67,17 @@ async def on_message(message: discord.Message):
     if "gg" == message.content:
         pass
 
-    member: discord.member.Member = message.author
-    gg: discord.activity.Activity = member.activities[1]
-    print(gg.to_dict())
+    if music_channel_id == message.channel.id:
+        if playlist:
+            await read_url(message.content)
+            await message.reply("Музон был добавлен", delete_after=3)
+        else:
+            await play(message, message.content)
+        await message.delete()
+
+    # member: discord.member.Member = message.author
+    # gg: discord.activity.Activity = member.activities[1]
+    # print(gg.to_dict())
 
     # Не забывать await
     # await message.channel.send("Hello")  # Отправить в канал

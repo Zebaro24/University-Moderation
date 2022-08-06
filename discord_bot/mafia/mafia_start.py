@@ -1,10 +1,11 @@
 import config
-from config import mafia_color, mafia_players
+from config import mafia_color, mafia_players, discord_guild, mafia_channel_id
 from utils import print_ds
 import discord
 # rom discord_components import Button, ButtonStyle
 from discord_bot.main_discord import bot, slash
 from dislash import has_permissions, interactions, ActionRow, Button, ButtonStyle
+from asyncio import sleep
 import dislash
 
 
@@ -32,71 +33,51 @@ async def mafia_start(ctx):
         await ctx.send(embed=embed_send, components=[ActionRow(bt_1, bt_2, bt_3)])
 
 
+async def update_start_message(message):
+    embed = message.embeds[0]
+    embed.clear_fields()
+
+    players = ""
+    num = 1
+    player_want_play = 0
+    for i in mafia_players:
+        if i["want_play"]:
+            player_want_play += 1
+        players += f"{num}) {i['player'].mention}\n"
+        num += 1
+    embed.add_field(name="Игроки", value=players)
+    embed.add_field(name="Хотят начать игру",
+                    value=f"{player_want_play}/{len(mafia_players) if len(mafia_players) >= 4 else 4}")
+
+    await message.edit(embed=embed)
+
+
+async def start_game():
+    print_ds("Игра в мафию началась!")
+    chanel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
+
+    await chanel.send("**3**")
+    await chanel.trigger_typing()
+    await sleep(1)
+    await chanel.send("**2**")
+    await chanel.trigger_typing()
+    await sleep(1)
+    await chanel.send("**1**")
+    await chanel.trigger_typing()
+    await sleep(1)
+    await chanel.send("**Начинаем игру!**")
+    await sleep(1)
+
+@slash.slash_command(description="Тест мафа")
+async def maf(ctx):
+    ctx.reply("Ок")
+    await start_game()
+
 # На заметку
-#@bot.event
-async def on_button_click(interaction: dislash.interactions.message_interaction.MessageInteraction):
-    print("gggh")
-    print(interaction.component.custom_id)
-    if interaction.component.custom_id == "mafia_info":
-        await interaction.reply("Правила", ephemeral=True)
-    elif interaction.component.custom_id == "mafia_join":
-        if interaction.author in [i["player"] for i in mafia_players]:
-            await interaction.reply("Вы уже присоединились", ephemeral=True)
-            return
-        player = {"player": interaction.author, "role": None, "want_play": False}
-        mafia_players.append(player)
-        embed = interaction.message.embeds[0]
-        embed.clear_fields()
-
-        players = ""
-        num = 1
-        player_want_play = 0
-        for i in mafia_players:
-            if i["want_play"]:
-                player_want_play += 1
-            players += f"{num}) {i['player'].mention}\n"
-            num += 1
-        embed.add_field(name="Игроки", value=players)
-        embed.add_field(name="Хотят начать игру",
-                        value=f"{player_want_play}/{len(mafia_players) if len(mafia_players) >= 4 else 4}")
-
-        await interaction.message.edit(embed=embed)
-        await interaction.reply("Вы присоединились", ephemeral=True)
-    elif interaction.component.custom_id == "mafia_play":
-        if interaction.author in [i["player"] for i in mafia_players]:
-            for i in range(len(mafia_players)):
-                if interaction.author == mafia_players[i]["player"]:
-                    mafia_players[i]["want_play"] = True
-                    embed = interaction.message.embeds[0]
-                    embed.clear_fields()
-
-                    players = ""
-                    num = 1
-                    player_want_play = 0
-                    for i in mafia_players:
-                        if i["want_play"]:
-                            player_want_play += 1
-                        players += f"{num}) {i['player'].mention}\n"
-                        num += 1
-                    embed.add_field(name="Игроки", value=players)
-                    embed.add_field(name="Хотят начать игру",
-                                    value=f"{player_want_play}/{len(mafia_players) if len(mafia_players) >= 4 else 4}")
-
-                    await interaction.message.edit(embed=embed)
-                    await interaction.reply("Ждем остальных игроков", ephemeral=True)
-
-        else:
-            await interaction.reply("Вы еще не присоединились", ephemeral=True)
-    elif interaction.component.custom_id == "music_pause":
-        await interaction.reply("Пауза",delete_after=3)
-        voice: discord.voice_client.VoiceClient = bot.voice_clients
-        if voice:
-            await voice[0].pause()
-    elif interaction.component.custom_id == "music_play":
-        await interaction.reply("Воспроизвести", delete_after=3)
-        voice: discord.voice_client.VoiceClient = bot.voice_clients
-        if voice:
-            await voice[0].resume()
+# @bot.event
+# async def on_button_click(interaction: dislash.interactions.message_interaction.MessageInteraction):
+#     print("gggh")
+#     print(interaction.component.custom_id)
 #     print(type(interaction))
 #     print(interaction.component.)
 #     print(interaction.component.to_dict())
@@ -124,4 +105,3 @@ async def on_button_click(interaction: dislash.interactions.message_interaction.
 #         embed.clear_fields()
 #         embed.add_field(name="Игроки", value=players)
 #         await interaction.message.edit(embed=embed, components=[[bt_1, bt_2]])
-#

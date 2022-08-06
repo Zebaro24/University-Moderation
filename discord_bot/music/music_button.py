@@ -35,6 +35,7 @@ async def button_music(interaction: MessageInteraction):
         elif interaction.component.custom_id == "music_stop":
             playlist.clear()
             await vc.stop()
+            await vc.disconnect()
 
         elif interaction.component.custom_id == "music_low":
             details_player["volume"] = "low"
@@ -46,6 +47,6 @@ async def button_music(interaction: MessageInteraction):
 
         elif interaction.component.custom_id == "music_high":
             details_player["volume"] = "high"
-            await vc.set_filter(Filter(vc.filter, volume=5))
+            await vc.set_filter(Filter(vc.filter, volume=0.6))
 
         await interaction.reply("Ок", delete_after=3)
