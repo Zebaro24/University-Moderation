@@ -16,40 +16,55 @@ from discord_bot.music.music_read import read_url, playlist
                          dislash.Option("url", "Введите ссылку на плейлист или трек", dislash.OptionType.STRING, True)])
 async def play(ctx: dislash.interactions.app_command_interaction.SlashInteraction, url):
     if discord_guild != ctx.guild_id:
+        print_ds("Использование функции музыки в личных сообщениях!")
         return
     if music_channel_id != ctx.channel_id:
         await ctx.reply("Здесь нельзя запускать музыку", ephemeral=True)
         return
+    if not ctx.author.voice:
+        await ctx.reply("Вы не зашли в голосовой канал", ephemeral=True)
+        return
 
-    ctx.channel.typing()  # Вообще работает?
+    await ctx.channel.trigger_typing()
 
     before_time = time.perf_counter()
-
     playlist.clear()
     await read_url(url)
 
     track_name = f"{playlist[0]['artists']} - {playlist[0]['name']}"
     track = await wavelink.YouTubeTrack.search(track_name, return_first=True)
 
-    if not utils.get(bot.voice_clients):
+    vc: wavelink.player.Player
+    if not bot.voice_clients:
         await ctx.send("Подключение к голосовому каналу...", delete_after=3)
-        channel = ctx.author.voice.channel
-        voice = utils.get(bot.voice_clients)
-        if voice and voice.is_connected():
-            await voice.move_to(channel)
-        else:
-            vc: wavelink.player.Player = await channel.connect(cls=wavelink.Player)
-            await vc.set_filter(wavelink.Filter(vc.filter, volume=0.015))
-            await vc.play(track)
-            print_ds(f"Загрузка музыки за: {time.perf_counter() - before_time} сек")
-            print_ds(f"Играет музыка: {track}")
+        vc = await ctx.author.voice.channel.connect(cls=wavelink.Player)
+        await vc.set_filter(wavelink.Filter(vc.filter, volume=0.015))
+
+    elif bot.voice_clients[0].channel != ctx.author.voice.channel:
+        await ctx.send("Подключение к голосовому каналу...", delete_after=3)
+        await bot.voice_clients[0].move_to(ctx.author.voice.channel)
+        vc = bot.voice_clients[0]
+
     else:
-        await utils.get(bot.voice_clients).play(track)
+        vc = bot.voice_clients[0]
+
+    await ctx.send("Запускаю музон...", delete_after=3)
+    await vc.play(track)
+    print_ds(f"Загрузка музыки за: {time.perf_counter() - before_time} сек")
+    print_ds(f"Играет музыка: {track}")
 
 
 @bot.event
 async def on_wavelink_track_end(player: wavelink.Player, track, reason):
     # print(f"Трек закончился причина: {reason}")
+    if len(player.channel.members) >= 2:
+        if bot.user not in player.channel.members:
+            playlist.clear()
+            await player.disconnect()
+    else:
+        playlist.clear()
+        await player.disconnect()
+
     if reason == "REPLACED":
         return
     elif reason == "LOAD_FAILED":

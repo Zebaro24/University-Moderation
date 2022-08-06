@@ -26,6 +26,7 @@ import tg_ds.ds_to_tg as ds_to_tg
 import discord_bot.mafia.mafia_start as mafia_start
 from discord_bot.music.music_message import update_message
 import discord_bot.music.music_commands
+import discord_bot.activity
 
 
 @bot.event
