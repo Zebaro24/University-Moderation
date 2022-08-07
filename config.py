@@ -4,6 +4,8 @@ TELEGRAM_API = "<DEBUG_TELEGRAM_API>"
 
 discord_guild = 994019845039468584  # <---Первоначальная замена
 
+debug = True
+
 # <----Discord Configs---->
 # {Global}
 discord_color = 16777215  # Можно поменять

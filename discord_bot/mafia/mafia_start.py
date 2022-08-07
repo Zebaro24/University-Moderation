@@ -6,6 +6,9 @@ import discord
 from discord_bot.main_discord import bot, slash
 from dislash import has_permissions, interactions, ActionRow, Button, ButtonStyle
 from asyncio import sleep
+from discord_bot.mafia.mafia_phrases import quotes
+from discord_bot.mafia.mafia_global import distribution_of_roles, main_game
+import random
 import dislash
 
 
@@ -54,23 +57,37 @@ async def update_start_message(message):
 
 async def start_game():
     print_ds("Игра в мафию началась!")
-    chanel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
+    channel: discord.channel.TextChannel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
 
-    await chanel.send("**3**")
-    await chanel.trigger_typing()
+    await channel.send("**3**", delete_after=10)
     await sleep(1)
-    await chanel.send("**2**")
-    await chanel.trigger_typing()
+    await channel.send("**2**", delete_after=10)
     await sleep(1)
-    await chanel.send("**1**")
-    await chanel.trigger_typing()
+    await channel.send("**1**", delete_after=10)
     await sleep(1)
-    await chanel.send("**Начинаем игру!**")
-    await sleep(1)
+    await channel.send("**Начинаем игру!**", delete_after=10)
+    await channel.trigger_typing()
+    await sleep(2)
+    quote = random.choice(quotes)
+    embed = discord.Embed(title=quote["text"], color=mafia_color)
+    embed.set_footer(text=quote["author"],
+                     icon_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4figuc0MHBNlnCY5B5XYo6EuHjEmOsSOFyw&usqp=CAU")
+    await channel.send(embed=embed, delete_after=20)
+    await sleep(5)
+    await distribution_of_roles()
+    await channel.send("Роли были отправлены, проверяйте!", delete_after=10)
+    await sleep(4)
+    await main_game(channel)
+
 
 @slash.slash_command(description="Тест мафа")
 async def maf(ctx):
-    ctx.reply("Ок")
+    await ctx.reply("Ок")
+    mafia_players.clear()
+    mafia_players.append({"player": ctx.author, "role": None, "want_play": True})
+    mafia_players.append({"player": ctx.author, "role": None, "want_play": True})
+    mafia_players.append({"player": ctx.author, "role": None, "want_play": True})
+    mafia_players.append({"player": ctx.author, "role": None, "want_play": True})
     await start_game()
 
 # На заметку
