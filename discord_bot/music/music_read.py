@@ -51,6 +51,7 @@ def spotify_add(track):
 
 
 async def read_youtube(url):
+    # ----------------------------------------Нужен фикс----------------------------------------
     try:
         track = await wavelink.YouTubeTrack.search(url, return_first=True)
     except IndexError:
@@ -62,6 +63,7 @@ async def read_youtube(url):
                               "time": ceil(track.duration),
                               "img": track.thumb}
         playlist.append(track_for_playlist)
+    # ------------------------------------------------------------------------------------------
 
 
 def read_status(member: discord.member.Member):

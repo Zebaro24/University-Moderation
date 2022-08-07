@@ -39,10 +39,10 @@ async def play(ctx: dislash.interactions.app_command_interaction.SlashInteractio
     if bot.voice_clients:
         await bot.voice_clients[0].stop()
     await read_url(url)
-
-    track_name = f"{playlist[0]['artists']} - {playlist[0]['name']}"
+    # ----------------------------------------Нужен фикс----------------------------------------
     while True:  # Если трек не был найден
         try:
+            track_name = f"{playlist[0]['artists']} - {playlist[0]['name']}"
             track = await wavelink.YouTubeTrack.search(track_name, return_first=True)
             break
         except:
@@ -51,7 +51,7 @@ async def play(ctx: dislash.interactions.app_command_interaction.SlashInteractio
             if not playlist:
                 start_bool = False
                 return
-
+    # ------------------------------------------------------------------------------------------
     vc: wavelink.player.Player
     if not bot.voice_clients:
         await ctx.reply("Подключение к голосовому каналу...", delete_after=3)
@@ -93,9 +93,10 @@ async def on_wavelink_track_end(player: wavelink.Player, track, reason):
     if playlist:
         playlist.pop(0)
     if playlist:
-        track_name = f"{playlist[0]['artists']} - {playlist[0]['name']}"
+        # ----------------------------------------Нужен фикс----------------------------------------
         while True:
             try:
+                track_name = f"{playlist[0]['artists']} - {playlist[0]['name']}"
                 track = await wavelink.YouTubeTrack.search(track_name, return_first=True)
                 break
             except IndexError:
@@ -104,6 +105,7 @@ async def on_wavelink_track_end(player: wavelink.Player, track, reason):
                 playlist.pop(0)
                 if not playlist:
                     return
+        # ------------------------------------------------------------------------------------------
 
         print_ds(f"Играет музыка: {track}")
         await player.play(track)
@@ -145,9 +147,11 @@ async def add(ctx: dislash.interactions.app_command_interaction.SlashInteraction
         await ctx.reply("Здесь нельзя добавлять музыку", ephemeral=True)
         return
     if playlist:
+        # ----------------------------------------Нужен фикс----------------------------------------
         count = len(playlist)
         await read_url(url)
         if len(playlist) - count:
             await ctx.reply("Музон был добавлен", delete_after=3)
+        # ------------------------------------------------------------------------------------------
     else:
         await ctx.reply("Плейлист бота не играет!", delete_after=2)

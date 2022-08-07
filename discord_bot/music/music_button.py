@@ -3,6 +3,7 @@ from wavelink import player, Filter
 from dislash.interactions.message_interaction import MessageInteraction
 from discord_bot.music.music_read import playlist, details_player, read_status
 from random import shuffle
+from asyncio import sleep
 
 
 async def button_music(interaction: MessageInteraction):
@@ -17,6 +18,14 @@ async def button_music(interaction: MessageInteraction):
         elif interaction.component.custom_id == "music_pause":
             details_player["status"] = "pause"
             await vc.pause()
+            await sleep(120)
+            if len(vc.channel.members) >= 2:
+                if bot.user not in vc.channel.members:
+                    playlist.clear()
+                    await vc.disconnect()
+            else:
+                playlist.clear()
+                await vc.disconnect()
 
         elif interaction.component.custom_id == "music_skip":
             await vc.stop()
