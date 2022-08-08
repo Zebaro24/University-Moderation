@@ -10,6 +10,7 @@ from discord_bot.mafia.mafia_phrases import quotes
 from discord_bot.mafia.mafia_global import distribution_of_roles, main_game
 import random
 import dislash
+import requests
 
 
 # Создание главного сообщения для ролей
@@ -58,6 +59,7 @@ async def update_start_message(message):
 async def start_game():
     print_ds("Игра в мафию началась!")
     channel: discord.channel.TextChannel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
+    # channel = await bot.fetch_webhook("1006314317647462532/6i2It2KgY4DxeLZG4AbmHJnGK9HvnXo3s80EeAI5_7jDwvNvREW_zQuZ58387HZCM1iC") Вебхук
 
     await channel.send("**3**", delete_after=10)
     await sleep(1)
@@ -80,15 +82,14 @@ async def start_game():
     await main_game(channel)
 
 
-@slash.slash_command(description="Тест мафа")
-async def maf(ctx):
+@slash.slash_command(description="Тест мафа", options=[
+    dislash.Option("count", "Количество игроков", dislash.OptionType.INTEGER, True)])
+async def maf(ctx, count):
     await ctx.reply("Ок")
-    mafia_players.clear()
-    mafia_players.append({"player": ctx.author, "role": None, "want_play": True})
-    mafia_players.append({"player": ctx.author, "role": None, "want_play": True})
-    mafia_players.append({"player": ctx.author, "role": None, "want_play": True})
-    mafia_players.append({"player": ctx.author, "role": None, "want_play": True})
+    for i in range(count - len(mafia_players) + 1):
+        mafia_players.append({"player": ctx.author, "role": None, "want_play": True})
     await start_game()
+    mafia_players.clear()
 
 # На заметку
 # @bot.event

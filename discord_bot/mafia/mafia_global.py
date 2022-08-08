@@ -1,20 +1,22 @@
-from config import mafia_players, debug, mafia_color
-from discord_bot.mafia.mafia_phrases import professions
-from random import shuffle, choice
+from config import mafia_players, mafia_color
+from discord_bot.mafia.mafia_phrases import professions, random_roles
+from random import shuffle, choices, choice
 from discord import Embed
 
 
 async def distribution_of_roles():
-    role = ["mafia", "peace", "peace", "peace"]
+    role = ["mafia", "peace", "peace", "sheriff"]
     amount = len(mafia_players)
 
     if amount >= 5:
         role.append("doctor")
     if amount >= 6:
-        role.append("sheriff")
-    if amount >= 7:
-        role.append("mafia")
-    if amount >= 8:
+        random_roles_clone = random_roles.copy()
+        for i in range(amount - len(role) if amount - len(role) <= 6 else 6):
+            random_role = choices(list(random_roles_clone.keys()), random_roles_clone.values())[0]
+            del random_roles_clone[random_role]
+            role.append(random_role)
+    if amount >= 12:
         for i in range(amount - len(role)):
             role.append("peace")
 
@@ -22,9 +24,9 @@ async def distribution_of_roles():
 
     for i in range(amount):
         mafia_players[i]["role"] = role[i]
+        print(mafia_players[i])
 
-    print(mafia_players)
-
+    professions_clone = professions.copy()
     for player in mafia_players:
         if player["role"] == "mafia":
             embed = Embed(title="Вы являетесь опасной **мафией**!", color=mafia_color)
@@ -32,8 +34,23 @@ async def distribution_of_roles():
             embed = Embed(title="Вы являетесь важной персоной!\nВы **доктор**!", color=mafia_color)
         elif player["role"] == "sheriff":
             embed = Embed(title="Вы являетесь важной персоной!\nВы **шериф**!", color=mafia_color)
+        elif player["role"] == "whore":
+            embed = Embed(title="Откуда у тебя этот айфон.\nТы грязная шлюха(без обид, такая жизнь))",
+                          color=mafia_color)
+        elif player["role"] == "fucker":
+            embed = Embed(title="Знаешь откуда у меня эти шрамы?\nСкорее всего ты ебанат)", color=mafia_color)
+        elif player["role"] == "priest":
+            embed = Embed(title="А вы верите в бога?\nВы священник.", color=mafia_color)
+        elif player["role"] == "kitchener":
+            embed = Embed(title="Пять лет в техническо-кулинарной шараге не прошли даром.\nВы повар)",
+                          color=mafia_color)
+        elif player["role"] == "DJ":
+            embed = Embed(title="Диджей еблан...\nТун ту ту тун...\nВы диджей.", color=mafia_color)
         else:
-            embed = Embed(title=f"Так как вы **мирный житель**!\nВы {choice(professions)}!", color=mafia_color)
+            profession = choice(professions_clone)
+            professions_clone.remove(profession)
+            embed = Embed(title=f"Так как вы **мирный житель**!\nВы {profession}!", color=mafia_color)
+
         await player["player"].send(embed=embed)
 
 

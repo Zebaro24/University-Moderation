@@ -11,6 +11,9 @@ async def button_mafia(interaction):
         if interaction.author in [i["player"] for i in mafia_players]:
             await interaction.reply("Вы уже присоединились", delete_after=1.5)
             return
+        if len(mafia_players) > 18:
+            await interaction.reply("Уже максимальное количество игроков!", delete_after=5)
+            return
         player = {"player": interaction.author, "role": None, "want_play": False}
         mafia_players.append(player)
         await update_start_message(interaction.message)
@@ -30,9 +33,9 @@ async def button_mafia(interaction):
                         start_game_bool = False
 
                     if start_game_bool:
-                        bot.loop.create_task(start_game())
                         await interaction.message.edit(components=[])
-                        await interaction.reply("Начинаем игру!", delete_after=10)
+                        await interaction.reply("!!!", delete_after=5)
+                        bot.loop.create_task(start_game())
 
                     else:
                         await interaction.reply("Ждем остальных игроков", delete_after=1.5)
