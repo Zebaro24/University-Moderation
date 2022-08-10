@@ -4,7 +4,7 @@ TELEGRAM_API = "<DEBUG_TELEGRAM_API>"
 
 discord_guild = 994019845039468584  # <---Первоначальная замена
 
-debug = True
+debug = False
 
 # <----Discord Configs---->
 # {Global}

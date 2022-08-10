@@ -14,7 +14,7 @@ async def button_mafia(interaction):
         if len(mafia_players) > 18:
             await interaction.reply("Уже максимальное количество игроков!", delete_after=5)
             return
-        player = {"player": interaction.author, "role": None, "want_play": False}
+        player = {"player": interaction.author, "want_play": False}
         mafia_players.append(player)
         await update_start_message(interaction.message)
         await interaction.reply(f"{interaction.author.mention} присоединился", delete_after=2)

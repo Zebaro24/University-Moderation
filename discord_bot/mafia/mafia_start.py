@@ -59,37 +59,39 @@ async def update_start_message(message):
 async def start_game():
     print_ds("Игра в мафию началась!")
     channel: discord.channel.TextChannel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
-    # channel = await bot.fetch_webhook("1006314317647462532/6i2It2KgY4DxeLZG4AbmHJnGK9HvnXo3s80EeAI5_7jDwvNvREW_zQuZ58387HZCM1iC") Вебхук
 
-    await channel.send("**3**", delete_after=10)
+    message = await channel.send("**3**")
     await sleep(1)
-    await channel.send("**2**", delete_after=10)
+    await message.edit(content="**2**")
     await sleep(1)
-    await channel.send("**1**", delete_after=10)
+    await message.edit(content="**1**")
     await sleep(1)
-    await channel.send("**Начинаем игру!**", delete_after=10)
-    await channel.trigger_typing()
+    await message.edit(content="**Начинаем игру!**", delete_after=1.9)
     await sleep(2)
+    channel = await bot.fetch_webhook(
+        "1006314317647462532/6i2It2KgY4DxeLZG4AbmHJnGK9HvnXo3s80EeAI5_7jDwvNvREW_zQuZ58387HZCM1iC")
     quote = random.choice(quotes)
     embed = discord.Embed(title=quote["text"], color=mafia_color)
     embed.set_footer(text=quote["author"],
                      icon_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4figuc0MHBNlnCY5B5XYo6EuHjEmOsSOFyw&usqp=CAU")
-    await channel.send(embed=embed, delete_after=20)
+    await channel.send(embed=embed)
     await sleep(5)
     await distribution_of_roles()
-    await channel.send("Роли были отправлены, проверяйте!", delete_after=10)
-    await sleep(4)
+    await channel.send("Роли были отправлены, проверяйте!")
+    await sleep(10)
     await main_game(channel)
 
 
-@slash.slash_command(description="Тест мафа", options=[
+@slash.slash_command(description="Тест мафа, Debug - True", options=[
     dislash.Option("count", "Количество игроков", dislash.OptionType.INTEGER, True)])
 async def maf(ctx, count):
-    await ctx.reply("Ок")
-    for i in range(count - len(mafia_players) + 1):
-        mafia_players.append({"player": ctx.author, "role": None, "want_play": True})
+    config.debug = True
+    await ctx.reply("Ок", delete_after=0.5)
+    for i in range(count):
+        mafia_players.append({"player": ctx.author, "want_play": True})
     await start_game()
     mafia_players.clear()
+    config.debug = False
 
 # На заметку
 # @bot.event
