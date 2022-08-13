@@ -1,6 +1,7 @@
 from config import mafia_players
 from discord_bot.mafia.mafia_start import update_start_message, start_game
 from discord_bot.main_discord import bot
+from dislash import ResponseType
 
 
 async def button_mafia(interaction):
@@ -34,7 +35,7 @@ async def button_mafia(interaction):
 
                     if start_game_bool:
                         await interaction.message.edit(components=[])
-                        await interaction.reply("!!!", delete_after=5)
+                        await interaction.reply(type=ResponseType.DeferredUpdateMessage)
                         bot.loop.create_task(start_game())
 
                     else:

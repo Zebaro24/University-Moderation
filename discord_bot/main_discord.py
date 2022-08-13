@@ -28,6 +28,7 @@ from discord_bot.music.music_message import update_message
 from discord_bot.music.music_commands import playlist, read_url, play
 import discord_bot.music.music_commands
 import discord_bot.activity
+import discord_bot.mafia.mafia_menu
 
 
 @bot.event

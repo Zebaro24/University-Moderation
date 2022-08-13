@@ -43,15 +43,19 @@ async def update_start_message(message):
 
     players = ""
     num = 1
-    player_want_play = 0
+    num_want_play = 0
+    value_want_play = ""
     for i in mafia_players:
         if i["want_play"]:
-            player_want_play += 1
+            num_want_play += 1
+            value_want_play += ":ballot_box_with_check:\n"
+        else:
+            value_want_play += ":zzz:\n"
         players += f"{num}) {i['player'].mention}\n"
         num += 1
     embed.add_field(name="Игроки", value=players)
-    embed.add_field(name="Хотят начать игру",
-                    value=f"{player_want_play}/{len(mafia_players) if len(mafia_players) >= 4 else 4}")
+    embed.add_field(name=f"Хотят начать игру ({num_want_play}/{len(mafia_players) if len(mafia_players) >= 4 else 4})",
+                    value=value_want_play)
 
     await message.edit(embed=embed)
 
@@ -85,6 +89,7 @@ async def start_game():
 @slash.slash_command(description="Тест мафа, Debug - True", options=[
     dislash.Option("count", "Количество игроков", dislash.OptionType.INTEGER, True)])
 async def maf(ctx, count):
+    await ctx.reply(type=dislash.ResponseType.DeferredUpdateMessage)
     config.debug = True
     await ctx.reply("Ок", delete_after=0.5)
     for i in range(count):

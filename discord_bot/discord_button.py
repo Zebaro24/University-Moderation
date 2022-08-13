@@ -6,6 +6,7 @@ import dislash
 
 @bot.event
 async def on_button_click(interaction: dislash.interactions.message_interaction.MessageInteraction):
+    # await interaction.reply(type=dislash.ResponseType.DeferredUpdateMessage) - В случае если нету ответа
     if interaction.component.custom_id[:5] == "mafia":
         await button_mafia(interaction)
     elif interaction.component.custom_id[:5] == "music":

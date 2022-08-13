@@ -1,6 +1,8 @@
 from config import mafia_players, mafia_color, discord_guild, mafia_channel_id
+from utils import print_ds
 import config
 from discord_bot.mafia.mafia_phrases import professions, random_roles
+from discord_bot.mafia.mafia_menu import vote
 from random import shuffle, choices, choice
 from discord import Embed
 from asyncio import gather, sleep
@@ -54,7 +56,7 @@ async def distribution_of_roles():
 
         print_mafia = mafia_players[i].copy()
         print_mafia["player"] = print_mafia["player"].name
-        print(f"{mafia_players[i]['player'].name.ljust(10, ' ')}-{mafia_players[i]['text_role'].split(':')[2]}")
+        print_ds(f"{mafia_players[i]['player'].name.ljust(10, ' ')}-{mafia_players[i]['text_role'].split(':')[2]}")
 
     before_time = time.perf_counter()
     all_send = []
@@ -83,7 +85,7 @@ async def distribution_of_roles():
         all_send.append(player["player"].send(embed=embed))
 
     await gather(*all_send)
-    print(f"Time: {time.perf_counter() - before_time}")
+    print_ds(f"Время отправки ролей: {time.perf_counter() - before_time}")
 
 
 count_days = 0
@@ -92,10 +94,8 @@ ghosts = []
 
 
 async def main_game(channel):
-    global kill_people
     await first_meet(channel)
     while True:
-        kill_people.append(mafia_players[1])
         if await day(channel):
             break
         await night(channel)
@@ -139,19 +139,20 @@ async def day(channel):
     await channel.send(embed=embed)
     await sleep(3)
     for i in kill_people:
-        await channel.send(f"Последние слова игрока: {i['player'].mention}.\n"
+        await channel.send(f"Последние слова: {i['player'].mention}.\n"
                            f":stopwatch: Дается **10 секунд**. Время пошло...")
         await sleep(10)
         await channel.send(":stopwatch: Время вышло...")
         ghosts.append(i)
     kill_people.clear()
 
-    if not mafia_players:  # По фиксить так как мафия осталась !!!!!!!!!!
-        await channel.send("Игра закончена мафия победила...")
-        return True
+    win = win_game()
+    if win:
+        return win
 
     await sleep_5(channel)
 
+    vote("clear")
     await channel.send(":stopwatch: На голосование дается **20 секунд**. Время пошло...")
 
     await bot.get_guild(discord_guild).get_channel(mafia_channel_id).send("Кого считаешь мафией?",
@@ -160,6 +161,23 @@ async def day(channel):
                                                                           delete_after=20)
     await sleep(20)
     await channel.send(":stopwatch: Время вышло...")
+    await sleep(1)
+    kill_person = vote('day')
+    if kill_person:
+        move_to("kill", kill_person)
+        await channel.send(f"Последние слова: {kill_person.mention}.\n"
+                           f":stopwatch: Дается **10 секунд**. Время пошло...")
+        await sleep(10)
+        await channel.send(":stopwatch: Время вышло...")
+        await sleep(1)
+        await channel.send(f"А ведь этот человек был: {kill_people[0]['text_role']}")
+        move_to("ghost")
+        win = win_game()
+        if win:
+            return win
+    else:
+        await channel.send(f"На эту ночь мафию решили оставить живой")
+
     await sleep(2)
 
 
@@ -190,7 +208,7 @@ async def night(channel):
                                        components=components_select("whore", "Выбирай сладость", "whore",
                                                                     False), delete_after=30)
         elif plyer["role"] == "fucker":
-            await plyer["player"].send("Кому хочешь йобнуть?",
+            await plyer["player"].send("Кого хочешь йобнуть?",
                                        components=components_select("fucker", "Выбирай стерву", "fucker",
                                                                     False), delete_after=30)
         elif plyer["role"] == "kitchener":
@@ -204,7 +222,7 @@ async def night(channel):
 
 
 async def finish_game(channel):
-    pass
+    await channel.send("Вы победили")
 
 
 def components_select(custom_id, description, skip_role=None, skip=True):
@@ -225,7 +243,7 @@ def components_select(custom_id, description, skip_role=None, skip=True):
 
 
 async def sleep_5(channel, text="обсуждения"):
-    if not config.debug:
+    if not True:
         await channel.send(f":stopwatch: Вам дается **5 минут** на {text}. Время пошло...")
         await sleep(240)
         await channel.send(":stopwatch: Осталась **1 минута**...")
@@ -236,3 +254,38 @@ async def sleep_5(channel, text="обсуждения"):
         await sleep(1)
     else:
         await channel.send(":stopwatch: Скипаем 5 мин...")
+
+
+def move_to(where, who=None):
+    if where == "kill":
+        for i in mafia_players:
+            if who == i["player"]:
+                kill_people.append(i)
+                mafia_players.remove(i)
+    elif where == "ghost":
+        for i in kill_people:
+            ghosts.append(i)
+            kill_people.remove(i)
+
+
+def win_game():
+    mafia = 0
+    fucker = 0
+    peace = 0
+
+    for i in mafia_players:
+        if i["role"] == "mafia":
+            mafia += 1
+        elif i["role"] == "fucker":
+            fucker += 1
+        else:
+            peace += 1
+
+    if mafia >= peace + fucker:  # Мафия выиграла
+        return "Мафия победила в честном бою"
+    elif fucker == 1 and peace == 1:  # Тот самый выиграл
+        return "Ебанат победил"
+    elif fucker == 1 and mafia == 1 and peace == 0:  # Ничья между злыми силами
+        return "Ничья между ебанатом и мафией"
+    elif mafia == 0 and fucker == 0:  # Выиграли мирные
+        return "Выиграли мирные жители"
