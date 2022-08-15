@@ -2,7 +2,7 @@ from config import mafia_players, mafia_color, discord_guild, mafia_channel_id
 from utils import print_ds
 import config
 from discord_bot.mafia.mafia_phrases import professions, random_roles
-from discord_bot.mafia.mafia_menu import vote
+from discord_bot.mafia.mafia_menu import vote, vote_dict
 from random import shuffle, choices, choice
 from discord import Embed
 from asyncio import gather, sleep
@@ -187,6 +187,7 @@ async def night(channel):
     embed.set_image(url="https://truemafia.ru/sunset.gif")
     await channel.send(embed=embed)
     await sleep(2)
+    vote("clean")
     await channel.send("Нечисть выходит на охоту...\nШериф и доктор чувствуют что-то не ладное...")
     await channel.send(":stopwatch: Время на все про все дается **30 секунд**. Время пошло...")
 
@@ -218,6 +219,25 @@ async def night(channel):
 
     await sleep(30)
     await channel.send(":stopwatch: Время вышло...")
+
+    print(vote_dict)
+    vote_sherif = vote("sheriff")
+    if vote_sherif:
+        sheriff = None
+        check_player_role = None
+        for i in mafia_players:
+            if i["role"] == "sheriff":
+                sheriff = i["player"]
+            elif i["player"] == vote_sherif:
+                check_player_role = i["text_role"]
+        await sheriff.send(f"{vote_sherif.mention} - является: {check_player_role}")
+    move_to("kill", vote("mafia"))
+    move_to("kill", vote("fucker"))
+    move_to("treat", vote("doctor"))
+    # whore - Не забыть сделать!!!
+    # kitchener - Не забыть сделать!!!
+    vote("clear")
+
     await sleep(2)
 
 
@@ -257,11 +277,16 @@ async def sleep_5(channel, text="обсуждения"):
 
 
 def move_to(where, who=None):
-    if where == "kill":
+    if where == "kill" and who:
         for i in mafia_players:
             if who == i["player"]:
                 kill_people.append(i)
                 mafia_players.remove(i)
+    elif where == "treat" and who:
+        for i in kill_people:
+            if who == i["player"]:
+                kill_people.remove(i)
+                mafia_players.append(i)
     elif where == "ghost":
         for i in kill_people:
             ghosts.append(i)

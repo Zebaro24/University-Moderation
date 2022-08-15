@@ -10,31 +10,34 @@ async def on_dropdown(inter: MessageInteraction):
     # print(inter.select_menu.custom_id)
     # print(inter.select_menu.selected_options[0].value)
     # print(inter.author)
-
+    if inter.author not in [i["player"] for i in mafia_players]:
+        print(f"Проголосовал человек который не участвует в игре: {inter.author}")
+        return
     try:
         if inter.select_menu.selected_options[0].value == "skip":
             index = "skip"
         else:
             index = [i["player"].id for i in mafia_players].index(int(inter.select_menu.selected_options[0].value))
     except ValueError:
-        print("Скорее всего ошибка, или нажато после игры")
+        print("Скорее всего ошибка, или нажато не в том меню")
         return
 
-    if inter.select_menu.custom_id == "vote_kick":
+    author_role = None
+    for i in mafia_players:
+        if i["player"] == inter.author:
+            author_role = i["role"]
+
+    if index == "skip":
+        await inter.reply(f"{inter.author.mention} - решил скипнуть голосование")
+    elif inter.select_menu.custom_id == "vote_kick":
         await inter.reply(f"{inter.author.mention} - проголосовал за: {mafia_players[index]['player'].mention}")
         vote("day", inter.author, mafia_players[index]["player"])
     elif inter.select_menu.custom_id == "mafia":
-        pass
-    elif inter.select_menu.custom_id == "doctor":
-        pass
-    elif inter.select_menu.custom_id == "sheriff":
-        pass
-    elif inter.select_menu.custom_id == "whore":
-        pass
-    elif inter.select_menu.custom_id == "fucker":
-        pass
-    elif inter.select_menu.custom_id == "kitchener":
-        pass
+        await inter.reply(f"{inter.author.mention} - проголосовал за: {mafia_players[index]['player'].mention}")
+        vote("mafia", inter.author, mafia_players[index]["player"])
+    elif author_role == inter.select_menu.custom_id:
+        await inter.reply(f"Вы выбрали: {mafia_players[index]['player'].mention}")
+        vote(author_role, inter.author, mafia_players[index]["player"])
 
 
 def vote(custom_id, author=None, vote_to=None):
