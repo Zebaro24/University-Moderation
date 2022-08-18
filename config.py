@@ -35,6 +35,10 @@ mafia_color = 10038562
 mafia_button_colour = 4
 mafia_players = []
 
+# {Create Voice}
+create_text = 1009823336668348446
+create_voice = 1009823569871638568
+
 # <----Telegram Configs---->
 
 # <----General---->
