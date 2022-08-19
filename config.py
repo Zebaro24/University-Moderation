@@ -36,6 +36,7 @@ mafia_button_colour = 4
 mafia_players = []
 
 # {Create Voice}
+create_category = 1009823176362045440
 create_text = 1009823336668348446
 create_voice = 1009823569871638568
 

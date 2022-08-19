@@ -26,6 +26,7 @@ import tg_ds.ds_to_tg as ds_to_tg
 import discord_bot.mafia.mafia_start as mafia_start
 from discord_bot.music.music_message import update_message
 from discord_bot.music.music_commands import playlist, read_url, play
+from discord_bot.create_voice.create import delete_excess
 import discord_bot.music.music_commands
 import discord_bot.activity
 import discord_bot.mafia.mafia_menu
@@ -36,13 +37,16 @@ import discord_bot.create_voice.create
 async def on_ready():
     print_ds(f"Бот был запущен под именем: {bot.user.name}")
 
+    guild = bot.get_guild(discord_guild)
+
     activity = discord.Activity(type=discord.ActivityType.listening, name="СЕРЕГА ПИРАТ - Where Is My Mind?")
     await bot.change_presence(status=discord.Status.dnd, activity=activity)
 
     await roles.offline_role(bot)
 
-    chanel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
-    await mafia_start.mafia_start(chanel)
+    await mafia_start.mafia_start(guild.get_channel(mafia_channel_id))
+
+    await delete_excess(guild)
 
     bot.loop.create_task(wavelink.NodePool.create_node(bot=bot, host='127.0.0.1', port=2333, password='ln6Bdu47'))
 
