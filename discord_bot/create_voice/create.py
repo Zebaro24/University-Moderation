@@ -5,7 +5,7 @@ from discord.utils import get
 import discord
 
 who_channel = {}
-control_sound = {}
+control_sound = {}  # В базу данных!!!
 
 
 async def delete_excess(guild):
@@ -18,17 +18,41 @@ async def delete_excess(guild):
 async def create_channel(member):
     category: discord.channel.CategoryChannel = get(member.guild.categories, id=create_category)
     voice_channel = await category.create_voice_channel(f"<---{member.display_name}--->")
-    who_channel[member] = voice_channel
+    who_channel[member] = {"voice": voice_channel, "member_mute": {}}
     await voice_channel.set_permissions(member, manage_channels=True, mute_members=True, deafen_members=True)
     member_voice = {"mute": member.voice.mute, "deaf": member.voice.deaf}
     control_sound[member] = member_voice
     await member.move_to(voice_channel)
 
 
-async def delete_channel(member):
+async def delete_channel(member, before, after):
     if member in who_channel.keys():
-        await who_channel[member].delete()
+        delete_elem = who_channel[member]["voice"]
         del who_channel[member]
+        await delete_elem.delete()
+    else:
+        for i, j in who_channel.items():
+            if j["voice"].id == before.channel.id:
+                print(member.voice)
+                who_channel[i]["member_mute"][member] = {}
+                if member.voice:
+                    who_channel[i]["member_mute"][member]["mute"] = member.voice.mute
+                    who_channel[i]["member_mute"][member]["deaf"] = member.voice.deaf
+    if after.channel:
+        await member.edit(mute=control_sound[member]["mute"], deafen=control_sound[member]["deaf"])
+        del control_sound[member]
+
+
+async def voice_in(member, after):
+    member_voice = {"mute": member.voice.mute, "deaf": member.voice.deaf}
+    control_sound[member] = member_voice
+
+    for i in who_channel.values():
+        if i["voice"].id == after.channel.id:
+            if member in i["member_mute"].keys():
+                await member.edit(mute=i["member_mute"][member]["mute"], deafen=i["member_mute"][member]["deaf"])
+                return
+    await member.edit(mute=False, deafen=False)
 
 
 # Создание канала при <перемещении> с одного канала в другой или <простого захода>.
@@ -39,45 +63,41 @@ async def delete_channel(member):
 
 @bot.event
 async def on_voice_state_update(member: Member, before: VoiceState, after: VoiceState):
-    category: discord.channel.CategoryChannel = get(member.guild.categories, id=create_category)
     # {----Есть и <before> и <after>----}
     if after.channel and before.channel:  # Есть и <before> и <after>
         if after.channel.id == before.channel.id:
             return
 
-        before_in_create = before.channel.id in [i.id for i in category.voice_channels]
-        if before_in_create and before.channel.id != create_voice:
-            await member.edit(mute=control_sound[member]["mute"], deafen=control_sound[member]["deaf"])
-            del control_sound[member]
-            await delete_channel(member)
+        if before.channel.id in [i["voice"].id for i in who_channel.values()]:  # Если before в списке созданных
+            await delete_channel(member, before, after)
 
-        after_in_create = after.channel.id in [i.id for i in category.voice_channels]
-        if after_in_create and after.channel.id != create_voice:
-            member_voice = {"mute": member.voice.mute, "deaf": member.voice.deaf}
-            control_sound[member] = member_voice
+        if after.channel.id in [i["voice"].id for i in who_channel.values()]:  # Если after в списке созданных
+            await voice_in(member, after)
 
         if after.channel.id == create_voice:
             await create_channel(member)
 
-    # {----Есть только <after>----}
+    # {----Есть только <after>----} только вход
     elif after.channel:
+        for i, j in who_channel.items():  # Проверка на выход из голосового канала и запомнить данные мута для входа обратно
+            if member in j["member_mute"].keys():
+                if not j["member_mute"][member]:
+                    who_channel[i]["member_mute"][member]["mute"] = member.voice.mute
+                    who_channel[i]["member_mute"][member]["deaf"] = member.voice.deaf
 
         if after.channel.id == create_voice:
             await create_channel(member)
-            return
 
-        after_in_create = after.channel.id in [i.id for i in category.voice_channels]
-        if after_in_create:
-            member_voice = {"mute": member.voice.mute, "deaf": member.voice.deaf}
-            control_sound[member] = member_voice
+        elif after.channel.id in [i["voice"].id for i in who_channel.values()]:  # Если after в списке созданных
+            await voice_in(member, after)
+
         elif member in control_sound.keys():
             await member.edit(mute=control_sound[member]["mute"], deafen=control_sound[member]["deaf"])
             del control_sound[member]
 
-    # {----Есть только <before>----}
+    # {----Есть только <before>----} только выход
     elif before.channel:
-        before_in_create = before.channel.id in [i.id for i in category.voice_channels]
-        if before.channel.id != create_voice and before_in_create:
-            await delete_channel(member)
+        if before.channel.id in [i["voice"].id for i in who_channel.values()]:  # Если before в списке созданных
+            await delete_channel(member, before, after)
 
     # [i.id for i in category.voice_channels]
