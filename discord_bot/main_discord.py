@@ -7,6 +7,7 @@ from wavelink.ext import spotify
 from config import client_id, client_secret, music_channel_id
 # Для слеш команд используем dislash
 from dislash import InteractionClient
+from asyncio import sleep
 # Для кнопок и тд используем discord_components
 # from discord_components import DiscordComponents - Убран
 
@@ -31,6 +32,7 @@ import discord_bot.music.music_commands
 import discord_bot.activity
 import discord_bot.mafia.mafia_menu
 import discord_bot.create_voice.create
+import discord_bot.decor_message
 
 
 @bot.event
@@ -48,9 +50,18 @@ async def on_ready():
 
     await delete_excess(guild)
 
-    bot.loop.create_task(wavelink.NodePool.create_node(bot=bot, host='127.0.0.1', port=2333, password='ln6Bdu47'))
+    bot.loop.create_task(start_wavelink())
 
     await update_message()
+
+
+async def start_wavelink():
+    await sleep(2)
+    connect = False
+    while not connect:
+        node = await wavelink.NodePool.create_node(bot=bot, host='127.0.0.1', port=2333, password='ln6Bdu47')
+        connect = node.is_connected()
+        await sleep(5)
 
 
 @bot.event
