@@ -91,7 +91,7 @@ def time_text(sec):
 def timeline(start, end):
     time_start = (ceil(start / end * 20) if start < end else 20) * "═"
     time_end = (20 - len(time_start)) * "─"
-    return f"{time_text(start)} ╠{time_start}◉{time_end}╢ {time_text(end)}"
+    return f"`{time_text(start)}` ╠{time_start}◉{time_end}╢ `{time_text(end)}`"
 
 
 def show_detail(choice):
