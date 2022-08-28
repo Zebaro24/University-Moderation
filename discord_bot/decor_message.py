@@ -1,6 +1,6 @@
 from discord_bot.main_discord import slash, bot
 from dislash import Option, OptionType, has_permissions, interactions, OptionChoice
-from discord import Embed, errors
+from discord import Embed, errors, Message
 from config import discord_color
 from discord.colour import Color
 
@@ -63,7 +63,7 @@ async def set_message(ctx: interactions.app_command_interaction.SlashInteraction
 async def update_message(ctx: interactions.app_command_interaction.SlashInteraction, id_channel, id_message, title=None,
                          text=None, color=None, thumbnail=None, image=None):
     channel = await bot.fetch_channel(id_channel)
-    message: discord.Message = await channel.fetch_message(id_message)
+    message: Message = await channel.fetch_message(id_message)
     embed = message.embeds[0]
 
     if title:
