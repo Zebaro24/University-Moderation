@@ -40,8 +40,12 @@ create_category = 1009823176362045440
 create_text = 1009823336668348446
 create_voice = 1009823569871638568
 
+# {Version}
+version_channel = 1013383314461171722
+
 # <----Telegram Configs---->
 
 # <----General---->
 tg_chanel_id = 771348519
 ds_chanel_id = 997248600960680058
+distance_learning = True
