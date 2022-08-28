@@ -35,6 +35,7 @@ import discord_bot.mafia.mafia_menu
 import discord_bot.create_voice.create
 import discord_bot.decor_message
 import discord_bot.help_command
+import discord_bot.rgb_lenta
 
 
 @bot.event
