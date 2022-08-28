@@ -1,7 +1,10 @@
-import discord_bot.mafia.mafia_global as mafia_global
+from telebot import TeleBot
 
-vote_kick("gg")
+from config import TELEGRAM_API, tg_chanel_id
 
-vote_kick("gg")
+bot = TeleBot(TELEGRAM_API)
+id_channel = -1001624889289
 
-vote_kick("jj")
+while True:
+    text = input("Текст: ")
+    bot.send_message(id_channel, text)

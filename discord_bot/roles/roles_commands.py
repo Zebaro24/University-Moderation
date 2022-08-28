@@ -1,7 +1,6 @@
 # Конфиги
 from config import discord_guild, discord_color
 from config import role_channel_id, role_message_id, ROLES
-from utils import print_ds
 
 # Функции
 import discord
@@ -10,7 +9,6 @@ from discord_bot.main_discord import bot
 
 # Реализовать добавление ролей пока бот был выключен
 async def offline_role(cache_bot):
-    print_ds("Проверка добавленых реакций")
     guild = cache_bot.get_guild(discord_guild)
     message: discord.Message = await guild.get_channel(role_channel_id).fetch_message(role_message_id)
     # for i in roles.ROLES.keys():
@@ -38,7 +36,6 @@ async def offline_role(cache_bot):
                             await member.add_roles(role)
                             await member.send(
                                 embed=discord.Embed(title=f"Роль **{role.name}** была добавлена!", color=discord_color))
-    print_ds("Проверка прошла успешно")
 
 
 # Добавлять, убирать роль при клике на реакцию
