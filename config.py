@@ -31,6 +31,7 @@ music_button_colour = 1  # blurple
 
 # {Mafia}
 mafia_channel_id = 998603873415610438  # <---Первоначальная замена
+mafia_channel_webhook = "1006314317647462532/6i2It2KgY4DxeLZG4AbmHJnGK9HvnXo3s80EeAI5_7jDwvNvREW_zQuZ58387HZCM1iC"
 mafia_color = 10038562
 mafia_button_colour = 4
 mafia_players = []
@@ -48,4 +49,5 @@ version_channel = 1013383314461171722
 # <----General---->
 tg_chanel_id = 771348519
 ds_chanel_id = 997248600960680058
+ds_chanel_webhook = "1011608090233278515/Ds8dAqxUMYCF4bH8iXGPsO5KSN2RhtB_nLuH6wUzvGGzklPPsTH3hpT2KQy8hqrC5BLt"
 distance_learning = True

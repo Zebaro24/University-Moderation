@@ -3,6 +3,7 @@ from discord_bot.main_discord import slash
 from requests import post
 from config import DISCORD_API
 
+# Словарь с активностями Discord
 activities = [{"name": "Watch Together", "id": 880218394199220334},
               {"name": "Word Snacks", "id": 879863976006127627},
               {"name": "Sketch Heads", "id": 902271654783242291},
@@ -11,6 +12,7 @@ activities = [{"name": "Watch Together", "id": 880218394199220334},
 headers = {'authorization': f"Bot {DISCORD_API}"}
 
 
+# Запуск активности
 @slash.slash_command(description="Запустить игру или просмотр Youtube",
                      options=[Option("activity", "Выберите активность из списка", OptionType.STRING, True,
                                      [OptionChoice(i["name"], i) for i in activities])])

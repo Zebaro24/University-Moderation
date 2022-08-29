@@ -1,11 +1,15 @@
-from telegram_bot.main_telegram import bot as bot_tg
-from discord import Message
+# Импорт настроек
 from config import tg_chanel_id
 from utils import print_tg
+
+# Импорт Telegram бота
+from telegram_bot.main_telegram import bot as bot_tg
+
+# Импорт времени
 from time import perf_counter
 
 
-async def discord_to_tg(message: Message):
+async def discord_to_tg(message):
     if message.attachments:
         before = perf_counter()
         for i in message.attachments:

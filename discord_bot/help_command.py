@@ -1,8 +1,10 @@
+# Импорт функций Discord
 from discord_bot.main_discord import slash
 from dislash import interactions
 from discord import Embed
 
 
+# Команда помощи
 @slash.slash_command(name="help", description="Помощь по боту")
 async def help_comm(ctx: interactions.app_command_interaction.SlashInteraction):
     description = "Здесь вы узнаете основные функции бота и как он работает.\n" \

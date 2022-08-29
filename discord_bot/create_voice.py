@@ -1,6 +1,8 @@
-from config import create_voice, create_text, create_category
+# Импорт настроек
+from config import create_voice, create_category
+
+# Импорт функций Discord
 from discord_bot.main_discord import bot
-from discord.member import Member, VoiceState
 from discord.utils import get
 import discord
 
@@ -8,6 +10,7 @@ who_channel = {}
 control_sound = {}  # В базу данных!!!
 
 
+# Удаление созданных лишних каналов при запуске
 async def delete_excess(guild):
     category: discord.channel.CategoryChannel = get(guild.categories, id=create_category)
     for i in category.voice_channels:
@@ -15,6 +18,7 @@ async def delete_excess(guild):
             await i.delete()
 
 
+# Создание голосового канала
 async def create_channel(member):
     category: discord.channel.CategoryChannel = get(member.guild.categories, id=create_category)
     voice_channel = await category.create_voice_channel(f"<---{member.display_name}--->")
@@ -25,6 +29,7 @@ async def create_channel(member):
     await member.move_to(voice_channel)
 
 
+# Удаление голосового канала
 async def delete_channel(member, before, after):
     if member in who_channel.keys():
         delete_elem = who_channel[member]["voice"]
@@ -43,6 +48,7 @@ async def delete_channel(member, before, after):
         del control_sound[member]
 
 
+# Сохранение муза и звука при входе в голосовой канал
 async def voice_in(member, after):
     member_voice = {"mute": member.voice.mute, "deaf": member.voice.deaf}
     control_sound[member] = member_voice
@@ -60,9 +66,10 @@ async def voice_in(member, after):
 # Сохранить статус мута и звука при <перемещении> с любого канала кроме созданных и при <простого захода>.
 # Возобновить статус мута и звука при <перемещении> с созданного канала в любой другой и при <выходе и заходе в другой канал>.
 
-
+# Любое взаимодействие с голосовыми каналами
 @bot.event
-async def on_voice_state_update(member: Member, before: VoiceState, after: VoiceState):
+async def on_voice_state_update(member: discord.member.Member, before: discord.member.VoiceState,
+                                after: discord.member.VoiceState):
     # {----Есть и <before> и <after>----}
     if after.channel and before.channel:  # Есть и <before> и <after>
         if after.channel.id == before.channel.id:

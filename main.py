@@ -6,6 +6,7 @@ from os.path import isfile
 from subprocess import Popen, PIPE
 
 
+# Функция запуска ботов
 def start_bots():
     if isfile(r"D:\Install\Lavalink\Lavalink.jar"):
         Popen(r"cd /d D:\Install\Lavalink & java -jar Lavalink.jar", stdout=PIPE, shell=True)
@@ -15,6 +16,7 @@ def start_bots():
     start_telegram()
 
 
+# Запуск всего скрипта
 if __name__ == '__main__':
     print(f"{bc(32)}<---Программа была запущена--->{bc()}")
     start_bots()

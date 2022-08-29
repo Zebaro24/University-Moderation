@@ -2,15 +2,15 @@
 import discord
 from discord.ext import commands
 import wavelink
-from config import music_channel_id
 
 # Для слеш команд используем dislash
 from dislash import InteractionClient
-from asyncio import sleep
 
 # Конфиги и доп библиотеки
-from utils import print_ds, bc
+from config import music_channel_id
 from config import DISCORD_API, ds_chanel_id, discord_guild, mafia_channel_id
+from utils import print_ds, bc
+from asyncio import sleep
 
 # https://dislashpy.readthedocs.io/en/latest/quickstart.html#creating-a-simple-command - Slash command
 # Основные классы бота
@@ -80,7 +80,6 @@ async def on_wavelink_node_ready(node: wavelink.Node):
 
 
 # Все ивенты: https://discordpy.readthedocs.io/en/latest/api.html#event-reference
-#
 @bot.event
 async def on_message(message: discord.Message):
     # Если автор совпадает с клиентом – то вернуть
@@ -114,5 +113,6 @@ def start():
     bot.run(DISCORD_API)
 
 
+# Запуск сугубо Discord бота
 if __name__ == '__main__':
     start()

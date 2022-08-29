@@ -1,8 +1,8 @@
 import config
-from config import mafia_color, mafia_players, discord_guild, mafia_channel_id
+from config import mafia_color, mafia_players, discord_guild, mafia_channel_id, mafia_channel_webhook
 from utils import print_ds
 import discord
-# rom discord_components import Button, ButtonStyle
+# from discord_components import Button, ButtonStyle
 from discord_bot.main_discord import bot, slash
 from dislash import has_permissions, interactions, ActionRow, Button, ButtonStyle
 from asyncio import sleep
@@ -10,7 +10,6 @@ from discord_bot.mafia.mafia_phrases import quotes
 from discord_bot.mafia.mafia_global import distribution_of_roles, main_game
 import random
 import dislash
-import requests
 
 
 # Создание главного сообщения для ролей
@@ -72,8 +71,7 @@ async def start_game():
     await sleep(1)
     await message.edit(content="**Начинаем игру!**", delete_after=1.9)
     await sleep(2)
-    channel = await bot.fetch_webhook(
-        "1006314317647462532/6i2It2KgY4DxeLZG4AbmHJnGK9HvnXo3s80EeAI5_7jDwvNvREW_zQuZ58387HZCM1iC")
+    channel = await bot.fetch_webhook(mafia_channel_webhook)
     quote = random.choice(quotes)
     embed = discord.Embed(title=quote["text"], color=mafia_color)
     embed.set_footer(text=quote["author"],

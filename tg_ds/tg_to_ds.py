@@ -1,28 +1,35 @@
-import discord
+# Импорт настроек
+from config import TELEGRAM_API, ds_chanel_webhook
+from utils import print_ds, print_tg
 
+# Импорт Discord функций
+import discord
 from discord_bot.main_discord import bot as bot_ds
+
+# Импорт Telegram функций
 from telegram_bot.main_telegram import bot as bot_tg
-from config import TELEGRAM_API
-from asyncio import run_coroutine_threadsafe
 from telebot.types import Message
-from discord.webhook import Webhook
-from discord import File
+
+# Импорт доп функций
+from asyncio import run_coroutine_threadsafe
 import io
 import aiohttp
 from time import perf_counter
-from utils import print_ds, print_tg
 
 
+# Запуск coroutine функций
 def coroutine_send(message: Message):
     run_coroutine_threadsafe(telegram_to_ds(message), bot_ds.loop)
 
 
+# Получение файла с file_id Telegram
 def get_file_url(file_id):
     get_file_path = bot_tg.get_file(file_id).file_path
     file_path = f"https://api.telegram.org/file/bot{TELEGRAM_API}/{get_file_path}"
     return file_path
 
 
+# Добавление оформления текста с Telegram
 def text_read(text, entities):
     if not entities:
         return text
@@ -66,6 +73,7 @@ def text_read(text, entities):
     return text
 
 
+# Перевод файла со ссылки в Discord File
 async def file_reed(url, format_file):
     before = perf_counter()
     async with aiohttp.ClientSession() as session:
@@ -80,12 +88,12 @@ async def file_reed(url, format_file):
             data = io.BytesIO(await resp.read())
             time_load = perf_counter() - before
             print_ds(f"Файл был отправлен за: {round(time_load, 2)} сек")
-            return File(data, format_file)
+            return discord.File(data, format_file)
 
 
+# Отправка сообщения с Telegram в Discord
 async def telegram_to_ds(message: Message):
-    channel: Webhook = await bot_ds.fetch_webhook(
-        "1011608090233278515/Ds8dAqxUMYCF4bH8iXGPsO5KSN2RhtB_nLuH6wUzvGGzklPPsTH3hpT2KQy8hqrC5BLt")
+    channel: discord.webhook.Webhook = await bot_ds.fetch_webhook(ds_chanel_webhook)
     file_id = bot_tg.get_user_profile_photos(message.from_user.id).photos[0][-1].file_id
     path = bot_tg.get_file(file_id).file_path
     username = f"{message.from_user.first_name} TG"
