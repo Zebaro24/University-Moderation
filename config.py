@@ -1,6 +1,6 @@
 # <----Global Configs---->
 DISCORD_API = "<DISCORD_API>"  # "<DEBUG_DISCORD_API>"
-TELEGRAM_API = "<DEBUG_TELEGRAM_API>"
+TELEGRAM_API = "<DEBUG_TELEGRAM_API>"  # "<DEBUG_2_TELEGRAM_API>"
 
 discord_guild = 994019845039468584  # <---Первоначальная замена
 
@@ -45,9 +45,19 @@ create_voice = 1009823569871638568
 version_channel = 1013383314461171722
 
 # <----Telegram Configs---->
+# {Timetable}
+timetable_time = ["08:00 - 09:20", "09:40 - 11:00", "11:25 - 12:45", "13:10 - 14:30", "14:50 - 16:10", "16:25 - 17:45",
+                  "18:00 - 19:20"]
 
 # <----General---->
-tg_chanel_id = 771348519
+tg_chanel_id = -748444518  # -1001530372815
 ds_chanel_id = 997248600960680058
 ds_chanel_webhook = "1011608090233278515/Ds8dAqxUMYCF4bH8iXGPsO5KSN2RhtB_nLuH6wUzvGGzklPPsTH3hpT2KQy8hqrC5BLt"
 distance_learning = True
+
+# {Database}
+DB_NAME = '<DB_USER_NAME>'
+DB_USER = '<DB_USER_NAME>'
+DB_PASS = '<DB_PASS>'
+DB_HOST = '<DB_HOST>'
+DB_PORT = '"<DB_PORT>"'
