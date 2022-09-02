@@ -1,8 +1,8 @@
 from telegram_bot.main_telegram import bot
 from database_func import admins, teachers, calendar, db_run, edit_data
-from timetable.additional_func import check_default, markup_all, show, check_data, day_dz, rep
+from timetable.additional_func import check_default, check_data, rep
+from telegram_bot.timetable.function import day_info_tg, show, markup_all
 from config import tg_chanel_id
-from telebot import types
 from datetime import timedelta
 
 
@@ -78,14 +78,11 @@ def send_day(message):
         bot.send_message(message.chat.id, 'Формат для show_day:\n/show_day 2020:09:28\n2020:09:28 - Дата')
     elif not message.text[10:] == '':
         check_default()
-        good_data = check_data(message.text[10:], message.chat.id)
-        if good_data:
-            markup = types.InlineKeyboardMarkup(row_width=2)
-            item1 = types.InlineKeyboardButton("Прошлый", callback_data=f'early{good_data.strftime("%Y:%m:%d")}', )
-            item2 = types.InlineKeyboardButton("Следующий", callback_data=f'next{good_data.strftime("%Y:%m:%d")}')
-
-            markup.add(item1, item2)
-            day_dz(message.chat.id, good_data, markup)
+        good_data = check_data(message.text[10:])
+        if type(good_data) == str:
+            bot.send_message(message.chat.id, good_data)
+        else:
+            day_info_tg(message.chat.id, good_data, True)
 
     else:
         bot.send_message(message.chat.id, 'Формат для show_day:\n/show_day 2020:09:28\n2020:09:28 - Дата')
@@ -124,28 +121,31 @@ def timetable_text(message):
 
         elif message.chat.id in admins:
             if admins[message.chat.id] == 'edit':
-                good_check_data = check_data(message.text, message.chat.id)
+                good_check_data = check_data(message.text)
                 if message.text in edit_data:
                     admins[message.chat.id] = None
                     bot.send_message(message.chat.id, 'Дату уже изменяют!')
-
-                elif good_check_data:
+                elif type(good_check_data) == str:
+                    bot.send_message(message.chat.id, good_check_data)
+                else:
                     edit_data.append(good_check_data.strftime('%Y:%m:%d'))
                     db_run(
                         f"UPDATE admin SET work='edit',data='{good_check_data.strftime('%Y:%m:%d')}' WHERE id={message.chat.id}")
                     admins[message.chat.id] = {'edit': good_check_data}
                     print(f'Дата изменяется {message.chat.first_name} : {good_check_data}')
-                    day_dz(message.chat.id, good_check_data)
+                    day_info_tg(message.chat.id, good_check_data)
                     bot.send_message(message.chat.id, 'Что хотите сделать?', reply_markup=markup_all("edit"))
 
             elif admins[message.chat.id] == 'add_hw':
-                good_check_data = check_data(message.text, message.chat.id)
-                if not good_check_data.strftime('%Y:%m:%d') in calendar:
+                good_check_data = check_data(message.text)
+                if type(good_check_data) == str:
+                    bot.send_message(message.chat.id, good_check_data)
+                elif not good_check_data.strftime('%Y:%m:%d') in calendar:
                     bot.send_message(message.chat.id, 'На это число нету пар!')
                     admins[message.chat.id] = None
-                elif good_check_data:
+                else:
                     admins[message.chat.id] = {'add_hw': good_check_data}
-                    day_dz(message.chat.id, good_check_data)
+                    day_info_tg(message.chat.id, good_check_data)
                     bot.send_message(message.chat.id,
                                      'Форма добавления,изменения дз 2:№25,26\n2 - Очередь Пары\n№25,26 - На что меняем',
                                      reply_markup=markup_all("ans"))
@@ -171,7 +171,7 @@ def timetable_text(message):
                     text = message.text[2:]
                     data = admins[message.chat.id]['add_hw']
                     calendar[data.strftime('%Y:%m:%d')][intg][1] = text
-                    day_dz(message.chat.id, data)
+                    day_info_tg(message.chat.id, data)
                     admins[message.chat.id] = None
                     db_run(f"UPDATE owner SET hw='{text}' WHERE day='{data.strftime('%Y:%m:%d')}' AND int='{intg}'")
                     bot.send_message(message.chat.id, f'Дз добавлено!', reply_markup=markup_all("adm"))
@@ -275,7 +275,7 @@ def timetable_text(message):
                             db_run(
                                 f"UPDATE owner SET lesson ='{rep(calendar[data.strftime('%Y:%m:%d')][i][0])}',hw={calendar[data.strftime('%Y:%m:%d')][i][1]} WHERE day='{data.strftime('%Y:%m:%d')}'AND int={i}")
 
-                    day_dz(message.chat.id, data)
+                    day_info_tg(message.chat.id, data)
                     admins[message.chat.id] = {'edit': data}
                     db_run(f"UPDATE admin SET work='edit'WHERE id={message.chat.id}")
                     bot.send_message(message.chat.id, 'Хотите продолжить?', reply_markup=markup_all("edit"))
@@ -304,7 +304,7 @@ def timetable_text(message):
                     db_run(f"INSERT INTO owner VALUES ('{data.strftime('%Y:%m:%d')}',{k},'{rep(message.text)}',null)")
 
                     calendar[data.strftime('%Y:%m:%d')][k] = [message.text, None]
-                    day_dz(message.chat.id, data)
+                    day_info_tg(message.chat.id, data)
                     admins[message.chat.id] = {'edit': data}
                     db_run(f"UPDATE admin SET work='edit'WHERE id={message.chat.id}")
                     bot.send_message(message.chat.id, 'Хотите продолжить?', reply_markup=markup_all("edit"))
@@ -324,7 +324,7 @@ def timetable_text(message):
                         db_run(
                             f"UPDATE owner SET lesson ='{rep(text)}' WHERE day='{data.strftime('%Y:%m:%d')}'AND int={intg}")
                         calendar[data.strftime('%Y:%m:%d')][intg][0] = text
-                        day_dz(message.chat.id, data)
+                        day_info_tg(message.chat.id, data)
                         admins[message.chat.id] = {'edit': data}
                         db_run(f"UPDATE admin SET work='edit'WHERE id={message.chat.id}")
                         bot.send_message(message.chat.id, f'Пара изменена!', reply_markup=markup_all("edit"))
@@ -347,7 +347,7 @@ def timetable_text(message):
                     les = calendar[data.strftime('%Y:%m:%d')][integ][0]
                     db_run(f"DELETE FROM owner WHERE day='{data.strftime('%Y:%m:%d')}'AND int={integ}")
                     calendar[data.strftime('%Y:%m:%d')].pop(integ)
-                    day_dz(message.chat.id, data)
+                    day_info_tg(message.chat.id, data)
                     admins[message.chat.id] = {'edit': data}
                     db_run(f"UPDATE admin SET work='edit'WHERE id={message.chat.id}")
                     bot.send_message(message.chat.id, f'Удалена пара: {les}', reply_markup=markup_all("edit"))
@@ -369,14 +369,16 @@ def timetable_text(message):
                 bot.send_message(message.chat.id, 'Выбери кнопку!', reply_markup=markup_all("tch"))
 
             elif teachers[message.chat.id] == 'add_hw':
-                good_check_data = check_data(message.text, message.chat.id)
+                good_check_data = check_data(message.text)
+                if type(good_check_data) == str:
+                    bot.send_message(message.chat.id, good_check_data)
                 if not good_check_data.strftime('%Y:%m:%d') in calendar:
                     bot.send_message(message.chat.id, 'На єто число нету пар!')
                     teachers[message.chat.id] = None
-                elif good_check_data:
+                else:
                     edit_data.append(message.text)
                     teachers[message.chat.id] = {'add_hw': good_check_data}
-                    day_dz(message.chat.id, good_check_data)
+                    day_info_tg(message.chat.id, good_check_data)
                     bot.send_message(message.chat.id,
                                      'Форма добавления,изменения дз 2:№25,26\n2 - Очередь пары\n№25,26 - На что меняем',
                                      reply_markup=markup_all("ans"))
@@ -386,7 +388,7 @@ def timetable_text(message):
                     text = message.text[2:]
                     data = teachers[message.chat.id]['add_hw']
                     calendar[data.strftime('%Y:%m:%d')][intg][1] = text
-                    day_dz(message.chat.id, data)
+                    day_info_tg(message.chat.id, data)
                     teachers[message.chat.id] = None
                     db_run(f"UPDATE owner SET hw='{text}' WHERE day='{data.strftime('%Y:%m:%d')}' AND int='{intg}'")
                     bot.send_message(message.chat.id, f'Дз добавлено!', reply_markup=markup_all("del"))
@@ -415,26 +417,18 @@ def callback_inline(call):
     try:
         if call.message:
             if call.data[0:5] == 'early':
-                good_data = check_data(call.data[5:], 0)
+                good_data = check_data(call.data[5:])
                 good_data -= timedelta(1)
-                markup = types.InlineKeyboardMarkup(row_width=2)
-                item1 = types.InlineKeyboardButton("Прошлый", callback_data=f'early{good_data.strftime("%Y:%m:%d")}')
-                item2 = types.InlineKeyboardButton("Следующий", callback_data=f'next{good_data.strftime("%Y:%m:%d")}')
-                markup.add(item1, item2)
                 print(f'Запрос от {call.message.chat.first_name} на {good_data.strftime("%Y:%m:%d")}!')
 
-                day_dz(call.message.chat.id, good_data, markup, True, call.message.message_id)
+                day_info_tg(call.message.chat.id, good_data, True, True, call.message.message_id)
 
             elif call.data[0:4] == 'next':
-                good_data = check_data(call.data[4:], 0)
+                good_data = check_data(call.data[4:])
                 good_data += timedelta(1)
-                markup = types.InlineKeyboardMarkup(row_width=2)
-                item1 = types.InlineKeyboardButton("Прошлый", callback_data=f'early{good_data.strftime("%Y:%m:%d")}')
-                item2 = types.InlineKeyboardButton("Следующий", callback_data=f'next{good_data.strftime("%Y:%m:%d")}')
-                markup.add(item1, item2)
                 print(f'Запрос от {call.message.chat.first_name} на {good_data.strftime("%Y:%m:%d")}!')
 
-                day_dz(call.message.chat.id, good_data, markup, True, call.message.message_id)
+                day_info_tg(call.message.chat.id, good_data, True, True, call.message.message_id)
 
             # remove inline buttons
 

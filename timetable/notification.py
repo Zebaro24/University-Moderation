@@ -4,8 +4,8 @@ from telegram_bot.main_telegram import bot
 from config import tg_chanel_id, timetable_time
 from datetime import datetime, timedelta
 from pytz import timezone
-from timetable.additional_func import day_dz
 from database_func import calendar
+from telegram_bot.timetable.function import day_info_tg
 
 tz = timezone("Europe/Kyiv")
 
@@ -21,7 +21,7 @@ def start_task():
     try:
         print("Бот разбудил всех!")
         bot.send_message(tg_chanel_id, "Солнышко мое, вставай)")
-        day_dz(tg_chanel_id, datetime.now(tz))
+        day_info_tg(tg_chanel_id, datetime.now(tz))
     except Exception as gg:
         print(gg)
         print("В боте произошла ошибка!")

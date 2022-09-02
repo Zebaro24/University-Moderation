@@ -5,8 +5,7 @@ from config import TELEGRAM_API, tg_chanel_id
 bot = TeleBot(TELEGRAM_API)
 
 from tg_ds.tg_to_ds import coroutine_send
-import telegram_bot.timetable_tg
-from telegram_bot.timetable_tg import timetable_text
+from telegram_bot.timetable.command import timetable_text
 
 
 @bot.message_handler(commands=['id'])
