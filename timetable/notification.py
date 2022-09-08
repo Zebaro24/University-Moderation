@@ -21,7 +21,7 @@ def start_task():
     try:
         print("Бот разбудил всех!")
         bot.send_message(tg_chanel_id, "Солнышко мое, вставай)")
-        day_info_tg(tg_chanel_id, datetime.now(tz))
+        day_info_tg(tg_chanel_id, datetime.now(tz).strftime('%Y:%m:%d'))
     except Exception as gg:
         print(gg)
         print("В боте произошла ошибка!")

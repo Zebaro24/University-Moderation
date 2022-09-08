@@ -1,7 +1,6 @@
 import psycopg2
 from config import DB_NAME, DB_USER, DB_PASS, DB_HOST, DB_PORT
 from utils import bc
-from datetime import date
 from time import perf_counter
 
 admins = {}
@@ -48,8 +47,7 @@ def load_moderators(db_select, save_dict):
         if i[1] is None:
             save_dict[i[0]] = None
         else:
-            save_dict[i[0]] = {}
-            save_dict[i[0]][i[1]] = date(int(i[2][0:4]), int(i[2][5:7]), int(i[2][8:10]))
+            save_dict[i[0]] = {"action": i[1], "date": i[2]}
 
 
 def load_calendar(db_select, save_dict):

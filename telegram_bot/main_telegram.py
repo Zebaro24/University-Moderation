@@ -5,6 +5,7 @@ from config import TELEGRAM_API, tg_chanel_id
 bot = TeleBot(TELEGRAM_API)
 
 from tg_ds.tg_to_ds import coroutine_send
+from telegram_bot.timetable.function import markup_all
 from telegram_bot.timetable.command import timetable_text
 
 
@@ -19,7 +20,8 @@ def message_text(message: types.Message):
     timetable_ret = timetable_text(message)  # Сделать если использовалось то возвращать тру
     if timetable_ret:
         bot.forward_message(tg_chanel_id, message.chat.id, message.message_id)
-        bot.send_message(message.chat.id, 'Ваше сообщение было отправлено в общий чат!')
+        bot.send_message(message.chat.id, 'Ваше сообщение было отправлено в общий чат!',
+                         reply_markup=markup_all(message.chat.id))
 
     if message.chat.id == tg_chanel_id or timetable_ret:
         coroutine_send(message)
@@ -33,7 +35,8 @@ def telegram_ds(message):
 
     if message.chat.type == "private":
         bot.forward_message(tg_chanel_id, message.chat.id, message.message_id)
-        bot.send_message(message.chat.id, 'Ваше сообщение было отправлено в общий чат!')
+        bot.send_message(message.chat.id, 'Ваше сообщение было отправлено в общий чат!',
+                         reply_markup=markup_all(message.chat.id))
 
 
 def start():

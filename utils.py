@@ -7,4 +7,5 @@ def print_ds(text):
 
 
 def print_tg(text):
+    text = text.replace(r"Z̜̫̣̼̠͓̈e̻̰̱̥ͥ̒ͅb̻̦͉͛̏̈́ͅǎ̭̲͕̍̂ͩr̻̰̾̓̅ͬͬo̩ͭ̇̏ͩ̾̄", "Zebaro")
     print(f"{bc(34)}Telegram:{bc()} {text}")
