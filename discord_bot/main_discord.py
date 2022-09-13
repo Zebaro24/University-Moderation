@@ -28,6 +28,7 @@ import tg_ds.ds_to_tg as ds_to_tg
 import discord_bot.discord_button
 import discord_bot.activity
 import discord_bot.mafia.mafia_menu
+import discord_bot.timetable.command
 import discord_bot.decor_message
 import discord_bot.help_command
 import discord_bot.rgb_lenta

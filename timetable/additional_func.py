@@ -72,7 +72,7 @@ def list_days_by_text(time):
     return all_day
 
 
-def day_info(day: date):
+def day_info(day: date, space=None):
     title = ""
     if int(day.strftime('%W')) % 2:
         title += "Непарный\n"
@@ -82,7 +82,10 @@ def day_info(day: date):
     main_text = ''
     try:
         if list(calendar[day.strftime('%Y:%m:%d')].items()):
-            null_object = '\n          '
+            if space == "ds":
+                null_object = '\n   '
+            else:
+                null_object = '\n            '
             enter = "\n"
             for p in sorted(calendar[day.strftime('%Y:%m:%d')].items()):  # p,d p[1]
                 if p[1][1] is None:

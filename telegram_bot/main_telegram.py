@@ -1,9 +1,12 @@
 from telebot import TeleBot, types
 from utils import print_tg, bc
 from config import TELEGRAM_API, tg_chanel_id
+from threading import Thread
+from timetable.additional_func import check_default
 
 bot = TeleBot(TELEGRAM_API)
 
+from timetable.notification import check_task, go_task
 from tg_ds.tg_to_ds import coroutine_send
 from telegram_bot.timetable.function import markup_all
 from telegram_bot.timetable.command import timetable_text
@@ -41,7 +44,11 @@ def telegram_ds(message):
 
 def start():
     print_tg(f"Бот был {bc('01;38;05;34')}запущен{bc()} под именем: {bot.user.first_name}")
-    bot.polling()
+
+    check_default()
+    check_task()
+    Thread(target=go_task, daemon=True).start()
+    bot.polling(none_stop=True)
 
 
 if __name__ == '__main__':
