@@ -8,19 +8,6 @@ from datetime import timedelta
 from utils import print_tg
 
 
-@bot.message_handler(commands=['start'])
-def send_welcome(message: types.Message):
-    if message.chat.type == "private":
-
-        bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAEJIdhhiSG0K6iUciZOoueWASUDG1jHoAACoAEAAjDUnRGDNNeGcpfWEyIE')
-        bot.send_message(message.chat.id, f'Приветствую {message.from_user.first_name} рад вас видеть здесь.')
-        if message.chat.id in admins:
-            bot.send_message(message.chat.id, 'Ты админ!', reply_markup=markup_all(message.chat.id))
-
-        else:
-            bot.send_message(message.chat.id, 'Вот твои возможности!', reply_markup=markup_all(message.chat.id))
-
-
 @bot.message_handler(commands=['show_moder'])
 def home_work(message: types.Message):
     bot.send_message(message.chat.id, "Модераторы были отправлены в консоль")

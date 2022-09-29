@@ -1,14 +1,15 @@
-import datetime
-from pytz import timezone
+gg = "mafia_DJ_amogus"
 
-tz = timezone("Europe/Kyiv")
-dt = datetime.datetime.now(tz)
 
-print(dt)
-print(dt.tzname())
+hh={"ff":{"gg":1,"hh":2}, "jj":6}
+del hh["ff"]["hh"]
 
-print(datetime.date.today().strftime('%Y:%m:%d '))
-print(datetime.datetime.today().strftime('%Y:%m:%d '))
+print(hh)
+def gg():
+    def ll():
+        return 2
+    return 3
+print(gg.ll())
 # from telebot import TeleBot
 #
 # from config import TELEGRAM_API, tg_chanel_id

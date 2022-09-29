@@ -2,51 +2,77 @@ import time
 
 import wavelink
 
-from config import music_channel_id, discord_guild
-from discord import utils
+from config import music_channel_id, discord_guild, mafia_voice_channel_id, mafia_players
 import discord
 from discord_bot.main_discord import slash, bot
 from utils import print_ds
 import dislash
-from discord_bot.music.music_read import read_url, playlist
+from discord_bot.music.music_read import read_url, playlist, read_youtube, details_player
 from asyncio import sleep
 
-start_bool = False
+start_bool = True
 
 
 @slash.slash_command(description="Воспроизвести плейлист или трек",
                      options=[
                          dislash.Option("url", "Введите ссылку на плейлист или трек", dislash.OptionType.STRING, True)])
-async def play(ctx: dislash.interactions.app_command_interaction.SlashInteraction, url):
+async def play(ctx: dislash.interactions.app_command_interaction.SlashInteraction, url, mafia=None):
     global start_bool
-    if start_bool:
-        await add(ctx, url)
-        return
-    start_bool = True
+    if mafia:
+        class Ctx:
+            guild = ctx.guild
+            channel = ctx
+            reply = ctx.send
+            author = mafia
+        ctx = Ctx
+
     if discord_guild != ctx.guild.id:
         return
     if music_channel_id != ctx.channel.id:
-        await ctx.reply("Здесь нельзя запускать музыку", ephemeral=True)
+        await ctx.reply("💢 Здесь нельзя запускать музыку", ephemeral=True)
         return
     if not ctx.author.voice:
-        await ctx.reply("Вы не зашли в голосовой канал", ephemeral=True)
+        if mafia or type(ctx) == discord.message.Message:
+            await ctx.reply("⚠️ Вы не зашли в голосовой канал", delete_after=3)
+        else:
+            await ctx.reply("⚠️ Вы не зашли в голосовой канал", ephemeral=True)
         return
+    if ctx.author.voice.channel.id == mafia_voice_channel_id:
+        if ctx.author in mafia_players and \
+                "role" in mafia_players[ctx.author] and \
+                "DJ" == mafia_players[ctx.author]["role"]:
+            pass
+        else:
+            await ctx.author.reply("💢 В этом голосовом канале нельзя запускать музыку!", ephemeral=True)
+            return
+    if start_bool:
+        await ctx.reply("⏱ Пождите несколько секунд, выполняется команда", delete_after=3)
+        return
+    if playlist:
+        await ctx.reply("⚠️ Сначала очистите плейлист потом выполняйте эту команду", delete_after=3)
+        return
+    start_bool = True
 
     await ctx.channel.trigger_typing()
 
     before_time = time.perf_counter()
-    playlist.clear()
-    if bot.voice_clients:
-        await bot.voice_clients[0].stop()
+
+    playlist.clear()  # По сути ненужно, но метод предосторожности
     await read_url(url)
-    # ----------------------------------------Нужен фикс----------------------------------------
-    while True:  # Если трек не был найден
-        try:
-            track_name = f"{playlist[0]['artists']} - {playlist[0]['name']}"
-            track = await wavelink.YouTubeTrack.search(track_name, return_first=True)
+
+    if not playlist:
+        start_bool = False
+        return
+    # ----------------------------------------Нужен фикс (возможно исправил)----------------------------------------
+    while True:
+        if "track" in playlist[0]:
+            track = playlist[0]["track"]
             break
-        except:
-            await ctx.reply("Трек не был найден на YouTube...", delete_after=3)
+        else:
+            track_name = f"{playlist[0]['artists']} - {playlist[0]['name']}"
+            track = await read_youtube(track_name, True)
+            if track:
+                break
             playlist.pop(0)
             if not playlist:
                 start_bool = False
@@ -54,27 +80,33 @@ async def play(ctx: dislash.interactions.app_command_interaction.SlashInteractio
     # ------------------------------------------------------------------------------------------
     vc: wavelink.player.Player
     if not bot.voice_clients:
-        await ctx.reply("Подключение к голосовому каналу...", delete_after=3)
+        await ctx.reply("🌐 Подключение к голосовому каналу...", delete_after=3)
         vc = await ctx.author.voice.channel.connect(cls=wavelink.Player)
-        await vc.set_filter(wavelink.Filter(vc.filter, volume=0.015))
+        if ctx.author in mafia_players:
+            details_player["volume"] = "high"
+            await vc.set_filter(wavelink.Filter(vc.filter, volume=0.6))
+        else:
+            details_player["volume"] = "low"
+            await vc.set_filter(wavelink.Filter(vc.filter, volume=0.015))
 
     elif bot.voice_clients[0].channel != ctx.author.voice.channel:
-        await ctx.reply("Подключение к голосовому каналу...", delete_after=3)
+        await ctx.reply("🌐 Подключение к голосовому каналу...", delete_after=3)
         await bot.voice_clients[0].move_to(ctx.author.voice.channel)
         vc = bot.voice_clients[0]
 
     else:
         vc = bot.voice_clients[0]
 
-    await ctx.reply("Запускаю музон...", delete_after=3)
+    details_player["status"] = "play"
+    await ctx.reply("🎶 Запускаю музон...", delete_after=3)
     await vc.play(track)
-    print_ds(f"Загрузка музыки за: {time.perf_counter() - before_time} сек")
+    print_ds(f"Загрузка музыки за: {round(time.perf_counter() - before_time, 2)} сек")
     print_ds(f"Играет музыка: {track}")
     start_bool = False
 
 
 @bot.event
-async def on_wavelink_track_end(player: wavelink.Player, track, reason):
+async def on_wavelink_track_end(player: wavelink.Player, track, reason):  # noqa
     # print(f"Трек закончился причина: {reason}")
     if len(player.channel.members) >= 2:
         if bot.user not in player.channel.members:
@@ -88,20 +120,21 @@ async def on_wavelink_track_end(player: wavelink.Player, track, reason):
         return
     elif reason == "LOAD_FAILED":
         await bot.get_guild(discord_guild).get_channel(music_channel_id).send(
-            "Во время загрузки трека произошла ошибка", delete_after=5)
+            "❗️ Во время загрузки трека произошла ошибка", delete_after=5)
 
     if playlist:
         playlist.pop(0)
     if playlist:
         # ----------------------------------------Нужен фикс----------------------------------------
         while True:
-            try:
-                track_name = f"{playlist[0]['artists']} - {playlist[0]['name']}"
-                track = await wavelink.YouTubeTrack.search(track_name, return_first=True)
+            if "track" in playlist[0]:
+                track = playlist[0]["track"]
                 break
-            except IndexError:
-                await bot.get_guild(discord_guild).get_channel(music_channel_id).send(
-                    "Трек не был найден на YouTube...", delete_after=3)
+            else:
+                track_name = f"{playlist[0]['artists']} - {playlist[0]['name']}"
+                track = await read_youtube(track_name, True)
+                if track:
+                    break
                 playlist.pop(0)
                 if not playlist:
                     return
@@ -117,23 +150,40 @@ async def on_wavelink_track_end(player: wavelink.Player, track, reason):
 
 @slash.slash_command(description="Пауза")
 async def pause(ctx: dislash.interactions.app_command_interaction.SlashInteraction):
-    await ctx.reply("Ок")
+    if music_channel_id != ctx.channel.id:
+        await ctx.reply("💢 Здесь нельзя использовать эту команду...", ephemeral=True)
+        return
+    if ctx.author.voice and ctx.author.voice.channel.id == mafia_voice_channel_id:
+        await ctx.reply("💢 В данный момент нельзя использовать эту команду...", ephemeral=True)
+        return
+    await ctx.reply("👍 Есть пауза, сделано бос...", delete_after=6)
     voice: discord.voice_client.VoiceClient = bot.voice_clients[0]
     if voice:
+        details_player["status"] = "pause"
         voice.pause()
 
 
 @slash.slash_command(description="Продолжить")
 async def resume(ctx: dislash.interactions.app_command_interaction.SlashInteraction):
-    await ctx.reply("Ок")
+    if music_channel_id != ctx.channel.id:
+        await ctx.reply("💢 Здесь нельзя использовать эту команду...", ephemeral=True)
+        return
+    await ctx.reply("🥣 Уже воспроизводится, готов служить за миску риса...", delete_after=6)
     voice: discord.voice_client.VoiceClient = bot.voice_clients[0]
     if voice:
+        details_player["status"] = "play"
         voice.resume()
 
 
 @slash.slash_command(description="Скипнуть песню")
 async def skip(ctx: dislash.interactions.app_command_interaction.SlashInteraction):
-    await ctx.reply("Ок")
+    if music_channel_id != ctx.channel.id:
+        await ctx.reply("💢 Здесь нельзя использовать эту команду...", ephemeral=True)
+        return
+    if ctx.author.voice and ctx.author.voice.channel.id == mafia_voice_channel_id:
+        await ctx.reply("💢 В данный момент нельзя использовать эту команду...", ephemeral=True)
+        return
+    await ctx.reply(f"😔 Зачем ты так, это был самый клевый трек...", delete_after=6)
     voice: discord.voice_client.VoiceClient = bot.voice_clients[0]
     if voice:
         voice.stop()
@@ -144,14 +194,40 @@ async def skip(ctx: dislash.interactions.app_command_interaction.SlashInteractio
                          dislash.Option("url", "Введите ссылку на плейлист или трек", dislash.OptionType.STRING, True)])
 async def add(ctx: dislash.interactions.app_command_interaction.SlashInteraction, url):
     if music_channel_id != ctx.channel.id:
-        await ctx.reply("Здесь нельзя добавлять музыку", ephemeral=True)
+        await ctx.reply("💢 Здесь нельзя добавлять музыку", ephemeral=True)
+        return
+    if ctx.author.voice and ctx.author.voice.channel.id == mafia_voice_channel_id:
+        await ctx.reply("💢 В данный момент нельзя использовать эту команду...", ephemeral=True)
         return
     if playlist:
-        # ----------------------------------------Нужен фикс----------------------------------------
-        count = len(playlist)
+        await ctx.reply("🤘 Музон добавляется...", delete_after=6)
         await read_url(url)
-        if len(playlist) - count:
-            await ctx.reply("Музон был добавлен", delete_after=3)
-        # ------------------------------------------------------------------------------------------
     else:
-        await ctx.reply("Плейлист бота не играет!", delete_after=2)
+        await ctx.reply("🤷‍♂️ Плейлист бота не играет!", delete_after=2)
+
+
+@slash.slash_command(description="Громкость на полную")
+@dislash.has_permissions(administrator=True)
+async def max_value(ctx: dislash.interactions.app_command_interaction.SlashInteraction):
+    voices = bot.voice_clients
+    if voices:
+        vc = voices[0]
+        details_player["volume"] = "high"
+        await vc.set_filter(wavelink.Filter(vc.filter, volume=5))
+        await ctx.reply("🤣 Сделал...", ephemeral=True)
+    else:
+        await ctx.reply("🤷‍♂️ Плейлист бота не играет!", ephemeral=True)
+
+
+async def voice_leave(member: discord.member.Member, before: discord.member.VoiceState,  # noqa
+                      after: discord.member.VoiceState):
+    if before.channel and (not after.channel or before.channel != after.channel):
+        vc: discord.channel.VoiceChannel = before.channel
+        if bot.user in vc.members and len(vc.members) == 1:
+            if not bot.voice_clients:
+                await vc.members[0].edit(voice_channel=None)
+            else:
+                vc_bot = bot.voice_clients[0]
+                playlist.clear()
+                await vc_bot.stop()
+                await vc_bot.disconnect()

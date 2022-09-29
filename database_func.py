@@ -9,6 +9,7 @@ calendar = {}
 edit_data = []
 default_l = {0: {}, 1: {}, 2: {}, 3: {}, 4: {}}
 default_p = {0: {}, 1: {}, 2: {}, 3: {}, 4: {}}
+control_sound = {}
 
 conn = None
 cursor = None
@@ -28,6 +29,12 @@ def db_run(execute):
         return res
     else:
         conn.commit()
+
+
+def load_control_sound(db_select, save_dict):
+    row_dict = db_run(db_select)
+    for i in row_dict:
+        save_dict[i[0]] = {"mute": i[1], "deaf": i[2]}
 
 
 def load_default_timetable(db_select, save_dict):
@@ -61,6 +68,8 @@ def load_calendar(db_select, save_dict):
 
 
 def load_all_elements():
+    load_control_sound("SELECT * FROM control_sound", control_sound)
+
     load_moderators("SELECT * FROM admin", admins)
     load_moderators("SELECT * FROM teacher", teachers)
 

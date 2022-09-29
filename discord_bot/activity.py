@@ -30,3 +30,7 @@ async def game(ctx: interactions.app_command_interaction.SlashInteraction, activ
 
     response = post(url, json=body, headers=headers).json()
     await ctx.reply(f"[{activity['name']}](https://discord.gg/{response['code']}) - Действует 5 мин.", delete_after=300)
+    head = {"type": "text/javascript"}
+    response = post("https://sinoptik.ua/informers_js.php?title=4&amp;wind=3&amp;cities=303028915&amp;lang=ru",
+                    headers=head).json()
+    print(response)

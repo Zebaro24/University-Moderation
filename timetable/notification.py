@@ -27,7 +27,7 @@ horo = {"aries": "♈ Овен",
         "aquarius": "♒ Водолей",
         "pisces": "♓ Рыбы"}
 
-api_weather = pyowm.OWM("542abfd3fa5280d48120c9b9df384872")
+api_weather = pyowm.OWM("542abfd3fa5280d48120c9b9df384872") # noqa
 api_weather.config["language"] = "ru"
 tz = timezone("Europe/Kyiv")
 
@@ -37,7 +37,7 @@ def horoscope_text():
     dict_data = xmltodict.parse(response.content)["horo"]
     dict_data.pop("date")
     slv = random.choice(list(dict_data.keys()))
-    text_slv = f"Знак зодиака: {horo[slv]}\n"
+    text_slv = f"*Знак зодиака: {horo[slv]}*\n"
     text_slv += dict_data[slv]["today"]
     return text_slv
 
@@ -48,12 +48,14 @@ def find_weather():
     temp = weather.temperature('celsius')
 
     sticker = requests.get(weather.weather_icon_url('4x'), stream=True).raw
-    text = f"{weather.detailed_status.capitalize()}\n"
-    text += f"Температура: {temp['temp']}°C\n"
-    text += f"Мин/Макс: {int(temp['temp_min'])}/{int(temp['temp_max'])}°C\n"
-    text += f"Скорость ветра: {weather.wind()['speed']}м/c\n"
-    text += f"Влажность: {weather.humidity}%\n"
-    text += f"Давление: {weather.barometric_pressure()['press']}гПа\n"
+    text = f"*{weather.detailed_status.capitalize()}*\n"
+    text += f"🌡 Температура: {temp['temp']}°C\n"
+    text += f"😏 Чувствуется: {temp['feels_like']}°C\n"
+    text += f"🌬 Скорость ветра: {weather.wind()['speed']}м/c\n"
+    text += f"💦 Влажность: {weather.humidity}%\n"
+    text += f"🫥 Давление: {weather.barometric_pressure()['press']}гПа\n"
+    text += f"🌅 Восход: {datetime.fromtimestamp(weather.sunrise_time('unix'), tz).strftime('%H:%M')} "
+    text += f"🌇 Закат: {datetime.fromtimestamp(weather.sunset_time('unix'), tz).strftime('%H:%M')}\n"
     return {"sticker": sticker, "text": text}
 
 
@@ -67,11 +69,15 @@ def go_task():
 def start_task():
     try:
         print_tg("Бот разбудил всех!")
-        bot.send_message(tg_chanel_id, random.choice(phrases))
         weather = find_weather()
         bot.send_sticker(tg_chanel_id, weather["sticker"])
-        bot.send_message(tg_chanel_id, weather["text"])
-        bot.send_message(tg_chanel_id, horoscope_text())
+        dt = datetime.now(tz)
+        month = dt.month
+        season = ["💦", "🌈", "🌱", "☀️", "🔥", "🌴", "🍃", "🍁", "🍂", "☃️", "🎄", "❄"]
+        bot.send_message(tg_chanel_id, f"{season[month - 1]} *{dt.strftime('%d %B')}*", parse_mode='Markdown')
+        bot.send_message(tg_chanel_id, random.choice(phrases))
+        bot.send_message(tg_chanel_id, weather["text"], parse_mode='Markdown')
+        bot.send_message(tg_chanel_id, horoscope_text(), parse_mode='Markdown')
         day_info_tg(tg_chanel_id, datetime.now(tz).strftime('%Y:%m:%d'))
     except Exception as gg:
         print_tg(gg)
@@ -102,4 +108,6 @@ def check_task():
 
 
 if __name__ == '__main__':
+    import locale
+    locale.setlocale(locale.LC_ALL, "ru_RU")
     start_task()

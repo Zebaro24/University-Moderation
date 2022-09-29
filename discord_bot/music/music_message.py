@@ -47,30 +47,32 @@ async def update_message():
 
             embed.add_field(name="Следующие в очереди:", value=field_value)
 
-            bt_1 = Button(custom_id='music_play', emoji=PartialEmoji(name="play", id=1001490575347962017),
+            if details_player["status"] == "pause":
+                bt_1 = Button(custom_id='music_play', emoji=PartialEmoji(name="play", id=1001490575347962017),
+                              style=b_colour)
+            else:
+                bt_1 = Button(custom_id='music_pause', emoji=PartialEmoji(name="pause", id=1001487958739779715),
+                              style=b_colour)
+            bt_2 = Button(custom_id='music_skip', emoji=PartialEmoji(name="skip", id=1001490141543682078),
                           style=b_colour)
-            bt_2 = Button(custom_id='music_pause', emoji=PartialEmoji(name="pause", id=1001487958739779715),
+            bt_3 = Button(custom_id='music_shuffle', emoji=PartialEmoji(name="shuffle", id=1001490912037306469),
                           style=b_colour)
-            bt_3 = Button(custom_id='music_skip', emoji=PartialEmoji(name="skip", id=1001490141543682078),
-                          style=b_colour)
-            bt_4 = Button(custom_id='music_shuffle', emoji=PartialEmoji(name="shuffle", id=1001490912037306469),
-                          style=b_colour)
-            bt_5 = Button(custom_id='music_conn', emoji=PartialEmoji(name="conn", id=1001494112664551486),
-                          style=b_colour)
-
-            bt_6 = Button(custom_id='music_stop', emoji=PartialEmoji(name="stop", id=1001505894988791883),
-                          style=b_colour)
-            bt_7 = Button(custom_id='music_low', emoji=PartialEmoji(name="low", id=1001500402644156567), style=b_colour)
-            bt_8 = Button(custom_id='music_med', emoji=PartialEmoji(name="med", id=1001507090050863154), style=b_colour)
-            bt_9 = Button(custom_id='music_high', emoji=PartialEmoji(name="high", id=1001507394762838087),
+            bt_4 = Button(custom_id='music_conn', emoji=PartialEmoji(name="conn", id=1001494112664551486),
                           style=b_colour)
 
-            components = [ActionRow(bt_1, bt_2, bt_3, bt_4, bt_5),
-                          ActionRow(bt_6, bt_7, bt_8, bt_9)]
+            bt_5 = Button(custom_id='music_stop', emoji=PartialEmoji(name="stop", id=1001505894988791883),
+                          style=b_colour)
+            bt_6 = Button(custom_id='music_low', emoji=PartialEmoji(name="low", id=1001500402644156567), style=b_colour)
+            bt_7 = Button(custom_id='music_med', emoji=PartialEmoji(name="med", id=1001507090050863154), style=b_colour)
+            bt_8 = Button(custom_id='music_high', emoji=PartialEmoji(name="high", id=1001507394762838087),
+                          style=b_colour)
+
+            components = [ActionRow(bt_1, bt_2, bt_3, bt_4),
+                          ActionRow(bt_5, bt_6, bt_7, bt_8)]
 
         else:
             components = []
-            embed = Embed(title="В плейлисте нет песен", color=music_colour)
+            embed = Embed(title="🚫 В плейлисте нет песен", color=music_colour)
 
         if music_message is None:
             music_channel = bot.get_guild(discord_guild).get_channel(music_channel_id)

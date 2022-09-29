@@ -1,13 +1,14 @@
 # Импорт настроек
-from config import create_voice, create_category
+from config import create_voice, create_category, mafia_voice_channel_id
 
 # Импорт функций Discord
-from discord_bot.main_discord import bot
 from discord.utils import get
 import discord
+from discord_bot.voice_actions import voice_save, voice_return
+from discord_bot.main_discord import bot
+
 
 who_channel = {}
-control_sound = {}  # В базу данных!!!
 
 
 # Удаление созданных лишних каналов при запуске
@@ -24,9 +25,9 @@ async def create_channel(member):
     voice_channel = await category.create_voice_channel(f"<---{member.display_name}--->")
     who_channel[member] = {"voice": voice_channel, "member_mute": {}}
     await voice_channel.set_permissions(member, manage_channels=True, mute_members=True, deafen_members=True)
-    member_voice = {"mute": member.voice.mute, "deaf": member.voice.deaf}
-    control_sound[member] = member_voice
-    await member.move_to(voice_channel)
+    await voice_save(member)
+    if member.voice:
+        await member.move_to(voice_channel)
 
 
 # Удаление голосового канала
@@ -43,15 +44,13 @@ async def delete_channel(member, before, after):
                 if member.voice:
                     who_channel[i]["member_mute"][member]["mute"] = member.voice.mute
                     who_channel[i]["member_mute"][member]["deaf"] = member.voice.deaf
-    if after.channel:
-        await member.edit(mute=control_sound[member]["mute"], deafen=control_sound[member]["deaf"])
-        del control_sound[member]
+    if after.channel and after.channel != bot.get_channel(mafia_voice_channel_id):
+        await voice_return(member)
 
 
 # Сохранение муза и звука при входе в голосовой канал
 async def voice_in(member, after):
-    member_voice = {"mute": member.voice.mute, "deaf": member.voice.deaf}
-    control_sound[member] = member_voice
+    await voice_save(member)
 
     for i in who_channel.values():
         if i["voice"].id == after.channel.id:
@@ -67,9 +66,7 @@ async def voice_in(member, after):
 # Возобновить статус мута и звука при <перемещении> с созданного канала в любой другой и при <выходе и заходе в другой канал>.
 
 # Любое взаимодействие с голосовыми каналами
-@bot.event
-async def on_voice_state_update(member: discord.member.Member, before: discord.member.VoiceState,
-                                after: discord.member.VoiceState):
+async def create(member: discord.member.Member, before: discord.member.VoiceState, after: discord.member.VoiceState):
     # {----Есть и <before> и <after>----}
     if after.channel and before.channel:  # Есть и <before> и <after>
         if after.channel.id == before.channel.id:
@@ -79,10 +76,10 @@ async def on_voice_state_update(member: discord.member.Member, before: discord.m
             await delete_channel(member, before, after)
 
         if after.channel.id in [i["voice"].id for i in who_channel.values()]:  # Если after в списке созданных
-            await voice_in(member, after)
+            await voice_in(member, after) # noqa
 
         if after.channel.id == create_voice:
-            await create_channel(member)
+            await create_channel(member) # noqa
 
     # {----Есть только <after>----} только вход
     elif after.channel:
@@ -93,14 +90,12 @@ async def on_voice_state_update(member: discord.member.Member, before: discord.m
                     who_channel[i]["member_mute"][member]["deaf"] = member.voice.deaf
 
         if after.channel.id == create_voice:
-            await create_channel(member)
+            await create_channel(member) # noqa
 
         elif after.channel.id in [i["voice"].id for i in who_channel.values()]:  # Если after в списке созданных
-            await voice_in(member, after)
-
-        elif member in control_sound.keys():
-            await member.edit(mute=control_sound[member]["mute"], deafen=control_sound[member]["deaf"])
-            del control_sound[member]
+            await voice_in(member, after) # noqa
+        if after.channel != bot.get_channel(mafia_voice_channel_id):
+            await voice_return(member)
 
     # {----Есть только <before>----} только выход
     elif before.channel:

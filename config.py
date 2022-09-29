@@ -1,48 +1,51 @@
+from os import environ
+
 # <----Global Configs---->
-DISCORD_API = "<DISCORD_API>"  # "<DEBUG_DISCORD_API>"
-TELEGRAM_API = "<DEBUG_TELEGRAM_API>"  # "<DEBUG_2_TELEGRAM_API>"
+DISCORD_API = "<DISCORD_API>"  # "<DEBUG_DISCORD_API>" # noqa
+TELEGRAM_API = ""  # "<DEBUG_2_TELEGRAM_API>" # noqa
 
-discord_guild = 994019845039468584  # <---Первоначальная замена
-
-debug = False
+discord_guild = 0  # <---Первоначальная замена
 
 # <----Discord Configs---->
 # {Global}
 discord_color = 16777215  # Можно поменять
 
 # {Roles}
-role_channel_id = 995816130881015808  # <---Первоначальная замена
-role_message_id = 998501380006359100  # Получим с roles/roles_first.py
+role_channel_id = 0  # <---Первоначальная замена
+role_message_id = 0  # Получим с roles/roles_first.py
 
 ROLES = {
-    '💻': 996053166875488397,  # programming
-    "🏳️‍🌈": 996052626451992587,  # genshin
-    "⛏": 996053498338750504,  # minecraft
+    "💻": 0,  # programming
+    "🏳️‍🌈": 0,  # genshin
+    "⛏": 0,  # minecraft
 }
 
 # {Music}
-client_id = "<SPOTIFY_CLIENT_ID>"
-client_secret = "<SPOTIFY_CLIENT_SECRET>"
+client_id = "<SPOTIFY_CLIENT_ID>"  # noqa
+client_secret = "<SPOTIFY_CLIENT_SECRET>"  # noqa
 
-music_channel_id = 999748844025819146
+music_channel_id = 0
 
 music_colour = 7506394
 music_button_colour = 1  # blurple
 
 # {Mafia}
-mafia_channel_id = 998603873415610438  # <---Первоначальная замена
-mafia_channel_webhook = "1006314317647462532/6i2It2KgY4DxeLZG4AbmHJnGK9HvnXo3s80EeAI5_7jDwvNvREW_zQuZ58387HZCM1iC"
+mafia_channel_id = 0  # <---Первоначальная замена
+mafia_channel_webhook = ""
+mafia_chat = 0
+mafia_statistics = 0
+mafia_voice_channel_id = 0
 mafia_color = 10038562
 mafia_button_colour = 4
-mafia_players = []
+mafia_players = {}
 
 # {Create Voice}
-create_category = 1009823176362045440
-create_text = 1009823336668348446
-create_voice = 1009823569871638568
+create_category = 0
+create_text = 0
+create_voice = 0
 
 # {Version}
-version_channel = 1013383314461171722
+version_channel = 0
 
 # <----Telegram Configs---->
 # {Timetable}
@@ -50,14 +53,24 @@ timetable_time = ["08:00 - 09:20", "09:40 - 11:00", "11:25 - 12:45", "13:10 - 14
                   "18:00 - 19:20"]
 
 # <----General---->
-tg_chanel_id = -748444518  # -1001530372815
-ds_chanel_id = 997248600960680058
-ds_chanel_webhook = "1011608090233278515/Ds8dAqxUMYCF4bH8iXGPsO5KSN2RhtB_nLuH6wUzvGGzklPPsTH3hpT2KQy8hqrC5BLt"
+tg_chanel_id = 0  # -1001530372815
+ds_chanel_id = 0
+ds_chanel_webhook = ""  # for telegram
+ds_bug_channel = 0
 distance_learning = True
 
 # {Database}
-DB_NAME = '<DB_USER_NAME>'
-DB_USER = '<DB_USER_NAME>'
-DB_PASS = '<DB_PASS>'
-DB_HOST = '<DB_HOST>'
-DB_PORT = '"<DB_PORT>"'
+DB_NAME = '<DB_USER_NAME>'  # noqa
+DB_USER = '<DB_USER_NAME>'  # noqa
+DB_PASS = '<DB_PASS>'  # noqa
+DB_HOST = '<DB_HOST>'  # noqa
+DB_PORT = '"<DB_PORT>"'  # noqa
+
+# <----Debug Configs---->
+if "debug" in environ:
+    debug = environ["debug"]
+else:
+    debug = True
+
+if debug:
+    from config_debug import *  # noqa

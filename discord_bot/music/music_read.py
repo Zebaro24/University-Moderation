@@ -50,18 +50,34 @@ def spotify_add(track):
     playlist.append(track_for_playlist)
 
 
-async def read_youtube(url):
-    # ----------------------------------------Нужен фикс----------------------------------------
+async def read_youtube(url, stream=False):
+    # ----------------------------------------Нужен фикс (возможно пофиксил)----------------------------------------
     try:
-        track = await wavelink.YouTubeTrack.search(url, return_first=True)
-    except IndexError:
+        tracks_search = await wavelink.YouTubeTrack.search(url)
+    except Exception as error:
+        print(f"Error read_youtube: {error}")
         await bot.get_guild(discord_guild).get_channel(music_channel_id).send(
-            "Трек не был найден на YouTube...", delete_after=3)
+            "Не валидная ссылка...", delete_after=3)
+        return
+    if not tracks_search:
+        await bot.get_guild(discord_guild).get_channel(music_channel_id).send(
+            " Трек не был найден на YouTube...", delete_after=3)
+        return
+    if type(tracks_search) == wavelink.tracks.YouTubePlaylist:
+        # noinspection PyTypeChecker
+        youtube_playlist: wavelink.tracks.YouTubePlaylist = tracks_search
+        tracks = youtube_playlist.tracks
     else:
+        tracks = [tracks_search[0]]
+        if stream:
+            return tracks[0]
+
+    for track in tracks:
         track_for_playlist = {"name": track.title,
                               "artists": track.author,
                               "time": ceil(track.duration),
-                              "img": track.thumb}
+                              "img": track.thumb,
+                              "track": track}
         playlist.append(track_for_playlist)
     # ------------------------------------------------------------------------------------------
 
