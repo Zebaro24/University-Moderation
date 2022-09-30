@@ -1,7 +1,8 @@
 import os
 
 from telebot import types
-from utils import print_tg, bc, exception, discord_error, telegram_error, from_bytes
+from utils import print_tg, bc, exception, from_bytes
+import utils
 from speedtest import Speedtest
 from config import tg_chanel_id
 from threading import Thread
@@ -67,13 +68,13 @@ def del_logs(message: types.Message):
 @bot.message_handler(commands=['status_all_bot'])
 def status(message: types.Message):
     text = "*Статус бота:*\n"
-    if telegram_error:
-        text += f"Telegram бот имел: *{telegram_error} ошибок*\n"
+    if utils.telegram_error:
+        text += f"Telegram бот имел: *{utils.telegram_error} ошибок*\n"
     else:
         text += f"Telegram бот не имел ошибок!\n"
 
-    if discord_error:
-        text += f"Discord бот имел: *{discord_error} ошибок*\n"
+    if utils.discord_error:
+        text += f"Discord бот имел: *{utils.discord_error} ошибок*\n"
     else:
         text += f"Discord бот не имел ошибок!\n"
 
