@@ -1,7 +1,16 @@
 from logging import getLogger, INFO, FileHandler, Formatter, ERROR
+from pytz import timezone
+from datetime import datetime
 
 telegram_error = 0
 discord_error = 0
+start_time = "Не задана"
+tz = timezone("Europe/Kyiv")
+
+
+def time_start_bot():
+    global start_time
+    start_time = str(datetime.now(tz))
 
 
 def set_logger():

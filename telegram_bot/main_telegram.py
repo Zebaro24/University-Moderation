@@ -68,6 +68,7 @@ def del_logs(message: types.Message):
 @bot.message_handler(commands=['status_all_bot'])
 def status(message: types.Message):
     text = "*Статус бота:*\n"
+    text += f"Бот был запущен: *{utils.start_time}*"
     if utils.telegram_error:
         text += f"Telegram бот имел: *{utils.telegram_error} ошибок*\n"
     else:

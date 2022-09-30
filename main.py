@@ -1,7 +1,7 @@
 from discord_bot.main_discord import start as start_discord
 from telegram_bot.main_telegram import start as start_telegram
 from threading import Thread
-from utils import bc, set_logger, info
+from utils import bc, set_logger, info, time_start_bot
 from os.path import isfile
 from subprocess import Popen, PIPE
 from database_func import load_all_elements
@@ -10,6 +10,7 @@ import locale
 
 # Функция запуска ботов
 def start_bots():
+    time_start_bot()
     if isfile(r"D:\Install\Lavalink\Lavalink.jar"):
         Popen(r"cd /d D:\Install\Lavalink & java -jar Lavalink.jar", stdout=PIPE, shell=True)
     else:
