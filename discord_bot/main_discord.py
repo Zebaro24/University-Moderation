@@ -68,7 +68,7 @@ async def on_ready():
 
 # Запуск музыкальной ноды
 async def start_wavelink():
-    await sleep(2)
+    await sleep(5)
     connect = False
     while not connect:
         node = await wavelink.NodePool.create_node(bot=bot, host='127.0.0.1', port=2333, password='ln6Bdu47')
