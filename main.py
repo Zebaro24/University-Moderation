@@ -13,7 +13,7 @@ def start_bots():
     if isfile(r"D:\Install\Lavalink\Lavalink.jar"):
         Popen(r"cd /d D:\Install\Lavalink & java -jar Lavalink.jar", stdout=PIPE, shell=True)
     else:
-        Popen(r"Lavalink", stdout=PIPE, shell=True)
+        Popen(r"java -jar Lavalink.jar", stdout=PIPE, shell=True)
         # print(f"{bc(31)}<---Lavalink не установлен--->{bc()}")
 
     load_all_elements()
