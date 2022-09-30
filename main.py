@@ -19,8 +19,8 @@ def start_bots():
     load_all_elements()
     locale.setlocale(locale.LC_ALL, "ru_RU")
 
-    Thread(target=start_discord, daemon=True).start()
-    start_telegram()
+    Thread(target=start_telegram, daemon=True).start()
+    start_discord()
 
 
 # Запуск всего скрипта

@@ -123,6 +123,8 @@ def start():
     while True:
         try:
             bot.run(DISCORD_API)
+        except RuntimeError:
+            return
         except Exception as e:
             print_ds(f'Бот перезапустился из за \n{repr(e)}')
             exception("Discord")
