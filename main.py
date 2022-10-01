@@ -11,11 +11,7 @@ import locale
 # Функция запуска ботов
 def start_bots():
     time_start_bot()
-    if isfile(r"D:\Install\Lavalink\Lavalink.jar"):
-        Popen(r"cd /d D:\Install\Lavalink & java -jar Lavalink.jar", stdout=PIPE, shell=True)
-    else:
-        Popen(r"java -jar Lavalink.jar", stdout=PIPE, shell=True)
-        # print(f"{bc(31)}<---Lavalink не установлен--->{bc()}")
+    Popen(r"java -jar Lavalink.jar", stdout=PIPE, shell=True)
 
     load_all_elements()
     locale.setlocale(locale.LC_ALL, "ru_RU")
