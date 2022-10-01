@@ -18,7 +18,7 @@ async def distribution_of_roles():
     amount = len(mafia_players)
 
     if amount >= 5:
-        role.append("kitchener")
+        role.append("doctor")
     if amount >= 6:
         random_roles_clone = random_roles.copy()
         for i in range(amount - len(role) if amount - len(role) <= 6 else 6):

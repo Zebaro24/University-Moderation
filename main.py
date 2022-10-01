@@ -9,7 +9,7 @@ import locale
 
 # Функция запуска ботов
 def start_bots():
-    Popen(r"java -jar Lavalink.jar", stdout=PIPE, shell=True)
+    Popen(r"java -jar Lavalink.jar -Xmx200m", stdout=PIPE, shell=True)
 
     load_all_elements()
     locale.setlocale(locale.LC_ALL, "ru_RU")
