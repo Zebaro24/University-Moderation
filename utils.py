@@ -11,6 +11,8 @@ tz = timezone("Europe/Kyiv")
 def time_start_bot():
     global start_time
     start_time = str(datetime.now(tz))
+    print(f"{bc(32)}<---Время запуска: {start_time}--->{bc()}")
+    info("<---Время запуска: {start_time}--->")
 
 
 def set_logger():

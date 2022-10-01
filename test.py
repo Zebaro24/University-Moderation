@@ -1,15 +1,11 @@
-gg = "mafia_DJ_amogus"
+from datetime import datetime
+from random import choices
 
+if choices(["good", "bed"], [2, 1])[0] == "good":
+    print("yes")
+else:
+    print("no")
 
-hh={"ff":{"gg":1,"hh":2}, "jj":6}
-del hh["ff"]["hh"]
-
-print(hh)
-def gg():
-    def ll():
-        return 2
-    return 3
-print(gg.ll())
 # from telebot import TeleBot
 #
 # from config import TELEGRAM_API, tg_chanel_id
