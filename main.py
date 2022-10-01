@@ -9,7 +9,6 @@ import locale
 
 # Функция запуска ботов
 def start_bots():
-    time_start_bot()
     Popen(r"java -jar Lavalink.jar", stdout=PIPE, shell=True)
 
     load_all_elements()
@@ -22,6 +21,7 @@ def start_bots():
 # Запуск всего скрипта
 if __name__ == '__main__':
     set_logger()
+    time_start_bot()
     print(f"{bc(32)}<---Программа была запущена--->{bc()}")
     info("<---Программа была запущена--->")
     start_bots()
