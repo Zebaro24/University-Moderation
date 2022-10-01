@@ -70,7 +70,7 @@ DB_HOST = '<DB_HOST>'  # noqa
 DB_PORT = '"<DB_PORT>"'  # noqa
 
 # <----Debug Configs---->
-if "debug" in environ:
+if "SERVER" in environ:
     debug = False
 else:
     debug = True
