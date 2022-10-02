@@ -352,10 +352,8 @@ def components_select(custom_id, description, skip_role=None, skip=True):
 
 async def sleep_5(channel, text="обсуждения"):
     if not config.debug:
-        await channel.send(f":stopwatch: Вам дается **5 минут** на {text}. Время пошло...")
-        await sleep(240)
-        await channel.send(":stopwatch: Осталась **1 минута**...")
-        await sleep(50)
+        await channel.send(f":stopwatch: Вам дается **30 секунд** на {text}. Время пошло...")
+        await sleep(20)
         await channel.send(":stopwatch: Осталась **10 секунд**...")
         await sleep(10)
         await channel.send(":stopwatch: Время вышло...")
