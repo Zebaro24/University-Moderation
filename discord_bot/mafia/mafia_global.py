@@ -156,7 +156,7 @@ async def day(channel):
         leave_players.clear()
         text = "К сожалению эта ночка была очень не спокойной!\nУмерли:\n"
         for player, information in kill_people.items():
-            text += f"{information['text_role']} - {player.mention}\n"
+            text += f"{player.mention}\n"  # text += f"{information['text_role']} - {player.mention}\n"
     else:
         text = "К счастью эта ночка была достаточно тихой, никто не умер."
 
@@ -210,7 +210,7 @@ async def day(channel):
         await sleep(10)
         await channel.send(":stopwatch: Время вышло...")
         await sleep(1)
-        await channel.send(f"А ведь этот человек был: {kill_people[kill_person]['text_role']}")
+        # await channel.send(f"А ведь этот человек был: {kill_people[kill_person]['text_role']}")
         move_to("ghost")
         win = win_game()
         if win:
