@@ -14,11 +14,11 @@ import discord_bot.mafia.mafia_start as mafia_start
 
 
 async def distribution_of_roles():
-    role = ["mafia", "peace", "peace", "sheriff"]
+    role = ["mafia", "peace", "peace", "doctor"]
     amount = len(mafia_players)
 
     if amount >= 5:
-        role.append("doctor")
+        role.append("sheriff")
     if amount >= 6:
         random_roles_clone = random_roles.copy()
         for i in range(amount - len(role) if amount - len(role) <= 6 else 6):
