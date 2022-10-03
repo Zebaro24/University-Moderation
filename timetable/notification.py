@@ -1,9 +1,9 @@
-import schedule
+from scheduler import Scheduler
 from time import sleep
 from telegram_bot.main_telegram import bot
 from timetable.notification_phrases import phrases
 from config import tg_chanel_id, timetable_time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from pytz import timezone
 from database_func import calendar
 from telegram_bot.timetable.function import day_info_tg
@@ -27,9 +27,10 @@ horo = {"aries": "♈ Овен",
         "aquarius": "♒ Водолей",
         "pisces": "♓ Рыбы"}
 
-api_weather = pyowm.OWM("542abfd3fa5280d48120c9b9df384872") # noqa
+api_weather = pyowm.OWM("542abfd3fa5280d48120c9b9df384872")  # noqa
 api_weather.config["language"] = "ru"
 tz = timezone("Europe/Kyiv")
+schedule = Scheduler(tzinfo=tz)
 
 
 def horoscope_text():
@@ -62,7 +63,7 @@ def find_weather():
 def go_task():
     print_tg("Задачи запущены!")
     while True:
-        schedule.run_pending()
+        schedule.exec_jobs()
         sleep(1)
 
 
@@ -83,31 +84,42 @@ def start_task():
         print_tg(gg)
         print_tg("В боте произошла ошибка!")
     check_task()
-    return schedule.CancelJob
 
 
 def check_task():
     try:
-        now = calendar[datetime.now(tz).strftime('%Y:%m:%d')]
+        now_str = datetime.now(tz).strftime('%Y:%m:%d')
+
+        if not (now_str in calendar and calendar[now_str]):
+            print_tg(f"Сегодня выходной: {now_str}!")
+            schedule.once(time(3, tzinfo=tz), check_task)
+
         time_p = tz.localize(
-            datetime.strptime(datetime.now(tz).strftime('%Y:%m:%d ') + timetable_time[min(now.keys()) - 1][:5],
-                              "%Y:%m:%d %H:%M"))
+            datetime.strptime(now_str + " " + timetable_time[min(calendar[now_str]) - 1][:5], "%Y:%m:%d %H:%M"))
         time_p -= timedelta(minutes=10)
         if datetime.now(tz) < time_p:
             print_tg("Сейчас " + str(datetime.now(tz)))
             print_tg(f"Бот разбудит всех в {time_p}")
-            schedule.every().day.at(time_p.strftime("%H:%M")).do(start_task)
-            return schedule.CancelJob
+            schedule.once(time_p, start_task)
         else:
             print_tg(f"Бот сегодня уже всех разбудил в {time_p}")
-            schedule.every().day.at("03:00").do(check_task)
+            schedule.once(time(3, tzinfo=tz), check_task)
     except Exception as error:
         print_tg(f"Error: {error}")
-        print_tg("Или ошибка или это выходной!")
-        schedule.every().day.at("03:00").do(check_task)
+        print_tg("Ошибка в notification!")
+        schedule.once(time(3, tzinfo=tz), check_task)
 
 
 if __name__ == '__main__':
     import locale
+    from database_func import load_all_elements
+
+    load_all_elements()
     locale.setlocale(locale.LC_ALL, "ru_RU")
-    start_task()
+
+    check_task()
+    go_task()
+
+    print(schedule)
+
+    # start_task()

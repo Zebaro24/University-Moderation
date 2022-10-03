@@ -94,6 +94,8 @@ async def distribution_of_roles():
 
 
 count_days = 0
+start_time = time.perf_counter()
+
 kill_people = {}
 ghosts = {}
 
@@ -110,7 +112,7 @@ async def main_game(channel):
 
 
 async def first_meet(channel):
-    global count_days
+    global count_days, start_time
     for player, information in mafia_players.items():
         if information["role"] == "priest":
             await player.send("Да будет бог с тобой.\nЯ верю в тебя, возроди одного в любую секунду...",
@@ -125,6 +127,7 @@ async def first_meet(channel):
 
     await mafia_voice.voice_change("day")
     count_days += 1
+    start_time = time.perf_counter()
     embed = Embed(title="🏙 Это ваш первый день",
                   description="Во время первого дня вы знакомитесь между собой.\n"
                               "Не забывайте отыгрывать РП!\n",
@@ -144,8 +147,8 @@ async def first_meet(channel):
             await bot.get_channel(mafia_chat).set_permissions(player, read_messages=True)
     await bot.get_channel(mafia_chat).send("Чат был открыт!")
     await sleep(3)
-    await channel.send(":stopwatch: На знакомство дается **20 секунд**. Время пошло...")
-    await sleep(20)
+    await channel.send(":stopwatch: На знакомство дается **15 секунд**. Время пошло...")
+    await sleep(15)
     await channel.send(":stopwatch: Время вышло...")
 
 
@@ -318,7 +321,12 @@ async def finish_game(channel, ans):
     for player, information in ghosts.items():
         description += f"{player.mention} - {information['text_role']}\n"
 
-    embed_statistics = Embed(title=f"Игра номер: **{number + 1}**\n{ans}\nКоличество дней: {count_days}",
+    game_time = divmod(time.perf_counter() - start_time, 60)
+
+    embed_statistics = Embed(title=f"Игра номер: **{number + 1}**\n"
+                                   f"{ans}\n"
+                                   f"Количество дней: {count_days}\n"
+                                   f"Длительность: {game_time[0]} мин. {game_time[1]} сек.",
                              description=description, color=mafia_color)
 
     for player, information in (mafia_players | kill_people | ghosts).items():
@@ -342,7 +350,7 @@ def components_select(custom_id, description, skip_role=None, skip=True):
     options = []
     for player, information in mafia_players.items():
         if information["role"] != skip_role:
-            options.append(SelectOption(label=player.name, value=player.id, emoji="👤"))
+            options.append(SelectOption(label=player.display_name, value=player.id, emoji="👤"))
 
     if skip:
         options.append(SelectOption(label="Скипнуть...", value="skip", emoji="🚫"))
@@ -352,8 +360,8 @@ def components_select(custom_id, description, skip_role=None, skip=True):
 
 async def sleep_5(channel, text="обсуждения"):
     if not config.debug:
-        await channel.send(f":stopwatch: Вам дается **30 секунд** на {text}. Время пошло...")
-        await sleep(20)
+        await channel.send(f":stopwatch: Вам дается **1 минута** на {text}. Время пошло...")
+        await sleep(50)
         await channel.send(":stopwatch: Осталась **10 секунд**...")
         await sleep(10)
         await channel.send(":stopwatch: Время вышло...")

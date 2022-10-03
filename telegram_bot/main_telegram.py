@@ -3,7 +3,7 @@ import os
 from telebot import types
 from utils import print_tg, bc, exception, from_bytes
 import utils
-from speedtest import Speedtest
+from speedtest import Speedtest, ConfigRetrievalError
 from config import tg_chanel_id
 from threading import Thread
 from timetable.additional_func import check_default
@@ -84,14 +84,17 @@ def status(message: types.Message):
     text += f"ERROR весит: *{from_bytes(os.path.getsize('error.log'))}*\n"
     bot.send_message(message.chat.id, text, parse_mode='Markdown')
 
-    st = Speedtest()
-    st.get_best_server()
-    text = "*Скорость интернета:*\n"
-    text += f"Пинг: *{st.results.ping}*\n"
-    bot.send_message(message.chat.id, "Проверка скорости скачивания...")
-    text += f"Скорость скачивания: *{from_bytes(st.download())}*\n"
-    bot.send_message(message.chat.id, "Проверка скорости загрузки...")
-    text += f"Скорость загрузки: *{from_bytes(st.upload())}*\n"
+    try:
+        st = Speedtest()
+        st.get_best_server()
+        text = "*Скорость интернета:*\n"
+        text += f"Пинг: *{st.results.ping}*\n"
+        bot.send_message(message.chat.id, "Проверка скорости скачивания...")
+        text += f"Скорость скачивания: *{from_bytes(st.download())}*\n"
+        bot.send_message(message.chat.id, "Проверка скорости загрузки...")
+        text += f"Скорость загрузки: *{from_bytes(st.upload())}*\n"
+    except ConfigRetrievalError:
+        text = "Не удалось проверить скорость интернета!"
 
     bot.send_message(message.chat.id, text, parse_mode='Markdown')
 
