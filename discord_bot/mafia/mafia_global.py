@@ -326,7 +326,7 @@ async def finish_game(channel, ans):
     embed_statistics = Embed(title=f"Игра номер: **{number + 1}**\n"
                                    f"{ans}\n"
                                    f"Количество дней: {count_days}\n"
-                                   f"Длительность: {game_time[0]} мин. {game_time[1]} сек.",
+                                   f"Длительность: {game_time[0]} мин. {int(game_time[1])} сек.",
                              description=description, color=mafia_color)
 
     for player, information in (mafia_players | kill_people | ghosts).items():
