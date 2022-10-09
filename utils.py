@@ -12,7 +12,7 @@ def time_start_bot():
     global start_time
     start_time = str(datetime.now(tz))
     print(f"{bc(32)}<---Время запуска: {start_time}--->{bc()}")
-    info("<---Время запуска: {start_time}--->")
+    info(f"<---Время запуска: {start_time}--->")
 
 
 def set_logger():
@@ -21,6 +21,10 @@ def set_logger():
 
 
 def info(msg):
+    if "\033[01;38;05;34m" in msg:
+        msg = msg.replace("\033[01;38;05;34m", "")
+    if "\033[0m" in msg:
+        msg = msg.replace("\033[0m", "")
     getLogger("info").info(msg)
 
 
