@@ -93,6 +93,7 @@ def check_task():
         if not (now_str in calendar and calendar[now_str]):
             print_tg(f"Сегодня выходной: {now_str}!")
             schedule.once(time(3, tzinfo=tz), check_task)
+            return
 
         time_p = tz.localize(
             datetime.strptime(now_str + " " + timetable_time[min(calendar[now_str]) - 1][:5], "%Y:%m:%d %H:%M"))
