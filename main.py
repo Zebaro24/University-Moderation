@@ -1,5 +1,6 @@
 from discord_bot.main_discord import start as start_discord
 from telegram_bot.main_telegram import start as start_telegram
+from telegram_bot.feit_bot import start_feit_bot
 from threading import Thread
 from utils import bc, set_logger, info, time_start_bot
 from subprocess import Popen, PIPE
@@ -15,6 +16,7 @@ def start_bots():
     locale.setlocale(locale.LC_ALL, "ru_RU")
 
     Thread(target=start_telegram, daemon=True).start()
+    Thread(target=start_feit_bot, daemon=True).start()
     start_discord()
 
 
