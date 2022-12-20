@@ -6,6 +6,7 @@ from config import discord_guild, music_channel_id, music_colour
 from config import music_button_colour as b_colour
 from math import ceil
 from asyncio import sleep
+from datetime import timedelta, datetime
 
 music_message = None
 
@@ -74,14 +75,31 @@ async def update_message():
             components = []
             embed = Embed(title="🚫 В плейлисте нет песен", color=music_colour)
 
+        if music_message and music_message.created_at + timedelta(hours=1) < datetime.utcnow():
+            await music_message.delete()
+            music_message = None
+
         if music_message is None:
-            music_channel = bot.get_guild(discord_guild).get_channel(music_channel_id)
-            await music_channel.purge(limit=1000)
-            music_message = await music_channel.send(embed=embed, components=components)
+            message_or = await check_message()
+            if message_or:
+                music_message = message_or
+            else:
+                music_channel = bot.get_guild(discord_guild).get_channel(music_channel_id)
+                await music_channel.purge(limit=1000)
+                music_message = await music_channel.send(embed=embed, components=components)
         else:
             await music_message.edit(embed=embed, components=components)
 
         await sleep(1)
+
+
+async def check_message():
+    message_list = await bot.get_guild(discord_guild).get_channel(music_channel_id).history(limit=1).flatten()
+    if len(message_list) == 1:
+        if len(message_list[0].embeds) >= 1:
+            if message_list[0].embeds[0].title == "🚫 В плейлисте нет песен":
+                return message_list[0]
+    return None
 
 
 def time_text(sec):
