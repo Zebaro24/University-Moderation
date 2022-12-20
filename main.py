@@ -5,6 +5,7 @@ from threading import Thread
 from utils import bc, set_logger, info, time_start_bot
 from subprocess import Popen, PIPE
 from database_func import load_all_elements
+from config import debug
 import locale
 
 
@@ -16,7 +17,8 @@ def start_bots():
     locale.setlocale(locale.LC_ALL, "ru_RU")
 
     Thread(target=start_telegram, daemon=True).start()
-    Thread(target=start_feit_bot, daemon=True).start()
+    if not debug:
+        Thread(target=start_feit_bot, daemon=True).start()
     start_discord()
 
 
