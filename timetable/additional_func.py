@@ -15,7 +15,7 @@ def check_default():
     now = datetime.now(tz)
 
     # Проверка на каникулы
-    if now > datetime(2023,2,6):
+    if now > datetime(2023,2,6,tzinfo=tz):
         return
 
     day_to_week = timedelta(now.weekday())
