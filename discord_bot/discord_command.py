@@ -30,10 +30,23 @@ async def clear(ctx: dislash.interactions.app_command_interaction.SlashInteracti
 
 @slash.slash_command(description="Сообщить о баге!",
                      options=[
-                         dislash.Option("text", "Суть бага и как его воспроизвести", dislash.OptionType.STRING, True)])
+                         dislash.Option("text", "Суть бага и как его воспроизвести", dislash.OptionType.INTEGER, True)])
 async def bug(ctx: dislash.interactions.app_command_interaction.SlashInteraction, text: str):
     await ctx.reply("✅ Баг был отправлен.\n"
                     "⚜ Спасибо что помогаешь улучшить этого Discord, Telegram бота!", ephemeral=True)
     embed = discord.Embed(title=f"⚠ {ctx.author.display_name} нашел баг ⚠", description=f"**Суть бага:**\n{text}",
                           color=discord.Color.orange())
-    await bot.get_guild(discord_guild).get_channel(ds_bug_channel).send(embed=embed, content=f"{ctx.author.mention}")
+    await ctx.guild.get_channel(ds_bug_channel).send(embed=embed, content=f"{ctx.author.mention}")
+
+
+@slash.slash_command(description="Перекинуть всех в другой голосовой канал!")
+@dislash.has_permissions(administrator=True)
+async def goto(ctx: dislash.interactions.app_command_interaction.SlashInteraction):
+    guild: discord.guild.Guild = ctx.guild
+    print(guild.voice_channels)
+    options = []
+    for channel in ctx.guild.voice_channels:
+        options.append(dislash.SelectOption(label=channel.name, value=channel.id, emoji="👤"))
+    await ctx.reply("Выбирай...",
+                    components=[dislash.SelectMenu(custom_id="goto", placeholder="Куда переместить?", options=options)],
+                    ephemeral=True)

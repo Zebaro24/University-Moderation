@@ -355,7 +355,7 @@ def components_select(custom_id, description, skip_role=None, skip=True):
     if skip:
         options.append(SelectOption(label="Скипнуть...", value="skip", emoji="🚫"))
 
-    return [SelectMenu(custom_id=custom_id, placeholder=description, options=options)]
+    return [SelectMenu(custom_id="mafia_" + custom_id, placeholder=description, options=options)]
 
 
 async def sleep_5(channel, text="обсуждения"):

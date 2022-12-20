@@ -1,4 +1,3 @@
-from discord_bot.main_discord import bot
 from dislash import MessageInteraction
 from config import mafia_players
 import discord_bot.mafia.mafia_global as mafia_global
@@ -8,16 +7,16 @@ from utils import print_ds
 vote_dict = {}
 
 
-@bot.event
-async def on_dropdown(inter: MessageInteraction):
-    # print(inter.select_menu.custom_id)
+async def mafia_select(inter: MessageInteraction):
+    # print(custom_id)
     # print(inter.select_menu.selected_options[0].value)
     # print(inter.author)
+    custom_id = inter.select_menu.custom_id.split("_")[1]
     if inter.author not in mafia_players:
         print_ds(f"Проголосовал человек который не участвует в игре: {inter.author}")
         return
 
-    if inter.select_menu.custom_id == "priest":
+    if custom_id == "priest":
         if inter.author in mafia_players and mafia_players[inter.author]["role"] == "priest" and \
                 mafia_players[inter.author]["ability"]:
             await inter.send("Так, посмотрим кого на кого выбор пал...")
@@ -86,16 +85,16 @@ async def on_dropdown(inter: MessageInteraction):
 
     author_role = mafia_players[inter.author]["role"]
 
-    if inter.select_menu.custom_id == "vote_kick":
+    if custom_id == "vote_kick":
         if index == "skip":
             await inter.reply(f"{inter.author.mention} - решил скипнуть голосование")
         else:
             await inter.reply(f"{inter.author.mention} - проголосовал за: {index.mention}")
         vote("day", inter.author, index)
-    elif inter.select_menu.custom_id == "mafia":
+    elif custom_id == "mafia":
         await inter.reply(f"{inter.author.mention} - проголосовал за: {index.mention}")
         vote("mafia", inter.author, index)
-    elif author_role == inter.select_menu.custom_id:
+    elif author_role == custom_id:
         await inter.reply(f"Вы выбрали: {index.mention}")
         vote(author_role, inter.author, index)
 

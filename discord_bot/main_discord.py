@@ -27,7 +27,7 @@ import discord_bot.music.music_commands as music_commands
 import tg_ds.ds_to_tg as ds_to_tg
 import discord_bot.discord_button  # noqa
 import discord_bot.activity  # noqa
-import discord_bot.mafia.mafia_menu  # noqa
+import discord_bot.discord_select  # noqa
 import discord_bot.timetable.command  # noqa
 import discord_bot.decor_message  # noqa
 import discord_bot.help_command  # noqa
