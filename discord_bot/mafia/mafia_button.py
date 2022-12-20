@@ -1,17 +1,17 @@
 from config import mafia_players, mafia_voice_channel_id, mafia_color, music_channel_id, discord_guild
-from discord_bot.mafia.mafia_start import update_start_message, start_game
+from discord_bot.mafia.mafia_start import update_start_message, start_game, mafia_start
 from discord_bot.main_discord import bot
 from dislash import ResponseType
-import dislash
 from discord import Embed
 from discord_bot.music.music_commands import play
 from datetime import datetime, timedelta
-from mafia_start import mafia_start
+from time import sleep
 
 
-async def button_mafia(interaction: dislash.interactions.message_interaction.MessageInteraction):
+async def button_mafia(interaction):
     if interaction.message.created_at + timedelta(hours=1) < datetime.utcnow():
-        await mafia_start(interaction.channel)
+        await mafia_start(interaction.channel).cr_await
+        sleep(0.1)
     if interaction.component.custom_id == "mafia_info":
         description = "Роли «в закрытую» раздаются в начале игры в случайном порядке. " \
                       "Части игроков достаются роли законопослушных мирных граждан во главе с шерифом, " \
