@@ -41,7 +41,7 @@ def exception(msg):
 def setup_logger(logger_name, log_file, level=INFO, end=""):
     logger = getLogger(logger_name)
     formatter = Formatter(f'{end}[%(asctime)s] : [%(levelname)s] : %(message)s')  # noqa
-    file_handler = FileHandler(log_file, mode='a')
+    file_handler = FileHandler(log_file, 'a', 'utf-8')
     file_handler.setFormatter(formatter)
 
     logger.setLevel(level)
