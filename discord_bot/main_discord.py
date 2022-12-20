@@ -53,7 +53,7 @@ async def on_ready():
     await roles.offline_role(bot)
 
     print_ds("Создание сообщения для игры в мафию")
-    await mafia_start.mafia_start(guild.get_channel(mafia_channel_id))
+    await mafia_start.check_start_message(guild.get_channel(mafia_channel_id))
 
     print_ds("Удаление созданных голосовых каналов")
     await create_voice.delete_excess(guild)

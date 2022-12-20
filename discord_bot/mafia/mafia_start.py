@@ -33,6 +33,13 @@ async def mafia_start(ctx):
         await ctx.purge(limit=10000)
         await ctx.send(embed=embed_send, components=[ActionRow(bt_1, bt_2, bt_3)])
 
+async def check_start_message(channel):
+    message_list = await channel.history(limit=1).flatten()
+    if len(message_list) == 1:
+        if len(message_list[0].embeds)>=1:
+            if message_list[0].embeds[0].title=="Голосовая мафия":
+                return
+    await mafia_start(channel)
 
 async def update_start_message(message):
     embed = message.embeds[0]
