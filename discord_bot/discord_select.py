@@ -1,8 +1,6 @@
 from discord_bot.main_discord import bot
 from dislash import MessageInteraction
 from discord_bot.mafia.mafia_menu import mafia_select
-from config import discord_guild
-import discord
 
 @bot.event
 async def on_dropdown(inter: MessageInteraction):
