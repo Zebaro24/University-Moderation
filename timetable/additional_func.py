@@ -13,6 +13,11 @@ def rep(str_l):  # Замена ' на ''
 
 def check_default():
     now = datetime.now(tz)
+
+    # Проверка на каникулы
+    if now > datetime(2023,2,6):
+        return
+
     day_to_week = timedelta(now.weekday())
     one_day = timedelta(1)
 
@@ -88,12 +93,11 @@ def day_info(day: date, space=None):
                 null_object = '\n            '
             enter = "\n"
             for p in sorted(calendar[day.strftime('%Y:%m:%d')].items()):  # p,d p[1]
-                if p[1][1] is None:
-                    main_text += f"👉{p[0]}) ({timetable_time[int(p[0]) - 1]}){null_object}" \
-                                 f"{p[1][0].replace(enter, null_object)}\n\n"
-                else:
-                    main_text += f"👉{p[0]}) ({timetable_time[int(p[0]) - 1]}){null_object}" \
-                                 f"{p[1][0].replace(enter, null_object)} : {p[1][1]}\n\n"
+                pair = f"👉{p[0]}) ({timetable_time[int(p[0]) - 1]})\n" \
+                       f"{p[1][0]}"
+                if p[1][1]:
+                    pair += f"\n_Дз:_\n{p[1][1]}"
+                main_text += pair.replace(enter, null_object) + "\n\n"
         else:
             main_text += 'Пусто'
 
