@@ -46,7 +46,7 @@ async def on_ready():
     await check_version(bot)
 
     print_ds("Подключение статуса")
-    activity = discord.Activity(type=discord.ActivityType.listening, name="СЕРЕГА ПИРАТ - Where Is My Mind?")
+    activity = discord.Activity(type=discord.ActivityType.watching, name="ролики: \"MrLololoshka\"")
     await bot.change_presence(status=discord.Status.dnd, activity=activity)
 
     print_ds("Проверка добавленных реакций")
