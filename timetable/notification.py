@@ -67,7 +67,7 @@ def go_task():
         sleep(1)
 
 
-def start_task():
+def start_task(pars=True):
     try:
         print_tg("Бот разбудил всех!")
         weather = find_weather()
@@ -79,10 +79,12 @@ def start_task():
         bot.send_message(tg_chanel_id, random.choice(phrases))
         bot.send_message(tg_chanel_id, weather["text"], parse_mode='Markdown')
         bot.send_message(tg_chanel_id, horoscope_text(), parse_mode='Markdown')
-        day_info_tg(tg_chanel_id, datetime.now(tz).strftime('%Y:%m:%d'))
+        if pars:
+            day_info_tg(tg_chanel_id, datetime.now(tz).strftime('%Y:%m:%d'))
     except Exception as gg:
         print_tg(gg)
         print_tg("В боте произошла ошибка!")
+    sleep(1)
     check_task()
 
 
