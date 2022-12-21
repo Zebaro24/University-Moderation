@@ -11,8 +11,10 @@ async def on_dropdown(inter: MessageInteraction):
         channel_to = inter.guild.get_channel(int(inter.select_menu.selected_options[0].value))
         if not channel_to:
             await inter.reply("Такого голосового канала не существует!", ephemeral=True)
+            return
         if vc := inter.author.voice:
             for people in vc.channel.members:
                 await people.move_to(channel_to)
+            await inter.reply("Сделано", ephemeral=True)
         else:
             await inter.reply("Вы не подключены к голосовому каналу!",ephemeral=True)
