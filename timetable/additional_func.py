@@ -26,7 +26,7 @@ def check_default():
 
         # Проверка на каникулы
         if not day_delt > datetime(2023, 2, 5, tzinfo=tz):
-            return
+            continue
 
         if int(day_delt.strftime('%W')) % 2:
             default_r = default_l
