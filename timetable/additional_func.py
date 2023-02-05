@@ -26,6 +26,9 @@ def check_default():
 
         # Проверка на каникулы
         if not day_delt > datetime(2023, 2, 5, tzinfo=tz):
+            for i in range(5):
+                day_delt += one_day
+            print_tg(f"Сейчас каникулы: {day_delt}")
             continue
 
         if int(day_delt.strftime('%W')) % 2:
