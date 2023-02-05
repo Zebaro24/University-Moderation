@@ -25,7 +25,7 @@ def check_default():
             day_delt += one_day
 
         # Проверка на каникулы
-        if not day_delt > datetime(2023, 2, 6, tzinfo=tz):
+        if not day_delt > datetime(2023, 2, 5, tzinfo=tz):
             return
 
         if int(day_delt.strftime('%W')) % 2:
