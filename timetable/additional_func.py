@@ -14,10 +14,6 @@ def rep(str_l):  # Замена ' на ''
 def check_default():
     now = datetime.now(tz)
 
-    # Проверка на каникулы
-    if not now > datetime(2023,2,6,tzinfo=tz):
-        return
-
     day_to_week = timedelta(now.weekday())
     one_day = timedelta(1)
 
@@ -27,6 +23,11 @@ def check_default():
         if n:
             day_delt += one_day
             day_delt += one_day
+
+        # Проверка на каникулы
+        if not day_delt > datetime(2023, 2, 6, tzinfo=tz):
+            return
+
         if int(day_delt.strftime('%W')) % 2:
             default_r = default_l
         else:
