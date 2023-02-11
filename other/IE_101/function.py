@@ -1,8 +1,8 @@
-from database_func import admins, teachers, edit_data, calendar
-from additional_func import day_info, list_days_by_text, check_default, check_data, edit_day
-from additional_func import admin_update, teacher_update
+from other.IE_101.database_func import admins, teachers, edit_data, calendar
+from other.IE_101.additional_func import day_info, list_days_by_text, check_default, check_data, edit_day
+from other.IE_101.additional_func import admin_update, teacher_update
 from telebot import types
-from bot import bot
+from other.IE_101.bot import bot
 
 
 def show_days_by_text_tg(message, text):
@@ -217,7 +217,7 @@ def admin_message_check(message: types.Message):
                 condition_check = edit_day("turn", date_text, couple_number_1, couple_number_2)
                 if not condition_check:
                     bot.send_message(message.chat.id, 'Пари не можуть бути однакові'
-                                                      ,
+                                     ,
                                      reply_markup=markup_all(message.chat.id))
                     return True
 
@@ -284,7 +284,6 @@ def teacher_message_check(message: types.Message):
             elif date_text in edit_data:
                 bot.send_message(message.chat.id, "В данный момент над этой датой ведутся изменения!")
                 return
-
 
             if date_text not in calendar:
                 bot.send_message(message.chat.id, "На це число немає пар!")

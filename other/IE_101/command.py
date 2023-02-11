@@ -1,8 +1,8 @@
 from bot import bot
-from database_func import admins, teachers, db_run
-from additional_func import check_default, check_data
-from function import day_info_tg, show_days_by_text_tg, markup_all
-from function import admin_message_check, teacher_message_check
+from other.IE_101.database_func import admins, teachers, db_run
+from other.IE_101.additional_func import check_default, check_data
+from other.IE_101.function import day_info_tg, show_days_by_text_tg, markup_all
+from other.IE_101.function import admin_message_check, teacher_message_check
 from telebot import types
 from datetime import timedelta
 

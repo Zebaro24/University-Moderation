@@ -2,13 +2,12 @@ import locale
 from logging import exception
 from telebot import types
 
-import database_func
-from additional_func import check_default
-from function import markup_all
-from command import timetable_text
+from other.IE_101.additional_func import check_default
+from other.IE_101.function import markup_all
+from other.IE_101.command import timetable_text
 from time import sleep
-from database_func import admins
-from bot import bot
+from other.IE_101.database_func import admins, load_all_elements
+from other.IE_101.bot import bot
 
 
 @bot.message_handler(commands=['start'])
@@ -25,7 +24,6 @@ def send_welcome(message: types.Message):
             bot.send_message(message.chat.id, 'Ось твої можливості!', reply_markup=markup_all(message.chat.id))
 
 
-
 @bot.message_handler(content_types=['text'])
 def message_text(message: types.Message):
     timetable_text(message)  # Сделать если использовалось то возвращать тру
@@ -40,7 +38,7 @@ class MyExcept:
 
 def start():
     locale.setlocale(locale.LC_ALL, "ukr")
-    database_func.load_all_elements()
+    load_all_elements()
     bot.exception_handler = MyExcept()
     check_default()
 
