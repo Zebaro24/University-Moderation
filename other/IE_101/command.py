@@ -1,4 +1,4 @@
-from bot import bot
+from other.IE_101.bot import bot
 from other.IE_101.database_func import admins, teachers, db_run
 from other.IE_101.additional_func import check_default, check_data
 from other.IE_101.function import day_info_tg, show_days_by_text_tg, markup_all
