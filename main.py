@@ -1,6 +1,7 @@
 from discord_bot.main_discord import start as start_discord
 from telegram_bot.main_telegram import start as start_telegram
-from telegram_bot.feit_bot import start_feit_bot
+from other.feit_bot import start_feit_bot
+from other.IE_101.main_telegram import start as start_dima_bot
 from threading import Thread
 from utils import bc, set_logger, info, time_start_bot
 from subprocess import Popen, PIPE
@@ -19,6 +20,7 @@ def start_bots():
     Thread(target=start_telegram, daemon=True).start()
     if not debug:
         Thread(target=start_feit_bot, daemon=True).start()
+        Thread(target=start_dima_bot, daemon=True).start()
     start_discord()
 
 
