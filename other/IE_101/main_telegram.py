@@ -1,4 +1,3 @@
-import locale
 from logging import exception
 from telebot import types
 
@@ -37,7 +36,6 @@ class MyExcept:
 
 
 def start():
-    locale.setlocale(locale.LC_ALL, "ukr")
     load_all_elements()
     bot.exception_handler = MyExcept()
     check_default()
