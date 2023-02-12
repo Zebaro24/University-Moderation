@@ -1,4 +1,3 @@
-from logging import exception
 from telebot import types
 
 from other.IE_101.additional_func import check_default
@@ -31,7 +30,7 @@ def message_text(message: types.Message):
 class MyExcept:
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def handle(self, exceptions):
-        exception("Telegram")
+
         return True
 
 
@@ -45,7 +44,7 @@ def start():
 
             bot.polling(none_stop=True)
         except Exception as e:
-            exception("Telegram")
+            pass
         else:
             return
         sleep(3)
