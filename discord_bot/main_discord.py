@@ -8,7 +8,7 @@ import wavelink
 
 # Конфиги и доп библиотеки
 from config import music_channel_id
-from config import DISCORD_API, ds_chanel_id, discord_guild, mafia_channel_id
+from config import DISCORD_API, ds_chanel_id, discord_guild, mafia_channel_id, activityText
 from utils import print_ds, bc, exception
 from asyncio import sleep
 
@@ -46,7 +46,7 @@ async def on_ready():
     await check_version(bot)
 
     print_ds("Подключение статуса")
-    activity = discord.Activity(type=discord.ActivityType.watching, name="ролики: \"MrLololoshka\"")
+    activity = discord.Activity(type=discord.ActivityType.watching, name=activityText)
     await bot.change_presence(status=discord.Status.dnd, activity=activity)
 
     print_ds("Проверка добавленных реакций")
