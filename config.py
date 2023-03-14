@@ -9,7 +9,7 @@ discord_guild = 881075518336819221
 # <----Discord Configs---->
 # {Global}
 discord_color = 14480382  # 279628  # Можно поменять
-activityText = "в вашу душу 👁👁"
+activityText = "microwave phonk"
 
 # {Roles}
 role_channel_id = 881077605506359316
