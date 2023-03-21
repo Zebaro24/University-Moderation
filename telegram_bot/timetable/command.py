@@ -81,7 +81,7 @@ def send_day(message: types.Message):
         bot.send_message(message.chat.id, 'Формат для show_day:\n/show_day 2020:09:28\n2020:09:28 - Дата')
 
 
-@bot.message_handler(commands=['next_week', 'now_week', 'now_day'])
+@bot.message_handler(commands=['next_week', 'now_week', 'now_day', 'next_day'])
 def send_next(message: types.Message):
     show_days_by_text_tg(message, message.text)
 
@@ -100,6 +100,9 @@ def timetable_text(message: types.Message):
 
         elif message.text == 'Сегодня!':
             show_days_by_text_tg(message, 'now_day')
+
+        elif message.text == 'Завтра!':
+            show_days_by_text_tg(message, 'next_day')
 
         elif message.text == 'Эта неделя!':
             show_days_by_text_tg(message, 'now_week')

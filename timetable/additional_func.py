@@ -78,6 +78,9 @@ def list_days_by_text(time):
     elif time == 'now_day':
         all_day.append(datetime.now(tz).strftime('%Y:%m:%d'))
 
+    elif time == 'next_day':
+        all_day.append((datetime.now(tz)+timedelta(1)).strftime('%Y:%m:%d'))
+
     return all_day
 
 

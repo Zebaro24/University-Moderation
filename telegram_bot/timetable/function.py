@@ -12,6 +12,8 @@ def show_days_by_text_tg(message, text):
     command = text.replace("/", "").replace("@", " ").split()[0]
     if command == "now_day":
         command_name = "этот день"
+    elif command == "next_day":
+        command_name = "завтрашний день"
     elif command == "now_week":
         command_name = "эту неделю"
     elif command == "next_week":
@@ -85,18 +87,20 @@ def markup_all(user_id: int):
 
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item_btn_1 = types.KeyboardButton('Сегодня!')
-    item_btn_2 = types.KeyboardButton('Эта неделя!')
-    item_btn_3 = types.KeyboardButton('След неделя!')
+    item_btn_2 = types.KeyboardButton('Завтра!')
+    item_btn_3 = types.KeyboardButton('Эта неделя!')
+    item_btn_4 = types.KeyboardButton('След неделя!')
     markup.add(item_btn_1)
     markup.add(item_btn_2)
     markup.add(item_btn_3)
+    markup.add(item_btn_4)
     if user_id in admins:
-        item_btn_4 = types.KeyboardButton('Изменить день!')
-        item_btn_5 = types.KeyboardButton('Добавить дз!')
-        markup.add(item_btn_4, item_btn_5)
+        item_btn_5 = types.KeyboardButton('Изменить день!')
+        item_btn_6 = types.KeyboardButton('Добавить дз!')
+        markup.add(item_btn_5, item_btn_6)
     elif user_id in teachers:
-        item_btn_4 = types.KeyboardButton('Добавить дз!')
-        markup.add(item_btn_4)
+        item_btn_5 = types.KeyboardButton('Добавить дз!')
+        markup.add(item_btn_5)
     return markup
 
 
