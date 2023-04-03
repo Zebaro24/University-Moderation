@@ -74,7 +74,7 @@ def start_task(pars=True):
         bot.send_sticker(tg_chanel_id, weather["sticker"])
         dt = datetime.now(tz)
         month = dt.month
-        season = ["🎄", "❄", "💦", "🌈", "🌱", "☀️", "🔥", "🌴", "🍃", "🍁", "🍂", "☃️"]
+        season = ["🎄", "❄", "💦", "🌸", "🌱", "☀️", "🔥", "🌴", "🍃", "🍁", "🍂", "☃️"]
         bot.send_message(tg_chanel_id, f"{season[month - 1]} *{dt.strftime('%d %B')}*", parse_mode='Markdown')
         bot.send_message(tg_chanel_id, random.choice(phrases))
         bot.send_message(tg_chanel_id, weather["text"], parse_mode='Markdown')
