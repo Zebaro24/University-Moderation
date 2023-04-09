@@ -149,4 +149,7 @@ def else_message(message):
 def start_feit_bot():
     # <---Запуск--->
     print("Бот запущен!")
-    bot.polling(True)
+    while True:
+        bot.polling()
+        print("Бот ФЕИТ перезапустился!")
+        sl(5)
