@@ -15,14 +15,10 @@ import xmltodict
 import random
 
 horo = {"aries": "♈ Овен",
-        "taurus": "♉ Телец",
-        "gemini": "♊ Близнецы",
         "cancer": "♋ Рак",
         "leo": "♌ Лев",
-        "virgo": "♍ Дева",
         "libra": "♎ Весы",
         "scorpio": "♏ Скорпион",
-        "sagittarius": "♐ Стрелец",
         "capricorn": "♑ Козерог",
         "aquarius": "♒ Водолей",
         "pisces": "♓ Рыбы"}
@@ -37,7 +33,7 @@ def horoscope_text():
     response = requests.get('https://ignio.com/r/export/utf/xml/daily/com.xml')
     dict_data = xmltodict.parse(response.content)["horo"]
     dict_data.pop("date")
-    slv = random.choice(list(dict_data.keys()))
+    slv = list(horo.keys())[int(datetime.now(tz).timestamp() // 86400 % 8)]
     text_slv = f"*Знак зодиака: {horo[slv]}*\n"
     text_slv += dict_data[slv]["today"]
     return text_slv
