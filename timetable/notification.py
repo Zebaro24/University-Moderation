@@ -3,7 +3,7 @@ from time import sleep
 from telegram_bot.main_telegram import bot
 from timetable.notification_phrases import phrases
 from config import tg_chanel_id, timetable_time
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time, date
 from pytz import timezone
 from database_func import calendar
 from telegram_bot.timetable.function import day_info_tg
@@ -12,7 +12,8 @@ import pyowm
 from pyowm.weatherapi25.weather import Weather
 import requests
 import xmltodict
-import random
+from random import choice
+from timetable.birthdays import birth, birthdays_phrases
 
 horo = {"aries": "♈ Овен",
         "cancer": "♋ Рак",
@@ -28,6 +29,13 @@ api_weather.config["language"] = "ru"
 tz = timezone("Europe/Kyiv")
 schedule = Scheduler(tzinfo=tz)
 
+def check_birthdays():
+    for date_bd, name in birth.items():
+        if datetime.now().day == date_bd.day and datetime.now().month == date_bd.month:
+            age = date.today().year - date_bd.year
+            print_tg(f"Бот поздравил {name}")
+            text = choice(birthdays_phrases) % {"name":name.split()[1], "fullname":name, "age":age}
+            bot.send_message(tg_chanel_id, text, parse_mode='Markdown')
 
 def horoscope_text():
     response = requests.get('https://ignio.com/r/export/utf/xml/daily/com.xml')
@@ -65,6 +73,7 @@ def go_task():
 
 def start_task(pars=True):
     try:
+        check_birthdays()
         print_tg("Бот разбудил всех!")
         weather = find_weather()
         bot.send_sticker(tg_chanel_id, weather["sticker"])
@@ -72,13 +81,13 @@ def start_task(pars=True):
         month = dt.month
         season = ["🎄", "❄", "💦", "🌸", "🌱", "☀️", "🔥", "🌴", "🍃", "🍁", "🍂", "☃️"]
         bot.send_message(tg_chanel_id, f"{season[month - 1]} *{dt.strftime('%d %B')}*", parse_mode='Markdown')
-        bot.send_message(tg_chanel_id, random.choice(phrases))
+        bot.send_message(tg_chanel_id, choice(phrases))
         bot.send_message(tg_chanel_id, weather["text"], parse_mode='Markdown')
         bot.send_message(tg_chanel_id, horoscope_text(), parse_mode='Markdown')
         if pars:
             day_info_tg(tg_chanel_id, datetime.now(tz).strftime('%Y:%m:%d'))
-    except Exception as gg:
-        print_tg(gg)
+    except Exception as error:
+        print_tg(f"Error: {error}")
         print_tg("В боте произошла ошибка!")
     sleep(1)
     check_task()
@@ -90,6 +99,7 @@ def check_task():
 
         if not (now_str in calendar and calendar[now_str]):
             print_tg(f"Сегодня выходной: {now_str}!")
+            schedule.once(time(9,tzinfo=tz), check_birthdays)
             schedule.once(time(3, tzinfo=tz), check_task)
             return
 
@@ -116,9 +126,11 @@ if __name__ == '__main__':
     load_all_elements()
     locale.setlocale(locale.LC_ALL, "ru_RU")
 
-    check_task()
-    go_task()
+    tg_chanel_id = 771348519
 
-    print(schedule)
+    # check_task()
+    # go_task()
 
-    # start_task()
+    # print(schedule)
+
+    start_task()
