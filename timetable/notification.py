@@ -16,7 +16,7 @@ from random import choice
 from timetable.birthdays import birth, birthdays_phrases
 
 horo = {"aries": "♈ Овен",
-        "cancer": "♋ Рак",
+        "taurus": "♉ Телец",
         "leo": "♌ Лев",
         "libra": "♎ Весы",
         "scorpio": "♏ Скорпион",
