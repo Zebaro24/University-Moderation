@@ -83,9 +83,9 @@ def list_days_by_text(time):
 def day_info(day: date, space=None):
     title = ""
     if int(day.strftime('%W')) % 2:
-        title += "Перший тиждень\n"
-    else:
         title += "Другий тиждень\n"
+    else:
+        title += "Перший тиждень\n"
     title += f"{day.strftime('%A, (%d.%m.%Y)').title()}:\n\n"
     main_text = ''
     try:
