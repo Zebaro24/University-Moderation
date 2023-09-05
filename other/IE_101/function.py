@@ -87,13 +87,13 @@ def markup_all(user_id: int):
     markup.add(item_btn_1)
     markup.add(item_btn_2)
     markup.add(item_btn_3)
-    if user_id in admins:
-        item_btn_4 = types.KeyboardButton('Виправити день!')
-        item_btn_5 = types.KeyboardButton('Додати дз!')
-        markup.add(item_btn_4, item_btn_5)
-    elif user_id in teachers:
-        item_btn_4 = types.KeyboardButton('Додати дз!')
-        markup.add(item_btn_4)
+    # if user_id in admins:
+    #     item_btn_4 = types.KeyboardButton('Виправити день!')
+    #     item_btn_5 = types.KeyboardButton('Додати дз!')
+    #     markup.add(item_btn_4, item_btn_5)
+    # elif user_id in teachers:
+    #     item_btn_4 = types.KeyboardButton('Додати дз!')
+    #     markup.add(item_btn_4)
     return markup
 
 
@@ -159,7 +159,7 @@ def admin_message_check(message: types.Message):
                 if not condition_check:
                     bot.send_message(message.chat.id, 'Неправильні дані!', reply_markup=markup_all(message.chat.id))
                     return True
-                admin_update(message.chat.id)
+
 
                 day_info_tg(message.chat.id, date_text)
                 bot.send_message(message.chat.id, f"Дз додано!", reply_markup=markup_all(message.chat.id))

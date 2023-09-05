@@ -1,3 +1,5 @@
+import locale
+from logging import exception
 from telebot import types
 
 from other.IE_101.additional_func import check_default
@@ -12,8 +14,8 @@ from other.IE_101.bot import bot
 def send_welcome(message: types.Message):
     if message.chat.type == "private":
 
-        bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAEJIdhhiSG0K6iUciZOoueWASUDG1jHoAACoAEAAjDUnRGDNNeGcpfWEyIE')
-        bot.send_message(message.chat.id, f'Приветствую {message.from_user.first_name} рад вас видеть здесь.')
+        # bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAEJIdhhiSG0K6iUciZOoueWASUDG1jHoAACoAEAAjDUnRGDNNeGcpfWEyIE')
+        bot.send_message(message.chat.id, f'Радий бачити тебе, {message.from_user.first_name} ')
         if message.chat.id in admins:
             bot.send_message(message.chat.id, f'Ты админ!\n',
                              reply_markup=markup_all(message.chat.id))
@@ -30,7 +32,7 @@ def message_text(message: types.Message):
 class MyExcept:
     # noinspection PyMethodMayBeStatic,PyUnusedLocal
     def handle(self, exceptions):
-
+        exception("Telegram")
         return True
 
 
@@ -44,7 +46,7 @@ def start():
 
             bot.polling(none_stop=True)
         except Exception as e:
-            pass
+            exception("Telegram")
         else:
             return
         sleep(3)

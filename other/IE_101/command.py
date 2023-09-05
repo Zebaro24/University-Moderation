@@ -50,7 +50,7 @@ def send_edit(message: types.Message):
 @bot.message_handler(commands=['show_day'])
 def send_day(message: types.Message):
 
-    if message.text[10:] == 'IE_101_bot':
+    if message.text[10:] == 'YA_32_bot':
         bot.send_message(message.chat.id, 'Формат для show_day:\n/show_day 2020:09:28\n2020:09:28 - Дата')
     elif not message.text[10:] == '':
         check_default()

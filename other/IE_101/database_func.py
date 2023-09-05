@@ -70,11 +70,9 @@ def load_calendar(db_select, save_dict):
 
 
 def load_all_elements():
-
-    load_moderators("SELECT * FROM admin", admins)
     load_moderators("SELECT * FROM teacher", teachers)
 
-    load_default_timetable("SELECT * FROM default_l ORDER BY day", default_l)
-    load_default_timetable("SELECT * FROM default_p ORDER BY day", default_p)
+    load_default_timetable("SELECT * FROM default_l ORDER BY day", default_p)
+    load_default_timetable("SELECT * FROM default_p ORDER BY day", default_l)
 
     load_calendar("SELECT * FROM owner ORDER BY day, int", calendar)

@@ -4,8 +4,8 @@ from other.IE_101.database_func import default_l, default_p, db_run, calendar, a
 
 tz = timezone("Europe/Kyiv")
 
-timetable_time = ["08:30 - 09:40", "10:00 - 11:10", "11:30 - 12:40", "13:00 - 14:10", "14:30 - 15:40", "16:00 - 17:10",
-                  "17:30 - 18:40"]
+timetable_time = ["08:30 - 10:05", "10:25 - 12:00", "12:20 - 13:55", "14:15 - 15:50", "16:10 - 17:45", "18:30 - 20:05",
+                  "20:20 - 21:55"]
 
 
 def rep(str_l):  # Замена ' на ''
@@ -83,9 +83,9 @@ def list_days_by_text(time):
 def day_info(day: date, space=None):
     title = ""
     if int(day.strftime('%W')) % 2:
-        title += "Верхній\n"
+        title += "Перший тиждень\n"
     else:
-        title += "Нижній\n"
+        title += "Другий тиждень\n"
     title += f"{day.strftime('%A, (%d.%m.%Y)').title()}:\n\n"
     main_text = ''
     try:
