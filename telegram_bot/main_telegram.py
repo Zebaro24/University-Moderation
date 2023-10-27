@@ -11,7 +11,7 @@ from timetable.additional_func import check_default
 from main_bot_function import bot_tg as bot
 
 from timetable.notification import check_task, go_task
-from tg_ds.tg_to_ds import coroutine_send
+# from tg_ds.tg_to_ds import coroutine_send
 from telegram_bot.timetable.function import markup_all
 from telegram_bot.timetable.command import timetable_text
 from time import sleep
@@ -107,16 +107,11 @@ def message_text(message: types.Message):
         bot.send_message(message.chat.id, 'Ваше сообщение было отправлено в общий чат!',
                          reply_markup=markup_all(message.chat.id))
 
-    if message.chat.id == tg_chanel_id or timetable_ret:
-        coroutine_send(message)
-
 
 @bot.message_handler(
     content_types=['audio', 'photo', 'voice', 'video_note', 'video', 'document', 'location', 'contact', 'sticker',
                    'animation'])
 def telegram_ds(message):
-    coroutine_send(message)
-
     if message.chat.type == "private":
         bot.forward_message(tg_chanel_id, message.chat.id, message.message_id)
         bot.send_message(message.chat.id, 'Ваше сообщение было отправлено в общий чат!',

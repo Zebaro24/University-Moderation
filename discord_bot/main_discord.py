@@ -26,7 +26,7 @@ import discord_bot.mafia.mafia_start as mafia_start
 import discord_bot.music.music_commands as music_commands
 import tg_ds.ds_to_tg as ds_to_tg
 import discord_bot.discord_button  # noqa
-import discord_bot.activity  # noqa
+# import discord_bot.activity  # noqa
 import discord_bot.discord_select  # noqa
 import discord_bot.timetable.command  # noqa
 import discord_bot.decor_message  # noqa
@@ -91,10 +91,10 @@ async def on_message(message: discord.Message):
     if message.author == bot.user:
         return
 
-    # Телеграм пересылка
-    if message.channel.id == ds_chanel_id and str(message.author)[-5:] != "#0000":
-        await ds_to_tg.discord_to_tg(message)
-        return
+    # # Телеграм пересылка
+    # if message.channel.id == ds_chanel_id and str(message.author)[-5:] != "#0000":
+    #     await ds_to_tg.discord_to_tg(message)
+    #     return
 
     # Взаимодействие в муз канале
     if music_channel_id == message.channel.id:
