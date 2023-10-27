@@ -73,7 +73,7 @@ def go_task():
 
 def start_task(pars=True):
     try:
-        check_birthdays()
+        # check_birthdays()
         print_tg("Бот разбудил всех!")
         weather = find_weather()
         bot.send_sticker(tg_chanel_id, weather["sticker"])
