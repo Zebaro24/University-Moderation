@@ -15,33 +15,41 @@ import xmltodict
 from random import choice
 from timetable.birthdays import birth, birthdays_phrases
 
-horo = {"aries": "♈ Овен",
-        "taurus": "♉ Телец",
-        "leo": "♌ Лев",
-        "libra": "♎ Весы",
-        "scorpio": "♏ Скорпион",
-        "capricorn": "♑ Козерог",
-        "aquarius": "♒ Водолей",
-        "pisces": "♓ Рыбы"}
+horo = {
+    "aries": "♈ Овен",
+    "taurus": "♉ Телец",
+    "gemini": "♊ Близнецы",
+    "cancer": "♋ Рак",
+    "leo": "♌ Лев",
+    "virgo": "♍ Дева",
+    "libra": "♎ Весы",
+    "scorpio": "♏ Скорпион",
+    "sagittarius": "♐ Стрелец",
+    "capricorn": "♑ Козерог",
+    "aquarius": "♒ Водолей",
+    "pisces": "♓ Рыбы"
+}
 
 api_weather = pyowm.OWM("542abfd3fa5280d48120c9b9df384872")  # noqa
 api_weather.config["language"] = "ru"
 tz = timezone("Europe/Kyiv")
 schedule = Scheduler(tzinfo=tz)
 
+
 def check_birthdays():
     for date_bd, name in birth.items():
         if datetime.now().day == date_bd.day and datetime.now().month == date_bd.month:
             age = date.today().year - date_bd.year
             print_tg(f"Бот поздравил {name}")
-            text = choice(birthdays_phrases) % {"name":name.split()[1], "fullname":name, "age":age}
+            text = choice(birthdays_phrases) % {"name": name.split()[1], "fullname": name, "age": age}
             bot.send_message(tg_chanel_id, text, parse_mode='Markdown')
+
 
 def horoscope_text():
     response = requests.get('https://ignio.com/r/export/utf/xml/daily/com.xml')
     dict_data = xmltodict.parse(response.content)["horo"]
     dict_data.pop("date")
-    slv = list(horo.keys())[int(datetime.now(tz).timestamp() // 86400 % 8)]
+    slv = list(horo.keys())[int(datetime.now(tz).timestamp() // 86400 % 12)]
     text_slv = f"*Знак зодиака: {horo[slv]}*\n"
     text_slv += dict_data[slv]["today"]
     return text_slv
@@ -99,7 +107,7 @@ def check_task():
 
         if not (now_str in calendar and calendar[now_str]):
             print_tg(f"Сегодня выходной: {now_str}!")
-            schedule.once(time(9,tzinfo=tz), check_birthdays)
+            schedule.once(time(9, tzinfo=tz), check_birthdays)
             schedule.once(time(3, tzinfo=tz), check_task)
             return
 
