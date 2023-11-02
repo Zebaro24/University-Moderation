@@ -79,7 +79,7 @@ def list_days_by_text(time):
         all_day.append(datetime.now(tz).strftime('%Y:%m:%d'))
 
     elif time == 'next_day':
-        all_day.append((datetime.now(tz)+timedelta(1)).strftime('%Y:%m:%d'))
+        all_day.append((datetime.now(tz) + timedelta(1)).strftime('%Y:%m:%d'))
 
     return all_day
 
@@ -90,7 +90,7 @@ def day_info(day: date, space=None):
         title += "Парний\n"
     else:
         title += "Непарний\n"
-    title += f"{day.strftime('%A, (%Y:%m:%d)').title()}:\n\n"
+    title += f"{day.strftime('%A, (%Y:%m:%d)').title()}:\n\n".replace("'Я", "'я")
     main_text = ''
     try:
         if list(calendar[day.strftime('%Y:%m:%d')].items()):
