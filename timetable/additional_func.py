@@ -87,9 +87,9 @@ def list_days_by_text(time):
 def day_info(day: date, space=None):
     title = ""
     if int(day.strftime('%W')) % 2:
-        title += "Непарный\n"
+        title += "Парний\n"
     else:
-        title += "Парный\n"
+        title += "Непарний\n"
     title += f"{day.strftime('%A, (%Y:%m:%d)').title()}:\n\n"
     main_text = ''
     try:

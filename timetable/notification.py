@@ -83,15 +83,15 @@ def start_task(pars=True):
     try:
         # check_birthdays()
         print_tg("Бот разбудил всех!")
-        weather = find_weather()
-        bot.send_sticker(tg_chanel_id, weather["sticker"])
-        dt = datetime.now(tz)
-        month = dt.month
-        season = ["🎄", "❄", "💦", "🌸", "🌱", "☀️", "🔥", "🌴", "🍃", "🍁", "🍂", "☃️"]
-        bot.send_message(tg_chanel_id, f"{season[month - 1]} *{dt.strftime('%d %B')}*", parse_mode='Markdown')
-        bot.send_message(tg_chanel_id, choice(phrases))
-        bot.send_message(tg_chanel_id, weather["text"], parse_mode='Markdown')
-        bot.send_message(tg_chanel_id, horoscope_text(), parse_mode='Markdown')
+        # weather = find_weather()
+        # bot.send_sticker(tg_chanel_id, weather["sticker"])
+        # dt = datetime.now(tz)
+        # month = dt.month
+        # season = ["🎄", "❄", "💦", "🌸", "🌱", "☀️", "🔥", "🌴", "🍃", "🍁", "🍂", "☃️"]
+        # bot.send_message(tg_chanel_id, f"{season[month - 1]} *{dt.strftime('%d %B')}*", parse_mode='Markdown')
+        # bot.send_message(tg_chanel_id, choice(phrases))
+        # bot.send_message(tg_chanel_id, weather["text"], parse_mode='Markdown')
+        # bot.send_message(tg_chanel_id, horoscope_text(), parse_mode='Markdown')
         if pars:
             day_info_tg(tg_chanel_id, datetime.now(tz).strftime('%Y:%m:%d'))
     except Exception as error:
