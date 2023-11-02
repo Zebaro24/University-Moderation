@@ -15,7 +15,7 @@ def start_bots():
     Popen(r"java -jar Lavalink.jar -Xmx200m", stdout=PIPE, shell=True)
 
     load_all_elements()
-    locale.setlocale(locale.LC_ALL, "ru_RU")
+    locale.setlocale(locale.LC_ALL, "uk_UA")
 
     Thread(target=start_telegram, daemon=True).start()
     if not debug:
