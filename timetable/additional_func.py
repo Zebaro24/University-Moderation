@@ -25,7 +25,7 @@ def check_default():
             day_delt += one_day
 
         # Проверка на каникулы
-        if not day_delt > datetime(2023, 2, 5, tzinfo=tz):
+        if not day_delt > datetime(2024, 2, 11, tzinfo=tz):
             for i in range(5):
                 day_delt += one_day
             print_tg(f"Сейчас каникулы: {day_delt}")
@@ -97,7 +97,7 @@ def day_info(day: date, space=None):
             if space == "ds":
                 null_object = '\n   '
             else:
-                null_object = '\n            '
+                null_object = '\n           '
             enter = "\n"
             for p in sorted(calendar[day.strftime('%Y:%m:%d')].items()):  # p,d p[1]
                 pair = f"👉{p[0]}) ({timetable_time[int(p[0]) - 1]})\n" \
