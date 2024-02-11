@@ -32,9 +32,9 @@ def check_default():
             continue
 
         if int(day_delt.strftime('%W')) % 2:
-            default_r = default_l
-        else:
             default_r = default_p
+        else:
+            default_r = default_l
 
         for i in range(5):
             try:
