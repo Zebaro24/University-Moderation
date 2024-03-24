@@ -1,5 +1,6 @@
 import telebot
+from os import getenv
 
-TOKEN = '<TELEGRAM_API>'
+TOKEN = getenv("IE_101_TOKEN")
 
 bot = telebot.TeleBot(TOKEN)

@@ -1,9 +1,10 @@
 from telebot import TeleBot, types
 
 from time import sleep as sl
+from os import getenv
 
 # <---Глобальные переменные--->
-TOKEN = "<TELEGRAM_API>"
+TOKEN = getenv("FEIT_HUB_TOKEN")
 CHANNEL_ID = -1001511467262
 ADMIN_ID = 605313277  # 605313277  # 771348519
 connect_id = 0

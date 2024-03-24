@@ -1,5 +1,6 @@
 import psycopg2
 from time import perf_counter
+from os import getenv
 
 admins = {}
 teachers = {}
@@ -13,11 +14,11 @@ conn = None
 cursor = None
 
 # {Database}
-DB_NAME = '<DB_USER_NAME>'  # noqa
-DB_USER = '<DB_USER_NAME>'  # noqa
-DB_PASS = '<DB_PASS>'  # noqa
-DB_HOST = '<DB_HOST>'  # noqa
-DB_PORT = '"<DB_PORT>"'  # noqa
+DB_NAME = getenv("IE_101_DB_NAME")
+DB_USER = getenv("IE_101_DB_USER")
+DB_PASS = getenv("IE_101_DB_PASS")
+DB_HOST = getenv("IE_101_DB_HOST")
+DB_PORT = getenv("IE_101_DB_PORT")
 
 
 def db_run(execute):
