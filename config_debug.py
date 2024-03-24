@@ -1,6 +1,8 @@
+from os import getenv
+
 # <----Global Configs---->
-DISCORD_API = "<DISCORD_API>"  # "<DEBUG_DISCORD_API>" # noqa
-TELEGRAM_API = "<DEBUG_TELEGRAM_API>"  # "<DEBUG_2_TELEGRAM_API>" # noqa
+DISCORD_API = getenv('DEBUG_DISCORD_API')
+TELEGRAM_API = getenv("DEBUG_TELEGRAM_API")
 
 discord_guild = 994019845039468584  # <---Первоначальная замена
 
@@ -23,7 +25,7 @@ music_channel_id = 999748844025819146
 
 # {Mafia}
 mafia_channel_id = 998603873415610438  # <---Первоначальная замена
-mafia_channel_webhook = "1006314317647462532/6i2It2KgY4DxeLZG4AbmHJnGK9HvnXo3s80EeAI5_7jDwvNvREW_zQuZ58387HZCM1iC" # noqa
+mafia_channel_webhook = "1006314317647462532/6i2It2KgY4DxeLZG4AbmHJnGK9HvnXo3s80EeAI5_7jDwvNvREW_zQuZ58387HZCM1iC"  # noqa
 mafia_chat = 1006493314972930098
 mafia_statistics = 1023895335371808809
 mafia_voice_channel_id = 998604064138989688
@@ -42,6 +44,6 @@ version_channel = 1013383314461171722
 # <----General---->
 tg_chanel_id = -748444518  # -1001530372815
 ds_chanel_id = 997248600960680058
-ds_chanel_webhook = "1011608090233278515/Ds8dAqxUMYCF4bH8iXGPsO5KSN2RhtB_nLuH6wUzvGGzklPPsTH3hpT2KQy8hqrC5BLt" # noqa
+ds_chanel_webhook = "1011608090233278515/Ds8dAqxUMYCF4bH8iXGPsO5KSN2RhtB_nLuH6wUzvGGzklPPsTH3hpT2KQy8hqrC5BLt"  # noqa
 ds_bug_channel = 1019631923892596777
 distance_learning = True

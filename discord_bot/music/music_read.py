@@ -1,4 +1,4 @@
-from config import client_id, client_secret
+from config import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET
 import tekore as tk
 from math import ceil
 import discord
@@ -10,7 +10,7 @@ playlist = []
 details_player = {"status": "play", "volume": "low"}
 position = 0
 
-spotify = tk.Spotify(tk.request_client_token(client_id, client_secret))
+spotify = tk.Spotify(tk.request_client_token(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET))
 
 
 async def read_url(url):

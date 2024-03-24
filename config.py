@@ -1,8 +1,8 @@
-from os import environ
+from os import getenv
 
 # <----Global Configs---->
-DISCORD_API = "<DISCORD_API>"  # noqa
-TELEGRAM_API = "<TELEGRAM_API>"  # noqa
+DISCORD_API = getenv("DISCORD_API")
+TELEGRAM_API = getenv("TELEGRAM_API")
 
 discord_guild = 883022109599760434
 
@@ -25,8 +25,8 @@ ROLES = {
 }
 
 # {Music}
-client_id = "<SPOTIFY_CLIENT_ID>"  # noqa
-client_secret = "<SPOTIFY_CLIENT_SECRET>"  # noqa
+SPOTIFY_CLIENT_ID = getenv("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = getenv("SPOTIFY_CLIENT_SECRET")
 
 music_channel_id = 883064876472348692
 
@@ -35,7 +35,7 @@ music_button_colour = 1  # blurple
 
 # {Mafia}
 mafia_channel_id = 1167191796577742919
-mafia_channel_webhook = "1167191524577136670/rizv3WLUMiNmpK2tks4tGVdTFT99g8gTjWS3xtXAliYta_9aDhoAp9Pfq3cWGodBQzl5" # noqa
+mafia_channel_webhook = "1167191524577136670/rizv3WLUMiNmpK2tks4tGVdTFT99g8gTjWS3xtXAliYta_9aDhoAp9Pfq3cWGodBQzl5"  # noqa
 mafia_chat = 1167191850612949093
 mafia_statistics = 1167192140145754152
 mafia_voice_channel_id = 1167192252578267196
@@ -53,7 +53,12 @@ version_channel = 883022109599760437
 
 # <----Telegram Configs---->
 # {Timetable}
-timetable_time = ["08:00 - 09:20", "09:40 - 11:00", "11:25 - 12:45", "13:10 - 14:30", "14:50 - 16:10", "16:25 - 17:45",
+timetable_time = ["08:00 - 09:20",
+                  "09:40 - 11:00",
+                  "11:25 - 12:45",
+                  "13:10 - 14:30",
+                  "14:50 - 16:10",
+                  "16:25 - 17:45",
                   "18:00 - 19:20"]
 
 # <----General---->
@@ -64,17 +69,14 @@ ds_bug_channel = 883022109599760437
 distance_learning = True
 
 # {Database}
-DB_NAME = '<DB_USER_NAME>'  # noqa
-DB_USER = '<DB_USER_NAME>'  # noqa
-DB_PASS = '<DB_PASS>'  # noqa
-DB_HOST = '<DB_HOST>'  # noqa
-DB_PORT = '"<DB_PORT>"'  # noqa
+DB_NAME = getenv("DB_NAME")
+DB_USER = getenv("DB_USER")
+DB_PASS = getenv("DB_PASS")
+DB_HOST = getenv("DB_HOST")
+DB_PORT = int(getenv("DB_PORT"))
 
 # <----Debug Configs---->
-if "SERVER" in environ:
-    debug = False
-else:
-    debug = True
+debug = True if getenv("DEBUG") == "TRUE" else False
 
 if debug:
     from config_debug import *  # noqa
