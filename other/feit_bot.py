@@ -1,6 +1,5 @@
-from utils import print_tg
-import telebot
-from telebot import types
+from telebot import TeleBot, types
+
 from time import sleep as sl
 
 # <---Глобальные переменные--->
@@ -10,7 +9,7 @@ ADMIN_ID = 605313277  # 605313277  # 771348519
 connect_id = 0
 
 # <---Выполнение действий--->
-bot = telebot.TeleBot(TOKEN)
+bot = TeleBot(TOKEN)
 
 
 # <---Используемые функции--->
@@ -95,7 +94,7 @@ def tg_text(message: types.Message):
         if message.text == "Отсоединится":
             bot.send_message(connect_id, "🚫 Админ отсоединился 🚫")
             connect_id = 0
-            bot.send_message(ADMIN_ID, f"🚫 Вы вышли из беседы 🚫", reply_markup=telebot.types.ReplyKeyboardRemove())
+            bot.send_message(ADMIN_ID, f"🚫 Вы вышли из беседы 🚫", reply_markup=types.ReplyKeyboardRemove())
             return
         bot.send_message(connect_id, "Админ: " + message.text)
     elif message.chat.id == connect_id:
@@ -133,7 +132,7 @@ def tg_inline(call: types.CallbackQuery):
     else:
         if connect_id:
             bot.send_message(connect_id, "🚫 Админ отсоединился 🚫")
-            bot.send_message(ADMIN_ID, f"🚫 Вы вышли из беседы 🚫", reply_markup=telebot.types.ReplyKeyboardRemove())
+            bot.send_message(ADMIN_ID, f"🚫 Вы вышли из беседы 🚫", reply_markup=types.ReplyKeyboardRemove())
         connect_id = int(call.data[5:])
         bot.send_message(connect_id, "👨🏼‍💻 К вам присоединился админ 👨🏼‍💻")
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -145,6 +144,7 @@ def tg_inline(call: types.CallbackQuery):
 @bot.message_handler(chat_types=['private'], )
 def else_message(message):
     bot.send_message(message.chat.id, "К сожалению мы это не поддерживаем.")
+
 
 def start_feit_bot():
     # <---Запуск--->

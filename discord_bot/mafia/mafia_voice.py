@@ -1,13 +1,14 @@
-import discord
-from config import mafia_voice_channel_id, mafia_players
-from discord_bot.mafia.mafia_global import move_to, leave_players, ghosts, kill_people
-from discord_bot.main_discord import bot
-import discord_bot.voice_actions as voice_actions
+from ...config import mafia_voice_channel_id, mafia_players
+from ..main_discord import bot
+from .. import voice_actions
+from .mafia_global import move_to, leave_players, ghosts, kill_people
+
+from discord import Member, VoiceState, VoiceChannel
+
 from asyncio import gather
 
 
-async def mafia_game(member: discord.member.Member, before: discord.member.VoiceState,
-                     after: discord.member.VoiceState):
+async def mafia_game(member: Member, before: VoiceState, after: VoiceState):
     if member in mafia_players or member in leave_players:
         if before == after:
             return
@@ -68,7 +69,7 @@ async def voice_change(period=None):
     all_do = []
     who_period = period_voice()
 
-    channel: discord.channel.VoiceChannel = bot.get_channel(mafia_voice_channel_id)
+    channel: VoiceChannel = bot.get_channel(mafia_voice_channel_id)
 
     for member in channel.members:
         if member in mafia_players and "whore" in mafia_players[member]:

@@ -1,12 +1,13 @@
-from discord_bot.music.music_read import playlist, details_player
-from discord_bot.main_discord import bot
+from ...config import discord_guild, music_channel_id, music_colour, music_button_colour as b_colour
+from ..main_discord import bot
+from .music_read import playlist, details_player
+
 from discord import Embed, PartialEmoji
 from dislash import Button, ActionRow
-from config import discord_guild, music_channel_id, music_colour
-from config import music_button_colour as b_colour
-from math import ceil
-from asyncio import sleep
+
 from datetime import timedelta, datetime
+from asyncio import sleep
+from math import ceil
 
 music_message = None
 

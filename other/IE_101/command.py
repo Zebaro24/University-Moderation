@@ -1,9 +1,11 @@
-from other.IE_101.bot import bot
-from other.IE_101.database_func import admins, teachers, db_run
-from other.IE_101.additional_func import check_default, check_data
-from other.IE_101.function import day_info_tg, show_days_by_text_tg, markup_all
-from other.IE_101.function import admin_message_check, teacher_message_check
+from .database_func import admins, teachers, db_run
+from .additional_func import check_default, check_data
+from .function import day_info_tg, show_days_by_text_tg, markup_all
+from .function import admin_message_check, teacher_message_check
+from .bot import bot
+
 from telebot import types
+
 from datetime import timedelta
 
 
@@ -49,7 +51,6 @@ def send_edit(message: types.Message):
 
 @bot.message_handler(commands=['show_day'])
 def send_day(message: types.Message):
-
     if message.text[10:] == 'YA_32_bot':
         bot.send_message(message.chat.id, 'Формат для show_day:\n/show_day 2020:09:28\n2020:09:28 - Дата')
     elif not message.text[10:] == '':

@@ -1,21 +1,19 @@
-import os
+from ..config import tg_chanel_id
+from ..utils import print_tg, bc, exception, from_bytes, start_time, telegram_error, discord_error
+from ..timetable.additional_func import check_default
+from ..timetable.notification import check_task, go_task
+from ..database_func import admins
+# from ..tg_ds.tg_to_ds import coroutine_send
+from ..main_bot_function import bot_tg as bot
+from .timetable.function import markup_all
+from .timetable.command import timetable_text
 
 from telebot import types
-from utils import print_tg, bc, exception, from_bytes
-import utils
+
 from speedtest import Speedtest, ConfigRetrievalError
-from config import tg_chanel_id
 from threading import Thread
-from timetable.additional_func import check_default
-
-from main_bot_function import bot_tg as bot
-
-from timetable.notification import check_task, go_task
-# from tg_ds.tg_to_ds import coroutine_send
-from telegram_bot.timetable.function import markup_all
-from telegram_bot.timetable.command import timetable_text
 from time import sleep
-from database_func import admins
+import os
 
 
 @bot.message_handler(commands=['start'])
@@ -68,14 +66,14 @@ def del_logs(message: types.Message):
 @bot.message_handler(commands=['status_all_bot'])
 def status(message: types.Message):
     text = "*Статус бота:*\n"
-    text += f"Бот был запущен: *{utils.start_time}*\n"
-    if utils.telegram_error:
-        text += f"Telegram бот имел: *{utils.telegram_error} ошибок*\n"
+    text += f"Бот был запущен: *{start_time}*\n"
+    if telegram_error:
+        text += f"Telegram бот имел: *{telegram_error} ошибок*\n"
     else:
         text += f"Telegram бот не имел ошибок!\n"
 
-    if utils.discord_error:
-        text += f"Discord бот имел: *{utils.discord_error} ошибок*\n"
+    if discord_error:
+        text += f"Discord бот имел: *{discord_error} ошибок*\n"
     else:
         text += f"Discord бот не имел ошибок!\n"
 

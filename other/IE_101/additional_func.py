@@ -1,6 +1,7 @@
+from .database_func import default_l, default_p, db_run, calendar, admins, teachers, edit_data
+
 from datetime import date, timedelta, datetime
 from pytz import timezone
-from other.IE_101.database_func import default_l, default_p, db_run, calendar, admins, teachers, edit_data
 
 tz = timezone("Europe/Kyiv")
 

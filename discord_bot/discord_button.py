@@ -1,14 +1,15 @@
 # Импорт функций Discord
-from discord_bot.main_discord import bot
-from discord_bot.music.music_button import button_music
-from discord_bot.mafia.mafia_button import button_mafia
-from discord_bot.timetable.button import button_timetable
-import dislash
+from .main_discord import bot
+from .music.music_button import button_music
+from .mafia.mafia_button import button_mafia
+from .timetable.button import button_timetable
+
+from dislash import MessageInteraction
 
 
 # Тригер нажатия кнопки
 @bot.event
-async def on_button_click(interaction: dislash.interactions.message_interaction.MessageInteraction):
+async def on_button_click(interaction: MessageInteraction):
     # await interaction.reply(type=dislash.ResponseType.DeferredUpdateMessage) - В случае если нету ответа
     if interaction.component.custom_id[:5] == "mafia":
         await button_mafia(interaction)

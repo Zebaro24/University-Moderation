@@ -1,10 +1,10 @@
-from config import DISCORD_API
-from config import discord_color
-from config import role_channel_id, ROLES
+from ...config import DISCORD_API
+from ...config import discord_color
+from ...config import role_channel_id, ROLES
 
-import discord
+from discord import Client, Embed
 
-bot = discord.Client()
+bot = Client()
 
 
 # Создание главного сообщения для ролей
@@ -17,7 +17,7 @@ async def on_ready():
     for i in ROLES.keys():
         role_name = input(f"{i} - ")
         text += f"{i} - {role_name}\n"
-    message = await chanel.send(embed=discord.Embed(title=text, color=discord_color))
+    message = await chanel.send(embed=Embed(title=text, color=discord_color))
 
     for i in ROLES.keys():
         await message.add_reaction(i)

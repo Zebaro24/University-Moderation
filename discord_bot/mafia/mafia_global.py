@@ -1,16 +1,16 @@
-from config import mafia_players, mafia_color, mafia_channel_id, mafia_statistics, mafia_chat
-from utils import print_ds
-import config
-from discord_bot.mafia.mafia_phrases import professions, random_roles
-from discord_bot.mafia.mafia_menu import vote
-import discord_bot.mafia.mafia_voice as mafia_voice
-from random import shuffle, choices, choice
+from ...config import mafia_players, mafia_color, mafia_channel_id, mafia_statistics, mafia_chat, debug
+from ...utils import print_ds
+from ..main_discord import bot
+from .mafia_phrases import professions, random_roles
+from .mafia_menu import vote
+from . import mafia_voice, mafia_start
+
 from discord import Embed
+from dislash import SelectOption, SelectMenu, Button, ButtonStyle, ActionRow
+
+from random import shuffle, choices, choice
 from asyncio import gather, sleep
 import time
-from dislash import SelectOption, SelectMenu, Button, ButtonStyle, ActionRow
-from discord_bot.main_discord import bot
-import discord_bot.mafia.mafia_start as mafia_start
 
 
 async def distribution_of_roles():
@@ -359,7 +359,7 @@ def components_select(custom_id, description, skip_role=None, skip=True):
 
 
 async def sleep_5(channel, text="обсуждения"):
-    if not config.debug:
+    if not debug:
         await channel.send(f":stopwatch: Вам дается **1 минута** на {text}. Время пошло...")
         await sleep(50)
         await channel.send(":stopwatch: Осталась **10 секунд**...")

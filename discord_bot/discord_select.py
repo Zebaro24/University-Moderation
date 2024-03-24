@@ -1,6 +1,8 @@
-from discord_bot.main_discord import bot
+from .mafia.mafia_menu import mafia_select
+from .main_discord import bot
+
 from dislash import MessageInteraction
-from discord_bot.mafia.mafia_menu import mafia_select
+
 
 @bot.event
 async def on_dropdown(inter: MessageInteraction):
@@ -17,4 +19,4 @@ async def on_dropdown(inter: MessageInteraction):
                 await people.move_to(channel_to)
             await inter.reply("Сделано", ephemeral=True)
         else:
-            await inter.reply("Вы не подключены к голосовому каналу!",ephemeral=True)
+            await inter.reply("Вы не подключены к голосовому каналу!", ephemeral=True)

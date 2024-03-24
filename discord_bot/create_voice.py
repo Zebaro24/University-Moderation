@@ -1,11 +1,11 @@
 # Импорт настроек
-from config import create_voice, create_category, mafia_voice_channel_id
+from ..config import create_voice, create_category, mafia_voice_channel_id
 
 # Импорт функций Discord
-from discord.utils import get
-import discord
-from discord_bot.voice_actions import voice_save, voice_return
-from discord_bot.main_discord import bot
+from .voice_actions import voice_save, voice_return
+from .main_discord import bot
+
+from discord import CategoryChannel, VoiceState, Member, utils
 
 
 who_channel = {}
@@ -13,7 +13,7 @@ who_channel = {}
 
 # Удаление созданных лишних каналов при запуске
 async def delete_excess(guild):
-    category: discord.channel.CategoryChannel = get(guild.categories, id=create_category)
+    category: CategoryChannel = utils.get(guild.categories, id=create_category)
     for i in category.voice_channels:
         if i.id != create_voice:
             await i.delete()
@@ -21,7 +21,7 @@ async def delete_excess(guild):
 
 # Создание голосового канала
 async def create_channel(member):
-    category: discord.channel.CategoryChannel = get(member.guild.categories, id=create_category)
+    category: CategoryChannel = utils.get(member.guild.categories, id=create_category)
     voice_channel = await category.create_voice_channel(f"<---{member.display_name}--->")
     who_channel[member] = {"voice": voice_channel, "member_mute": {}}
     await voice_channel.set_permissions(member, manage_channels=True, mute_members=True, deafen_members=True)
@@ -66,7 +66,7 @@ async def voice_in(member, after):
 # Возобновить статус мута и звука при <перемещении> с созданного канала в любой другой и при <выходе и заходе в другой канал>.
 
 # Любое взаимодействие с голосовыми каналами
-async def create(member: discord.member.Member, before: discord.member.VoiceState, after: discord.member.VoiceState):
+async def create(member: Member, before: VoiceState, after: VoiceState):
     # {----Есть и <before> и <after>----}
     if after.channel and before.channel:  # Есть и <before> и <after>
         if after.channel.id == before.channel.id:

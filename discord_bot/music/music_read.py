@@ -1,10 +1,11 @@
-from config import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET
-import tekore as tk
+from ...config import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, discord_guild, music_channel_id
+from ..main_discord import bot
+
+from discord import Member
+from wavelink import YouTubePlaylist, YouTubeTrack
+
 from math import ceil
-import discord
-import wavelink
-from discord_bot.main_discord import bot
-from config import discord_guild, music_channel_id
+import tekore as tk
 
 playlist = []
 details_player = {"status": "play", "volume": "low"}
@@ -53,7 +54,7 @@ def spotify_add(track):
 async def read_youtube(url, stream=False):
     # ----------------------------------------Нужен фикс (возможно пофиксил)----------------------------------------
     try:
-        tracks_search = await wavelink.YouTubeTrack.search(url)
+        tracks_search = await YouTubeTrack.search(url)
     except Exception as error:
         print(f"Error read_youtube: {error}")
         await bot.get_guild(discord_guild).get_channel(music_channel_id).send(
@@ -63,9 +64,9 @@ async def read_youtube(url, stream=False):
         await bot.get_guild(discord_guild).get_channel(music_channel_id).send(
             " Трек не был найден на YouTube...", delete_after=3)
         return
-    if type(tracks_search) == wavelink.tracks.YouTubePlaylist:
+    if type(tracks_search) == YouTubePlaylist:
         # noinspection PyTypeChecker
-        youtube_playlist: wavelink.tracks.YouTubePlaylist = tracks_search
+        youtube_playlist: YouTubePlaylist = tracks_search
         tracks = youtube_playlist.tracks
     else:
         tracks = [tracks_search[0]]
@@ -82,7 +83,7 @@ async def read_youtube(url, stream=False):
     # ------------------------------------------------------------------------------------------
 
 
-def read_status(member: discord.member.Member):
+def read_status(member: Member):
     for activity in member.activities:
 
         if str(activity.type) == "ActivityType.listening" and activity.name == "Spotify":

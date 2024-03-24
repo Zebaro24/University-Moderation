@@ -18,6 +18,8 @@ DB_USER = '<DB_USER_NAME>'  # noqa
 DB_PASS = '<DB_PASS>'  # noqa
 DB_HOST = '<DB_HOST>'  # noqa
 DB_PORT = '"<DB_PORT>"'  # noqa
+
+
 def db_run(execute):
     global conn, cursor
     if not conn:

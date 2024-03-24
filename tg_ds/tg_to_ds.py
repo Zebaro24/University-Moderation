@@ -1,20 +1,20 @@
 # Импорт настроек
-from config import TELEGRAM_API, ds_chanel_webhook
-from utils import print_ds, print_tg
+from ..config import TELEGRAM_API, ds_chanel_webhook
+from ..utils import print_ds, print_tg
 
 # Импорт Discord функций
-import discord
-from discord_bot.main_discord import bot as bot_ds
+from ..discord_bot.main_discord import bot as bot_ds
+from discord import File, Webhook, Embed
 
 # Импорт Telegram функций
-from telegram_bot.main_telegram import bot as bot_tg
+from ..telegram_bot.main_telegram import bot as bot_tg
 from telebot.types import Message
 
 # Импорт доп функций
 from asyncio import run_coroutine_threadsafe
-import io
-import aiohttp
 from time import perf_counter
+import aiohttp
+import io
 
 
 # Запуск coroutine функций
@@ -88,25 +88,25 @@ async def file_reed(url, format_file):
             data = io.BytesIO(await resp.read())
             time_load = perf_counter() - before
             print_ds(f"Файл был отправлен за: {round(time_load, 2)} сек")
-            return discord.File(data, format_file)
+            return File(data, format_file)
 
 
 # Отправка сообщения с Telegram в Discord
 async def telegram_to_ds(message: Message):
-    channel: discord.webhook.Webhook = await bot_ds.fetch_webhook(ds_chanel_webhook)
+    channel: Webhook = await bot_ds.fetch_webhook(ds_chanel_webhook)
     file_id = bot_tg.get_user_profile_photos(message.from_user.id).photos[0][-1].file_id
     path = bot_tg.get_file(file_id).file_path
     username = f"{message.from_user.first_name} TG"
     avatar_url = f"https://api.telegram.org/file/bot{TELEGRAM_API}/{path}"
 
     if message.forward_from:
-        forward_embed = discord.Embed(title=f"Переслано от **{message.forward_from.first_name}**")
+        forward_embed = Embed(title=f"Переслано от **{message.forward_from.first_name}**")
         await channel.send(embed=forward_embed, username=username, avatar_url=avatar_url)
     elif message.forward_from_chat:
-        forward_embed = discord.Embed(title=f"Переслано от **{message.forward_from_chat.title}**")
+        forward_embed = Embed(title=f"Переслано от **{message.forward_from_chat.title}**")
         await channel.send(embed=forward_embed, username=username, avatar_url=avatar_url)
     elif message.forward_sender_name:
-        forward_embed = discord.Embed(title=f"Переслано от **{message.forward_sender_name}**")
+        forward_embed = Embed(title=f"Переслано от **{message.forward_sender_name}**")
         await channel.send(embed=forward_embed, username=username, avatar_url=avatar_url)
 
     if message.content_type == "text":
@@ -129,8 +129,8 @@ async def telegram_to_ds(message: Message):
         print_ds(f"Отправлено с TG: локация")
 
     elif message.content_type == "contact":
-        embed = discord.Embed(title=f"Контакт: {message.contact.first_name}",
-                              description=f"Номер: {message.contact.phone_number}")
+        embed = Embed(title=f"Контакт: {message.contact.first_name}",
+                      description=f"Номер: {message.contact.phone_number}")
         await channel.send(embed=embed, username=username, avatar_url=avatar_url)
         print_ds(f"Отправлено с TG: контакт")
 
@@ -207,7 +207,7 @@ async def telegram_to_ds(message: Message):
             file = message.audio.file_name
             text = text_read(message.caption, message.caption_entities)
 
-            embed = discord.Embed(title=message.audio.title, description=message.audio.performer)
+            embed = Embed(title=message.audio.title, description=message.audio.performer)
             if message.audio.thumb:
                 embed.set_thumbnail(url=get_file_url(message.audio.thumb.file_id))
             await channel.send(embed=embed, username=username, avatar_url=avatar_url)
@@ -228,7 +228,7 @@ async def telegram_to_ds(message: Message):
             text = ""
 
         if text:
-            embed = discord.Embed(description=text)
+            embed = Embed(description=text)
         else:
             embed = None
 
@@ -238,5 +238,5 @@ async def telegram_to_ds(message: Message):
             if embed:
                 embed.title = f"Файл: {file} больше 8мб и не может быть отправлен."
             else:
-                embed = discord.Embed(title=f"Файл: {file} больше 8мб и не может быть отправлен.")
+                embed = Embed(title=f"Файл: {file} больше 8мб и не может быть отправлен.")
             await channel.send(embed=embed, username=username, avatar_url=avatar_url)

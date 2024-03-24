@@ -1,10 +1,11 @@
-from database_func import admins, teachers, edit_data, calendar
-from timetable.additional_func import day_info, list_days_by_text, check_default, check_data, edit_day
-from timetable.additional_func import admin_update, teacher_update
-from config import tg_chanel_id
+from ...utils import print_tg
+from ...database_func import admins, teachers, edit_data, calendar
+from ...timetable.additional_func import day_info, list_days_by_text, check_default, check_data, edit_day
+from ...timetable.additional_func import admin_update, teacher_update
+from ...config import tg_chanel_id
+from ..main_telegram import bot
+
 from telebot import types
-from telegram_bot.main_telegram import bot
-from utils import print_tg
 
 
 def show_days_by_text_tg(message, text):

@@ -1,8 +1,9 @@
-from other.IE_101.database_func import admins, teachers, edit_data, calendar
-from other.IE_101.additional_func import day_info, list_days_by_text, check_default, check_data, edit_day
-from other.IE_101.additional_func import admin_update, teacher_update
+from .database_func import admins, teachers, edit_data, calendar
+from .additional_func import day_info, list_days_by_text, check_default, check_data, edit_day
+from .additional_func import admin_update, teacher_update
+from .bot import bot
+
 from telebot import types
-from other.IE_101.bot import bot
 
 
 def show_days_by_text_tg(message, text):
@@ -159,7 +160,6 @@ def admin_message_check(message: types.Message):
                 if not condition_check:
                     bot.send_message(message.chat.id, 'Неправильні дані!', reply_markup=markup_all(message.chat.id))
                     return True
-
 
                 day_info_tg(message.chat.id, date_text)
                 bot.send_message(message.chat.id, f"Дз додано!", reply_markup=markup_all(message.chat.id))

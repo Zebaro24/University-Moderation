@@ -1,10 +1,11 @@
-from discord_bot.main_discord import bot
+from ...config import mafia_voice_channel_id
+from ..main_discord import bot
+from .music_read import playlist, details_player, read_status
+
+from dislash import MessageInteraction, ResponseType
 from wavelink import player, Filter
-from dislash.interactions.message_interaction import MessageInteraction
-from discord_bot.music.music_read import playlist, details_player, read_status
+
 from random import shuffle
-from dislash import ResponseType
-from config import mafia_voice_channel_id
 
 
 async def button_music(interaction: MessageInteraction):

@@ -1,12 +1,13 @@
-from config import mafia_color, mafia_players, discord_guild, mafia_channel_id, mafia_channel_webhook
-from utils import print_ds
-import discord
-# from discord_components import Button, ButtonStyle
-from discord_bot.main_discord import bot, slash
+from ...config import mafia_color, mafia_players, discord_guild, mafia_channel_id, mafia_channel_webhook
+from ...utils import print_ds
+from ..main_discord import bot, slash
+from .mafia_phrases import quotes
+from . import mafia_global
+
+from discord import Embed, TextChannel
 from dislash import has_permissions, interactions, ActionRow, Button, ButtonStyle
+
 from asyncio import sleep
-from discord_bot.mafia.mafia_phrases import quotes
-import discord_bot.mafia.mafia_global as mafia_global
 import random
 
 
@@ -14,7 +15,7 @@ import random
 @slash.slash_command(description="Отправить главное сообщение")
 @has_permissions(administrator=True)
 async def mafia_start(ctx):
-    embed_send = discord.Embed(title="Голосовая мафия",
+    embed_send = Embed(title="Голосовая мафия",
                                description="Цель мирных жителей: выгнать мафию, \nцель мафии: убить мирных жителей.",
                                color=mafia_color)
     embed_send.set_author(name="Мафия",
@@ -70,7 +71,7 @@ async def update_start_message(message):
 
 async def start_game():
     print_ds("Игра в мафию началась!")
-    channel: discord.channel.TextChannel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
+    channel: TextChannel = bot.get_guild(discord_guild).get_channel(mafia_channel_id)
 
     message = await channel.send("**3**")
     await sleep(1)
@@ -82,7 +83,7 @@ async def start_game():
     await sleep(2)
     channel = await bot.fetch_webhook(mafia_channel_webhook)
     quote = random.choice(quotes)
-    embed = discord.Embed(title=quote["text"], color=mafia_color)
+    embed = Embed(title=quote["text"], color=mafia_color)
     embed.set_footer(text=quote["author"],
                      icon_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4figuc0MHBNlnCY5B5XYo6EuHjEmOsSOFyw&usqp=CAU")
     await channel.send(embed=embed)

@@ -1,7 +1,9 @@
+from ..config import DISCORD_API
+from .main_discord import slash
+
 from dislash import Option, OptionChoice, OptionType, interactions
-from discord_bot.main_discord import slash
+
 from requests import post
-from config import DISCORD_API
 
 # Словарь с активностями Discord
 activities = [{"name": "Watch Together", "id": 880218394199220334},

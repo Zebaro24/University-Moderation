@@ -1,6 +1,6 @@
 # Импорт настроек и информации о версии
-from config import discord_guild, version_channel, discord_color, debug
-import version
+from ..config import discord_guild, version_channel, discord_color, debug
+from .. import version
 
 # Создание красивого сообщения
 from discord import Embed

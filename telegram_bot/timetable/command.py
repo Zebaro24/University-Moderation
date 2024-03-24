@@ -1,11 +1,13 @@
-from telegram_bot.main_telegram import bot
-from database_func import admins, teachers, db_run, calendar
-from timetable.additional_func import check_default, check_data
-from telegram_bot.timetable.function import day_info_tg, show_days_by_text_tg, markup_all
-from telegram_bot.timetable.function import admin_message_check, teacher_message_check
+from ...utils import print_tg
+from ...database_func import admins, teachers, db_run, calendar
+from ...timetable.additional_func import check_default, check_data
+from ..main_telegram import bot
+from .function import day_info_tg, show_days_by_text_tg, markup_all
+from .function import admin_message_check, teacher_message_check
+
 from telebot import types
+
 from datetime import timedelta
-from utils import print_tg
 
 
 @bot.message_handler(commands=['show_moder'])

@@ -1,8 +1,9 @@
+from ...config import mafia_players
+from ...utils import print_ds
+from . import mafia_global
+from . import mafia_voice
+
 from dislash import MessageInteraction
-from config import mafia_players
-import discord_bot.mafia.mafia_global as mafia_global
-import discord_bot.mafia.mafia_voice as mafia_voice
-from utils import print_ds
 
 vote_dict = {}
 

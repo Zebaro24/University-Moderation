@@ -1,39 +1,36 @@
 # Основные дискорд библиотеки
-import discord
-# from discord.ext import commands
-import wavelink
-
-# Для слеш команд используем dislash
-# from dislash import InteractionClient
+from discord import Activity, ActivityType, Status, Message
+from wavelink import NodePool, Node
 
 # Конфиги и доп библиотеки
-from config import music_channel_id
-from config import DISCORD_API, ds_chanel_id, discord_guild, mafia_channel_id, activityText
-from utils import print_ds, bc, exception
+from ..config import music_channel_id
+from ..config import DISCORD_API, ds_chanel_id, discord_guild, mafia_channel_id, activityText
+from ..utils import print_ds, bc, exception
 from asyncio import sleep
 
 # https://dislashpy.readthedocs.io/en/latest/quickstart.html#creating-a-simple-command - Slash command
 # Основные классы бота
-from main_bot_function import bot_ds as bot
-from main_bot_function import slash  # noqa
+from ..main_bot_function import bot_ds as bot
+from ..main_bot_function import slash  # noqa
 
 # Возможности
-from discord_bot.music.music_message import update_message
-from discord_bot.control_version import check_version
-import discord_bot.roles.roles_commands as roles
-import discord_bot.create_voice as create_voice
-import discord_bot.mafia.mafia_start as mafia_start
-import discord_bot.music.music_commands as music_commands
-import tg_ds.ds_to_tg as ds_to_tg
-import discord_bot.discord_button  # noqa
-# import discord_bot.activity  # noqa
-import discord_bot.discord_select  # noqa
-import discord_bot.timetable.command  # noqa
-import discord_bot.decor_message  # noqa
-import discord_bot.help_command  # noqa
-import discord_bot.rgb_lenta  # noqa
-import discord_bot.voice_actions  # noqa
-import discord_bot.discord_command  # noqa
+from .music.music_message import update_message
+from .control_version import check_version
+from .roles import roles_commands as roles
+from . import create_voice
+from .mafia import mafia_start
+from .music import music_commands
+# from ..tg_ds import ds_to_tg
+
+from . import discord_command  # noqa
+from . import discord_button  # noqa
+from . import discord_select  # noqa
+from .timetable import command  # noqa
+# from . import activity  # noqa
+from . import decor_message  # noqa
+from . import help_command  # noqa
+from . import rgb_lenta  # noqa
+from . import voice_actions  # noqa
 
 
 # При готовности бота
@@ -46,8 +43,8 @@ async def on_ready():
     await check_version(bot)
 
     print_ds("Подключение статуса")
-    activity = discord.Activity(type=discord.ActivityType.watching, name=activityText)
-    await bot.change_presence(status=discord.Status.dnd, activity=activity)
+    activity = Activity(type=ActivityType.watching, name=activityText)
+    await bot.change_presence(status=Status.dnd, activity=activity)
 
     print_ds("Проверка добавленных реакций")
     await roles.offline_role(bot)
@@ -71,21 +68,21 @@ async def start_wavelink():
     await sleep(10)
     connect = False
     while not connect:
-        node = await wavelink.NodePool.create_node(bot=bot, host='127.0.0.1', port=2333, password='ln6Bdu47')
+        node = await NodePool.create_node(bot=bot, host='127.0.0.1', port=2333, password='ln6Bdu47')
         connect = node.is_connected()
         await sleep(5)
 
 
 # Нода готова
 @bot.event
-async def on_wavelink_node_ready(node: wavelink.Node):
+async def on_wavelink_node_ready(node: Node):
     print_ds(f"Музыкальная нода была запущена под идентификатором: {node.identifier}")
     music_commands.start_bool = False
 
 
 # Все ивенты: https://discordpy.readthedocs.io/en/latest/api.html#event-reference
 @bot.event
-async def on_message(message: discord.Message):
+async def on_message(message: Message):
     # Если автор совпадает с клиентом – то вернуть
     # Чтобы бот не считывал свои сообщения
     if message.author == bot.user:

@@ -1,13 +1,13 @@
-import locale
-from logging import exception
+from .database_func import admins, load_all_elements
+from .additional_func import check_default
+from .command import timetable_text
+from .function import markup_all
+from .bot import bot
+
 from telebot import types
 
-from other.IE_101.additional_func import check_default
-from other.IE_101.function import markup_all
-from other.IE_101.command import timetable_text
+from logging import exception
 from time import sleep
-from other.IE_101.database_func import admins, load_all_elements
-from other.IE_101.bot import bot
 
 
 @bot.message_handler(commands=['start'])

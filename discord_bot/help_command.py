@@ -1,7 +1,8 @@
 # Импорт функций Discord
-from discord_bot.main_discord import slash
-from dislash import interactions
+from .main_discord import slash
+
 from discord import Embed
+from dislash import interactions
 
 
 # Команда помощи
