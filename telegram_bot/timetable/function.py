@@ -3,7 +3,7 @@ from ...database_func import admins, teachers, edit_data, calendar
 from ...timetable.additional_func import day_info, list_days_by_text, check_default, check_data, edit_day
 from ...timetable.additional_func import admin_update, teacher_update
 from ...config import tg_chanel_id
-from ..main_telegram import bot
+from ...main_bot_function import bot_tg as bot
 
 from telebot import types
 

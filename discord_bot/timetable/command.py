@@ -1,9 +1,8 @@
 # Импорт Discord функций
+from ...utils import print_ds
 from ...timetable.additional_func import list_days_by_text
 from ..main_discord import slash
 from .function import day_info_ds
-
-from utils import print_ds
 
 
 # Команда для показа расписания на день

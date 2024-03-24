@@ -2,11 +2,12 @@ from ..config import tg_chanel_id, timetable_time
 from ..utils import print_tg
 from ..telegram_bot.timetable.function import day_info_tg
 from ..database_func import calendar
-from ..telegram_bot.main_telegram import bot
+from ..main_bot_function import bot_tg as bot
 from .birthdays import birth, birthdays_phrases
 from .notification_phrases import phrases
 
 from pyowm.weatherapi25.weather import Weather
+from pyowm import OWM
 from datetime import datetime, timedelta, time, date
 from scheduler import Scheduler
 from pytz import timezone
@@ -30,7 +31,7 @@ horo = {
     "pisces": "♓ Рыбы"
 }
 
-api_weather = pyowm.OWM("542abfd3fa5280d48120c9b9df384872")  # noqa
+api_weather = OWM("542abfd3fa5280d48120c9b9df384872")  # noqa
 api_weather.config["language"] = "ru"
 tz = timezone("Europe/Kyiv")
 schedule = Scheduler(tzinfo=tz)

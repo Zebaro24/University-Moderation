@@ -3,7 +3,7 @@ from ...utils import print_ds
 from ..main_discord import slash, bot
 from .music_read import read_url, playlist, read_youtube, details_player
 
-from discord import VoiceClient, VoiceChannel, VoiceState, Message
+from discord import VoiceClient, VoiceChannel, VoiceState, Message, Member
 from dislash import Option, SlashInteraction, OptionType, has_permissions
 from wavelink import Player, Filter
 
@@ -107,7 +107,7 @@ async def play(ctx: SlashInteraction, url, mafia=None):
 
 
 @bot.event
-async def on_wavelink_track_end(player: wavelink.Player, track, reason):  # noqa
+async def on_wavelink_track_end(player: Player, track, reason):  # noqa
     # print(f"Трек закончился причина: {reason}")
     if len(player.channel.members) >= 2:
         if bot.user not in player.channel.members:
@@ -220,7 +220,7 @@ async def max_value(ctx: SlashInteraction):
         await ctx.reply("🤷‍♂️ Плейлист бота не играет!", ephemeral=True)
 
 
-async def voice_leave(member: discord.member.Member, before: discord.member.VoiceState,  # noqa
+async def voice_leave(member: Member, before: VoiceState,  # noqa
                       after: VoiceState):
     if before.channel and (not after.channel or before.channel != after.channel):
         vc: VoiceChannel = before.channel
