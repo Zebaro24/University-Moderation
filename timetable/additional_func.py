@@ -1,6 +1,6 @@
-from ..config import timetable_time
-from ..utils import print_tg
-from ..database_func import default_l, default_p, db_run, calendar, admins, teachers, edit_data
+from config import timetable_time
+from utils import print_tg
+from database_func import default_l, default_p, db_run, calendar, admins, teachers, edit_data
 
 from datetime import date, timedelta, datetime
 from pytz import timezone

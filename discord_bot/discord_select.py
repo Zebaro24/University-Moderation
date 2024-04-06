@@ -1,5 +1,5 @@
-from .mafia.mafia_menu import mafia_select
-from .main_discord import bot
+from discord_bot.mafia.mafia_menu import mafia_select
+from discord_bot.main_discord import bot
 
 from dislash import MessageInteraction
 

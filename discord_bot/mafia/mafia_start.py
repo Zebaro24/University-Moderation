@@ -1,8 +1,8 @@
-from ...config import mafia_color, mafia_players, discord_guild, mafia_channel_id, mafia_channel_webhook
-from ...utils import print_ds
-from ..main_discord import bot, slash
-from .mafia_phrases import quotes
-from . import mafia_global
+from config import mafia_color, mafia_players, discord_guild, mafia_channel_id, mafia_channel_webhook
+from utils import print_ds
+from discord_bot.main_discord import bot, slash
+from discord_bot.mafia.mafia_phrases import quotes
+from discord_bot.mafia import mafia_global
 
 from discord import Embed, TextChannel
 from dislash import has_permissions, interactions, ActionRow, Button, ButtonStyle
@@ -16,8 +16,8 @@ import random
 @has_permissions(administrator=True)
 async def mafia_start(ctx):
     embed_send = Embed(title="Голосовая мафия",
-                               description="Цель мирных жителей: выгнать мафию, \nцель мафии: убить мирных жителей.",
-                               color=mafia_color)
+                       description="Цель мирных жителей: выгнать мафию, \nцель мафии: убить мирных жителей.",
+                       color=mafia_color)
     embed_send.set_author(name="Мафия",
                           icon_url="https://w1.pngwing.com/pngs/252/342/png-transparent-card-mafia-android-game-board-game-card-game-red-hat-thumbnail.png")
     embed_send.add_field(name="Игроки", value="Нет игроков")
@@ -34,13 +34,15 @@ async def mafia_start(ctx):
         await ctx.purge(limit=10000)
         await ctx.send(embed=embed_send, components=[ActionRow(bt_1, bt_2, bt_3)])
 
+
 async def check_start_message(channel):
     message_list = await channel.history(limit=1).flatten()
     if len(message_list) == 1:
-        if len(message_list[0].embeds)>=1:
-            if message_list[0].embeds[0].title=="Голосовая мафия":
+        if len(message_list[0].embeds) >= 1:
+            if message_list[0].embeds[0].title == "Голосовая мафия":
                 return
     await mafia_start(channel)
+
 
 async def update_start_message(message):
     embed = message.embeds[0]

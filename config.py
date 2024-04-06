@@ -79,4 +79,4 @@ DB_PORT = int(getenv("DB_PORT"))
 debug = True if getenv("DEBUG") == "TRUE" else False
 
 if debug:
-    from .config_debug import *  # noqa
+    from config_debug import *  # noqa

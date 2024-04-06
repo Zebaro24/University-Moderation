@@ -1,5 +1,5 @@
-from ...config import discord_color
-from ...timetable.additional_func import day_info, check_data
+from config import discord_color
+from timetable.additional_func import day_info, check_data
 
 from discord import Embed
 from dislash import Button, ButtonStyle, ActionRow

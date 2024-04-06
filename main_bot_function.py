@@ -1,4 +1,4 @@
-from .config import TELEGRAM_API
+from config import TELEGRAM_API
 
 from discord.ext.commands import Bot
 from discord import Intents

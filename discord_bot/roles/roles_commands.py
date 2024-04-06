@@ -1,9 +1,9 @@
 # Конфиги
-from ...config import discord_guild, discord_color
-from ...config import role_channel_id, role_message_id, ROLES
+from config import discord_guild, discord_color
+from config import role_channel_id, role_message_id, ROLES
 
 # Функции
-from ..main_discord import bot
+from discord_bot.main_discord import bot
 from discord import Message, Embed, Role, RawReactionActionEvent
 
 

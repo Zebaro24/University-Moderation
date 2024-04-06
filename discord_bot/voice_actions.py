@@ -1,8 +1,8 @@
-from ..database_func import db_run, control_sound
-from .main_discord import bot
-from .music import music_commands as music
-from .mafia import mafia_voice as mafia
-from . import create_voice as voice
+from database_func import db_run, control_sound
+from discord_bot.main_discord import bot
+from discord_bot.music import music_commands as music
+from discord_bot.mafia import mafia_voice as mafia
+from discord_bot import create_voice as voice
 
 from discord import Member, VoiceState
 

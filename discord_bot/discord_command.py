@@ -1,5 +1,5 @@
-from ..config import ds_bug_channel
-from .main_discord import slash
+from config import ds_bug_channel
+from discord_bot.main_discord import slash
 
 from discord import Embed, Guild, Color
 from dislash import has_permissions, SlashInteraction, Option, OptionType, SelectOption, SelectMenu

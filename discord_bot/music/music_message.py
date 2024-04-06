@@ -1,6 +1,6 @@
-from ...config import discord_guild, music_channel_id, music_colour, music_button_colour as b_colour
-from ..main_discord import bot
-from .music_read import playlist, details_player
+from config import discord_guild, music_channel_id, music_colour, music_button_colour as b_colour
+from discord_bot.main_discord import bot
+from discord_bot.music.music_read import playlist, details_player
 
 from discord import Embed, PartialEmoji
 from dislash import Button, ActionRow

@@ -1,7 +1,7 @@
-from ...config import mafia_voice_channel_id, mafia_players
-from ..main_discord import bot
-from .. import voice_actions
-from .mafia_global import move_to, leave_players, ghosts, kill_people
+from config import mafia_voice_channel_id, mafia_players
+from discord_bot.main_discord import bot
+from discord_bot import voice_actions
+from discord_bot.mafia.mafia_global import move_to, leave_players, ghosts, kill_people
 
 from discord import Member, VoiceState, VoiceChannel
 

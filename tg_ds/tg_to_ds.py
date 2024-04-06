@@ -1,13 +1,13 @@
 # Импорт настроек
-from ..config import TELEGRAM_API, ds_chanel_webhook
-from ..utils import print_ds, print_tg
+from config import TELEGRAM_API, ds_chanel_webhook
+from utils import print_ds, print_tg
 
 # Импорт Discord функций
-from ..discord_bot.main_discord import bot as bot_ds
+from discord_bot.main_discord import bot as bot_ds
 from discord import File, Webhook, Embed
 
 # Импорт Telegram функций
-from ..telegram_bot.main_telegram import bot as bot_tg
+from telegram_bot.main_telegram import bot as bot_tg
 from telebot.types import Message
 
 # Импорт доп функций

@@ -1,5 +1,5 @@
-from ...config import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, discord_guild, music_channel_id
-from ..main_discord import bot
+from config import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, discord_guild, music_channel_id
+from discord_bot.main_discord import bot
 
 from discord import Member
 from wavelink import YouTubePlaylist, YouTubeTrack

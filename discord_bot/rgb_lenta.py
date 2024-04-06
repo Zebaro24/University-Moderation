@@ -1,5 +1,5 @@
 # Импорт Discord функций
-from .main_discord import slash
+from discord_bot.main_discord import slash
 
 from dislash import Option, OptionType
 

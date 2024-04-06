@@ -1,10 +1,10 @@
-from ..config import tg_chanel_id, timetable_time
-from ..utils import print_tg
-from ..telegram_bot.timetable.function import day_info_tg
-from ..database_func import calendar
-from ..main_bot_function import bot_tg as bot
-from .birthdays import birth, birthdays_phrases
-from .notification_phrases import phrases
+from config import tg_chanel_id, timetable_time
+from utils import print_tg
+from telegram_bot.timetable.function import day_info_tg
+from database_func import calendar
+from main_bot_function import bot_tg as bot
+from timetable.birthdays import birth, birthdays_phrases
+from timetable.notification_phrases import phrases
 
 from pyowm.weatherapi25.weather import Weather
 from pyowm import OWM

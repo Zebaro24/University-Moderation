@@ -1,12 +1,12 @@
-from ..config import tg_chanel_id
-from ..utils import print_tg, bc, exception, from_bytes, start_time, telegram_error, discord_error
-from ..timetable.additional_func import check_default
-from ..timetable.notification import check_task, go_task
-from ..database_func import admins
-# from ..tg_ds.tg_to_ds import coroutine_send
-from ..main_bot_function import bot_tg as bot
-from .timetable.function import markup_all
-from .timetable.command import timetable_text
+from config import tg_chanel_id
+from utils import print_tg, bc, exception, from_bytes, start_time, telegram_error, discord_error
+from timetable.additional_func import check_default
+from timetable.notification import check_task, go_task
+from database_func import admins
+# from tg_ds.tg_to_ds import coroutine_send
+from main_bot_function import bot_tg as bot
+from telegram_bot.timetable.function import markup_all
+from telegram_bot.timetable.command import timetable_text
 
 from telebot import types
 

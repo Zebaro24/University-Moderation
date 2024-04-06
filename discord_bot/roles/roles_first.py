@@ -1,6 +1,6 @@
-from ...config import DISCORD_API
-from ...config import discord_color
-from ...config import role_channel_id, ROLES
+from config import DISCORD_API
+from config import discord_color
+from config import role_channel_id, ROLES
 
 from discord import Client, Embed
 

@@ -1,8 +1,8 @@
 # Импорт функций Discord
-from .main_discord import bot
-from .music.music_button import button_music
-from .mafia.mafia_button import button_mafia
-from .timetable.button import button_timetable
+from discord_bot.main_discord import bot
+from discord_bot.music.music_button import button_music
+from discord_bot.mafia.mafia_button import button_mafia
+from discord_bot.timetable.button import button_timetable
 
 from dislash import MessageInteraction
 

@@ -1,5 +1,5 @@
-from ..config import DISCORD_API
-from .main_discord import slash
+from config import DISCORD_API
+from discord_bot.main_discord import slash
 
 from dislash import Option, OptionChoice, OptionType, interactions
 

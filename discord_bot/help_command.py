@@ -1,5 +1,5 @@
 # Импорт функций Discord
-from .main_discord import slash
+from discord_bot.main_discord import slash
 
 from discord import Embed
 from dislash import interactions

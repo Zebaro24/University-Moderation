@@ -1,6 +1,6 @@
-from ...utils import print_ds
-from ...timetable.additional_func import check_data
-from .function import day_info_ds
+from utils import print_ds
+from timetable.additional_func import check_data
+from discord_bot.timetable.function import day_info_ds
 
 from dislash import MessageInteraction, ResponseType
 

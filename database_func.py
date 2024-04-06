@@ -1,5 +1,5 @@
-from .config import DB_NAME, DB_USER, DB_PASS, DB_HOST, DB_PORT
-from .utils import bc
+from config import DB_NAME, DB_USER, DB_PASS, DB_HOST, DB_PORT
+from utils import bc
 from time import perf_counter
 import psycopg2
 

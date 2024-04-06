@@ -1,6 +1,6 @@
-from ...config import mafia_voice_channel_id
-from ..main_discord import bot
-from .music_read import playlist, details_player, read_status
+from config import mafia_voice_channel_id
+from discord_bot.main_discord import bot
+from discord_bot.music.music_read import playlist, details_player, read_status
 
 from dislash import MessageInteraction, ResponseType
 from wavelink import player, Filter

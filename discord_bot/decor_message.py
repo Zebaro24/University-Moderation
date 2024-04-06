@@ -1,8 +1,8 @@
 # Импорт настроек
-from ..config import discord_color
+from config import discord_color
 
 # Импорт функций Discord
-from .main_discord import slash, bot
+from discord_bot.main_discord import slash, bot
 from discord import Color, Embed, Message, HTTPException, NotFound
 from dislash import OptionChoice, Option, OptionType, SlashInteraction, has_permissions
 

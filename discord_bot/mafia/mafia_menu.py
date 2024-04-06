@@ -1,7 +1,7 @@
-from ...config import mafia_players
-from ...utils import print_ds
-from . import mafia_global
-from . import mafia_voice
+from config import mafia_players
+from utils import print_ds
+from discord_bot.mafia import mafia_global
+from discord_bot.mafia import mafia_voice
 
 from dislash import MessageInteraction
 

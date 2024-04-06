@@ -1,9 +1,9 @@
 # Импорт настроек
-from ..config import create_voice, create_category, mafia_voice_channel_id
+from config import create_voice, create_category, mafia_voice_channel_id
 
 # Импорт функций Discord
-from .voice_actions import voice_save, voice_return
-from .main_discord import bot
+from discord_bot.voice_actions import voice_save, voice_return
+from discord_bot.main_discord import bot
 
 from discord import CategoryChannel, VoiceState, Member, utils
 

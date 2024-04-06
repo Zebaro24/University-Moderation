@@ -1,7 +1,7 @@
-from ...config import mafia_players, mafia_voice_channel_id, mafia_color, music_channel_id, discord_guild
-from ..main_discord import bot
-from ..music.music_commands import play
-from .mafia_start import update_start_message, start_game, mafia_start
+from config import mafia_players, mafia_voice_channel_id, mafia_color, music_channel_id, discord_guild
+from discord_bot.main_discord import bot
+from discord_bot.music.music_commands import play
+from discord_bot.mafia.mafia_start import update_start_message, start_game, mafia_start
 
 from discord import Embed
 from dislash import ResponseType

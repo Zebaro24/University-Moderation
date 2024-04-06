@@ -1,9 +1,9 @@
-from ...config import mafia_players, mafia_color, mafia_channel_id, mafia_statistics, mafia_chat, debug
-from ...utils import print_ds
-from ..main_discord import bot
-from .mafia_phrases import professions, random_roles
-from .mafia_menu import vote
-from . import mafia_voice, mafia_start
+from config import mafia_players, mafia_color, mafia_channel_id, mafia_statistics, mafia_chat, debug
+from utils import print_ds
+from discord_bot.main_discord import bot
+from discord_bot.mafia.mafia_phrases import professions, random_roles
+from discord_bot.mafia.mafia_menu import vote
+from discord_bot.mafia import mafia_voice, mafia_start
 
 from discord import Embed
 from dislash import SelectOption, SelectMenu, Button, ButtonStyle, ActionRow

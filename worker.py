@@ -1,9 +1,9 @@
-from .utils import bc, set_logger, info, time_start_bot
+from utils import bc, set_logger, info, time_start_bot
 
-from .discord_bot.main_discord import start as start_discord
-from .telegram_bot.main_telegram import start as start_telegram
+from discord_bot.main_discord import start as start_discord
+from telegram_bot.main_telegram import start as start_telegram
 
-from .database_func import load_all_elements
+from database_func import load_all_elements
 
 from threading import Thread
 from subprocess import Popen, PIPE

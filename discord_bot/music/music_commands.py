@@ -1,7 +1,7 @@
-from ...config import music_channel_id, discord_guild, mafia_voice_channel_id, mafia_players
-from ...utils import print_ds
-from ..main_discord import slash, bot
-from .music_read import read_url, playlist, read_youtube, details_player
+from config import music_channel_id, discord_guild, mafia_voice_channel_id, mafia_players
+from utils import print_ds
+from discord_bot.main_discord import slash, bot
+from discord_bot.music.music_read import read_url, playlist, read_youtube, details_player
 
 from discord import VoiceClient, VoiceChannel, VoiceState, Message, Member
 from dislash import Option, SlashInteraction, OptionType, has_permissions
