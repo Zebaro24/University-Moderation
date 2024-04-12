@@ -5,7 +5,7 @@ from wavelink import NodePool, Node
 # Конфиги и доп библиотеки
 from config import music_channel_id
 from config import DISCORD_API, ds_chanel_id, discord_guild, mafia_channel_id, activityText
-from utils import print_ds, bc, exception
+from utils import print_ds, bc, exception, info
 from asyncio import sleep
 
 # https://dislashpy.readthedocs.io/en/latest/quickstart.html#creating-a-simple-command - Slash command
@@ -67,10 +67,14 @@ async def on_ready():
 async def start_wavelink():
     await sleep(10)
     connect = False
-    while not connect:
+    for i in range(8):
         node = await NodePool.create_node(bot=bot, host='127.0.0.1', port=2333, password='ln6Bdu47')
         connect = node.is_connected()
+        if connect:
+            break
         await sleep(5)
+    if not connect:
+        info("Не удалось подключить Wavelink")
 
 
 # Нода готова

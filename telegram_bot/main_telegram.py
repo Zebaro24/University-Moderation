@@ -149,7 +149,7 @@ def start():
 
         bot.set_webhook(f"{server_address}university_moderation_tg/")
         try:
-            run(app, host="0.0.0.0", port=webhook_tg_port)
+            run(app, host="0.0.0.0", port=webhook_tg_port, log_level=LOG_ERROR)
         except KeyboardInterrupt:
             bot.remove_webhook()
 
