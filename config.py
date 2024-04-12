@@ -77,6 +77,11 @@ DB_PORT = int(getenv("DB_PORT"))
 
 # <----Debug Configs---->
 debug = True if getenv("DEBUG") == "TRUE" else False
+server_bool = True if getenv("SERVER") == "TRUE" else False
+
+server_address = getenv("SERVER_ADDRESS")
+webhook_tg_port = int(getenv("UNIVER_MODER_TG_PORT"))
+webhook_ds_port = int(getenv("UNIVER_MODER_DS_PORT"))
 
 if debug:
     from config_debug import *  # noqa

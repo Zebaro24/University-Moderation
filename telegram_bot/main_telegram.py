@@ -1,4 +1,4 @@
-from config import tg_chanel_id
+from config import tg_chanel_id, server_bool
 from utils import print_tg, bc, exception, from_bytes, start_time, telegram_error, discord_error
 from timetable.additional_func import check_default
 from timetable.notification import check_task, go_task
@@ -132,15 +132,38 @@ def start():
     check_task()
     Thread(target=go_task, daemon=True).start()
 
-    while True:
+    if server_bool:
+        from config import webhook_tg_port, server_address
+        from uvicorn import run
+        from fastapi import FastAPI
+        from logging import ERROR as LOG_ERROR
+        from telebot.types import Update
+
+        app = FastAPI()
+
+        @app.post('/')
+        def process_webhook(update: dict):
+            if update:
+                update = Update.de_json(update)
+                bot.process_new_updates([update])
+
+        bot.set_webhook(f"{server_address}university_moderation_tg/")
         try:
-            bot.polling(none_stop=True)
-        except Exception as e:
-            exception("Telegram")
-            print_tg(f'Бот перезапустился из за \n{repr(e)}')
-        else:
-            return
-        sleep(3)
+            run(app, host="0.0.0.0", port=webhook_tg_port, log_level=LOG_ERROR)
+        except KeyboardInterrupt:
+            bot.remove_webhook()
+
+    else:
+        bot.delete_webhook()
+        while True:
+            try:
+                bot.polling(none_stop=True)
+            except Exception as e:
+                exception("Telegram")
+                print_tg(f'Бот перезапустился из за \n{repr(e)}')
+            else:
+                return
+            sleep(3)
 
 
 if __name__ == '__main__':
