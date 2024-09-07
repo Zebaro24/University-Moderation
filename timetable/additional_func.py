@@ -26,7 +26,7 @@ def check_default():
             day_delt += one_day
 
         # Проверка на каникулы
-        if not day_delt < datetime(2024, 5, 20, tzinfo=tz):
+        if datetime(2024, 5, 20, tzinfo=tz) < day_delt < datetime(2024, 9, 7, tzinfo=tz):
             for i in range(5):
                 day_delt += one_day
             print_tg(f"Сейчас каникулы или сессия: {day_delt}")
