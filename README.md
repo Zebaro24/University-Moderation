@@ -1,7 +1,6 @@
 # University Moderation Bot 🤖
 
 [![Project Status](https://img.shields.io/badge/Status-Active-brightgreen)]()
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-%233776AB?logo=python)](https://python.org/)
 [![Discord.py](https://img.shields.io/badge/discord.py-1.7.3-%235865F2?logo=discord)](https://discordpy.readthedocs.io/)
 [![Telegram Bot API](https://img.shields.io/badge/pyTelegramBotAPI-4.x-%2326A5E4?logo=telegram)](https://core.telegram.org/bots/api)
@@ -146,11 +145,10 @@ worker.py             # Main executable
 ## 🎮 Feature Highlights
 | Discord Features                              | Telegram Features                                 |
 |-----------------------------------------------|---------------------------------------------------|
-| <img src="" alt="Features" width="500" />     | <img src="" alt="Features" width="500" />         |
-| <img src="" alt="Music Player" width="500" /> | <img src="" alt="Schedule" width="500" />         |
-| <img src="" alt="Mafia Game" width="500" />   | <img src="" alt="Morning greeting" width="500" /> |
-| <img src="" alt="Roles" width="500" />        | <img src="" alt="Status" width="500" />           |
-
+| <img src="https://github.com/user-attachments/assets/b5f0a6fc-ec2a-41df-8ca6-e4ccd87a353b" alt="Features" width="500" />     | <img src="https://github.com/user-attachments/assets/3bc0f30a-348b-4d1f-bd4e-5d3b2737972d" alt="Features" width="500" />         |
+| <img src="https://github.com/user-attachments/assets/39285a2d-3e50-415a-9c56-5497d5452474" alt="Music Player" width="500" /> | <img src="https://github.com/user-attachments/assets/8a6910d3-a63a-45f5-85b4-d52f3c39f10b" alt="Schedule" width="500" />         |
+| <img src="https://github.com/user-attachments/assets/adf8763a-23ef-4531-8c51-f75e1a2754ef" alt="Mafia Game" width="500" />   | <img src="https://github.com/user-attachments/assets/95ae7d71-6cb9-412b-9d81-d4ef86b562fb" alt="Morning greeting" width="500" /> |
+| <img src="https://github.com/user-attachments/assets/300fe47e-3a98-4926-82ff-da91c5d2f9d0" alt="Roles" width="500" />        | <img src="https://github.com/user-attachments/assets/bdd0b02b-cd57-47e0-9e27-245b85b8e365" alt="Status" width="500" />           |
 
 ---
 
